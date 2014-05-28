@@ -1,0 +1,73 @@
+
+// Config ----------------------------------
+
+$spinner-size: 30px;                 // 200px
+$spinner-thickness: 4px;              // 4px
+$spinner-speed: 1.2s;                 // 1.2s
+
+$spinner-3d: true;                    // true
+$spinner-loops: infinite;             // infinite (be careful, save the batteries!)
+
+
+// Spinner ----------------------------------
+
+.tron-spinner {
+  position: relative;
+  margin: auto;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  width: $spinner-size;
+  height: $spinner-size;
+  border-radius: $spinner-size / 2;
+  border: $spinner-thickness solid hsla(0,0%,100%,.1);
+  @if ($spinner-3d) {
+    // mask smoothens out the anti-aliasing artifacts in the back.
+    -webkit-mask: linear-gradient(hsla(0,0%,0%,.1), hsla(0,0%,0%,1)  90% );
+    @include transform-origin(50% 60%);
+    @include transform(perspective($spinner-size) rotateX(66deg));
+    @include animation(spinner-wiggle $spinner-speed $spinner-loops);
+  }
+  
+}
+
+@include keyframes(spinner-wiggle) {
+  30% { @include transform(perspective($spinner-size) rotateX(66deg)); }
+  40% { @include transform(perspective($spinner-size) rotateX(65deg)); }
+  50% { @include transform(perspective($spinner-size) rotateX(68deg)); }
+  60% { @include transform(perspective($spinner-size) rotateX(64deg)); }
+}
+
+
+.tron-spinner:before,
+.tron-spinner:after {
+  content: "";
+  position: absolute;
+  margin: -$spinner-thickness;
+  box-sizing: inherit;
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  opacity: .05;
+  border: inherit;
+  border-color: transparent;
+  @include animation(spinner-spin $spinner-speed cubic-bezier(.6,.2,0,.8) $spinner-loops, spinner-fade $spinner-speed linear $spinner-loops);
+}
+
+.tron-spinner:before {
+  border-top-color: hsl(190,100%,70%);
+}
+
+.tron-spinner:after {
+  border-top-color: hsl(50,80%,70%);
+  @include animation-delay($spinner-speed * 0.25);
+}
+
+@include keyframes(spinner-spin) {
+  100% { @include transform(rotate(360deg)); }
+}
+
+@include keyframes(spinner-fade) {
+  20% { opacity: .1; }
+  40% { opacity: 1; }
+  60% { opacity: .1; }
+}

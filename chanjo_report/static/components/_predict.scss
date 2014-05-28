@@ -1,0 +1,26 @@
+%table,
+.table,
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  th {
+    border: 1px solid $flat-gray-1;
+    vertical-align: middle;
+
+    background-color: lighten($flat-gray-1, 5%);
+    font-weight: bold;
+    text-align: center;
+  }
+
+  td {
+    border: 1px solid $flat-gray-1;
+  }
+}
+
+.table--auto {
+  @extend %table;
+  table-layout: auto;
+}

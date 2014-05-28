@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+  {% include "header.html" %}
+{% endblock %}
+
+{% block body %}
+  {% for id, data in components %}
+    <section id="{{ id }}">
+      {% from 'components/' + id + '.html' import index %}
+      {{ index(data, samples) }}
+    </section>
+  {% endfor %}
+  
+  <section id="furter-info" class="break-here">
+    <h2>Förklaringar</h2>
+    <div class="text-box columns--3">
+      <div class="info">
+        <h3>Allmänt</h3>
+        <p>De delar av genomet som har analyserats omfattar alla proteinkodande, exoniska intervall som anges i <a href="http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi">CCDS-databasen</a>. Därutöver, inkluderas även splitsningpositioner (donator- och acceptorpositioner, två baser i vardera ände utanför alla exoner).</p>
+
+        <p><strong>Täckningsgrad</strong>: Ett alternativt mått på sekvensdjup. Det definieras som andelen baser som är sekvenserade med ett djup över en specificerad gräns, t.ex. 10x. Den aktuella gränsen definieras per prov och återfinns i kolumnen "Gränsvärde".
+
+        <p><strong>Fullständighet</strong>: ger en översiktlig bild av sekvenseringens framgång. Det definieras som andelen av transkripten som har täckningsgraden 100%.
+      </div>
+
+      {% for _, info in further_info %}
+        <div class="info">
+          {% filter markdown %}
+            {{ info }}
+          {% endfilter %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.2/d3.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vega/1.3.3/vega.js"></script>
+{% endblock %}

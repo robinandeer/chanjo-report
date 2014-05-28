@@ -1,0 +1,6 @@
+livereload
+Flask
+Flask-Assets
+Flask-Markdown
+chanjo
+SQLAlchemy

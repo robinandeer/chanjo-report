@@ -1,0 +1,34 @@
+{% import 'tables.html' as tables %}
+
+{% macro index(supersets, samples) -%}
+
+  {% set headers = ['Sample Id', 'Number of Missed Transcripts'] -%}
+
+  <h2>Missed Transcripts</h2>
+
+  <table class="fb-table">
+    <thead>
+      <tr>
+        <th>Gene Id</th>
+        <th>Transcript Id</th>
+        <th>Sample</th>
+        <th>Completeness [%]</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for superset_id, sets in supersets %}
+        {% for set_id, samples in sets %}
+          {% for sample_id, completeness in samples %}
+            <tr>
+              <td>{{ superset_id }}</td>
+              <td>{{ set_id }}</td>
+              <td>{{ sample_id }}</td>
+              <td class="text-right">{{ (completeness * 100)|round(4) }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+{%- endmacro %}

@@ -1,0 +1,147 @@
+// +--------------------------------------------------------------------
+// |  Custom Mixins
+// +--------------------------------------------------------------------
+
+// +--------------------------------------------------------------------
+// |  dotdotdot - Replaces ending of text with "..." when it
+// |  no longer fits in the container element.
+// | 
+// |  Usage:
+// |
+// |    .text__container {
+// |      @include dotdotdot;
+// |    }
+// +--------------------------------------------------------------------
+@mixin dotdotdot {
+  // Allow one line of text only
+  white-space: nowrap;
+
+  // Don't allow container to expand beyond parent container size
+  max-width: 100%;
+
+  // 'overflow' value must be different from 'visible'
+  overflow: hidden;
+
+  // This is where the magic happens
+  text-overflow: ellipsis;
+}
+
+// +--------------------------------------------------------------------
+// |  hyphens - Enables hyphenation for text. Possible
+// |  parameters are "auto", and "manual" (default).
+// | 
+// |  Usage:
+// |
+// |    .text__container {
+// |      @include hyphens(auto);
+// |    }
+// +--------------------------------------------------------------------
+@mixin hyphens($value: 'manual') {
+  @each $prefix in -webkit-, -moz-, -o-, '' {
+    #{$prefix}hyphens: $value;
+  }
+  -webkit-hyphenate-character: '\2010';
+  -webkit-hyphenate-limit-after: 1;
+  -webkit-hyphenate-limit-before: 3;
+}
+
+// +--------------------------------------------------------------------
+// |  Media queries shortcut. Customize the breakpoints to
+// |  suit your project.
+// | 
+// |  Usage:
+// |
+// |    .sidebar {
+// |      float: left;
+// |      width: 300px;
+// |      @include respond-to(handhelds) { float: none; }
+// |      @include respond-to(wide-handhelds) { float: none; }
+// |      @include respond-to(tablets) { width: 240px; }
+// |    }
+// +--------------------------------------------------------------------
+@mixin respond-to($media) {
+  @if $media == handhelds {
+    @media only screen and (max-width: 479px) {
+      @content;
+    }
+  }
+
+  @else if $media == wide-handhelds {
+    @media only screen and (min-width: 480px) and (max-width: 767px) {
+      @content;
+    }
+  }
+
+  @else if $media == tablets {
+    @media only screen and (min-width: 768px) and (max-width: 959px) {
+      @content;
+    }
+  }
+
+  @else if $media == desktops {
+    @media only screen and (min-width: 960px) {
+      @content;
+    }
+  }
+}
+
+// +--------------------------------------------------------------------
+// |  WebKit font-smoothing - controvertial option, use responsibly!
+// | 
+// |  Values: none, antialiased (default), subpixel-antialiased
+// |
+// |  References:
+// |    1. http://maxvoltar.com/sandbox/fontsmoothing/
+// |    2. http://maxvoltar.com/archive/-webkit-font-smoothing
+// +--------------------------------------------------------------------
+@mixin font-smoothing($value: antialiased) {
+  -webkit-font-smoothing: $value;
+}
+
+// +--------------------------------------------------------------------
+// |  CSS3 Grayscale filter
+// | 
+// |  Values: 0-100%
+// +--------------------------------------------------------------------
+@mixin grayscale($value: 100%) {
+  @each $prefix in -webkit-, -moz-, -o-, '' {
+    #{$prefix}filter: grayscale($value);
+  }
+}
+
+// +--------------------------------------------------------------------
+// |  ios-scrolling: Enable smooth scrolling on iOS devices
+// +--------------------------------------------------------------------
+%ios-scrolling {
+  -webkit-overflow-scrolling: touch;
+}
+
+// +--------------------------------------------------------------------
+// |  fill-up: fill up the entire parent container
+// +--------------------------------------------------------------------
+%fill-up,
+.fill-up {
+  width: 100%;
+  height: 100%;
+}
+
+// +--------------------------------------------------------------------
+// |  {type}-overlay: partly transparent overlay styles
+// +--------------------------------------------------------------------
+%light-overlay {
+  background-color: #fff; // When 'rgba' isn't available
+  background-color: rgba(#fff, .98);
+}
+
+%dark-overlay {
+  background-color: #000;
+  background-color: rgba(#000, .9);
+}
+
+// +--------------------------------------------------------------------
+// |  space-between: space out child elements evenly in the container
+// +--------------------------------------------------------------------
+.space-between {
+  @include display(flex);
+  @include justify-content(space-between);
+}

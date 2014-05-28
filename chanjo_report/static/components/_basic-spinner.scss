@@ -1,0 +1,30 @@
+$basic-spinner-size: 25px;
+$basic-spinner-width: 4px;
+
+.basic-spinner {
+  height: $basic-spinner-size;
+  width: $basic-spinner-size;
+  @include animation(rotation 1s infinite linear);
+  border: $basic-spinner-width solid rgba(#000, .2);
+  border-radius: 100%;
+}
+
+.basic-spinner:before {
+   content: "";
+   display: block;
+   position: absolute;
+   left: -$basic-spinner-width;
+   top: -$basic-spinner-width;
+   height: 100%;
+   width: 100%;
+   border-top: $basic-spinner-width solid rgba(0,0,0,.8);
+   border-left: $basic-spinner-width solid transparent;
+   border-bottom: $basic-spinner-width solid transparent;
+   border-right: $basic-spinner-width solid transparent;
+   border-radius: 100%;
+}
+
+@include keyframes(rotation) {
+   0% { @include transform(rotate(0deg)); }
+   100% { @include transform(rotate(359deg)); }
+}

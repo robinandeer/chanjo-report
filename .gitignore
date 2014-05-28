@@ -49,6 +49,9 @@ coverage.xml
 *.log
 *.pot
 
+# Flask stuff:
+chanjo_report/static/.webassets-cache
+
 # Sphinx documentation
 docs/_build/
 

@@ -1,0 +1,36 @@
+.card {
+  // Required
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  margin-bottom: 15px;
+
+  // Default
+  background-color: lighten($flat-gray-1, 6%);
+  border-radius: 2px;
+  box-shadow: 0 1px 1px #d8dbe1;
+  border: 1px solid #e3e6ef;
+
+  &:hover,
+  &:focus {
+    @include transform(scale(1.01))
+  }
+
+  &:active {
+    @include transform(scale(.99))
+  }
+}
+
+.card__header {
+  font-weight: bold;
+  padding: 5px 15px;
+  background-color: lighten(#ebeef3, 3%);
+  border-bottom: 1px solid rgba(#000, .1);
+  border-radius: 2px 2px 0 0;
+}
+
+.card__body {
+  padding: 15px;
+  border-top: 1px solid #fff;
+}

@@ -1,0 +1,40 @@
+$bg-color: $background-color;
+$separator-color: rgba(#000, 0.1);
+
+.separator__wrapper {
+  // Required
+  @include display(flex);
+  @include justify-content(center);
+
+  // Default
+  margin: 25px 0 30px; 
+}
+
+%separator {
+  // Defaults
+  min-width: 100px;
+  height: 2px;
+  background: $separator-color;
+}
+
+.separator--left {
+  @extend %separator;
+}
+
+.separator--right {
+  @extend %separator;
+}
+
+.separator__text {
+  @include dotdotdot;
+
+  // Required
+  text-align: center;
+  background: $bg-color;
+
+  // Defaults
+  margin-top: -13px;
+  padding: 0 25px 2px;
+  border: 2px solid $separator-color;
+  border-radius: 50px;
+}

@@ -1,0 +1,19 @@
+.text-box {
+  // Required
+  margin-left: auto;
+  margin-right: auto;
+
+  // Defaults
+  max-width: 550px;
+  font-family: Lato;
+
+  p {
+    font-size: 1.2em;
+    line-height: 1.6em;
+  }
+
+  .lead {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+}

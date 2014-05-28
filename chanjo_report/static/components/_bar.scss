@@ -1,0 +1,38 @@
+%bar,
+.bar,
+.bar--start {
+  @include display(flex);
+  @include align-items(center);
+  overflow-x: auto;
+}
+
+.bar--vertical {
+  @extend %bar;
+  @include flex-direction(column);
+  @include justify-content(center);
+  @include align-items(flex-start);
+}
+
+%bar--end,
+.bar--end {
+  @extend %bar;
+  @include justify-content(flex-end);
+}
+
+%bar--center,
+.bar--center {
+  @extend %bar;
+  @include justify-content(center);
+}
+
+%bar--space-between,
+.bar--space-between {
+  @extend %bar;
+  @include justify-content(space-between);
+}
+
+%bar--space-around,
+.bar--space-around {
+  @extend %bar;
+  @include justify-content(space-around);
+}

@@ -1,0 +1,68 @@
+// +-------------------------------------------------------------------+
+// |  Hovering notification bar
+// +-------------------------------------------------------------------+
+// Container for wrapping all panel elements
+.notification__wrapper {
+  // Required
+  height: 100%;
+  position: relative;  // To contain absolute-positioned child elements
+}
+
+// Scrollable section of a panel
+.notification__body {
+  // Required
+  overflow-y: auto;
+  height: 100%;
+}
+
+%notification {
+  // Required
+  position: absolute;
+  @include display(flex);
+  @include align-items(center);
+
+  // Center div
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  z-index: 9999;  // Make sure it floats above everything else
+  background-color: rgba($flat-blue-1, .97);
+  border-radius: 3px;
+  border-top: 1px solid lighten($flat-blue-1, 20%);
+  border-bottom: 1px solid darken($flat-blue-1, 5%);
+  text-shadow: 0 -1px 0 darken($flat-blue-1, 20%);
+
+  // DEMO
+  width: 80%;
+}
+
+.notification--top {
+  @extend %notification;
+  top: 15px;
+}
+
+.notification--bottom {
+  @extend %notification;
+  bottom: 15px;
+}
+
+.notification--middle {
+  @extend %notification;
+  top: 50%;
+  margin-top: -50px;
+}
+
+.notification__icon {
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+
+.notification__text {
+  padding: 5px 10px;
+  color: #fff;
+}
