@@ -1,6 +1,1 @@
-livereload
-Flask
-Flask-Assets
-Flask-Markdown
-chanjo
-SQLAlchemy
+-r requirements/conda.txt

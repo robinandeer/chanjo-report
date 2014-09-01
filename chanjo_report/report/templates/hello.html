@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello</title>
+  <link rel=stylesheet href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <p>Hello, {{ name }}</p>
+  <nav><a href="{{ url_for('report.hello_pdf', name=name) }}">Get as PDF</a></nav>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# conda installables
+setuptools
+lxml>=3.0
+cairo
+cffi
+Flask
+six

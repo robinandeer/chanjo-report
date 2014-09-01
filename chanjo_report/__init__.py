@@ -1,21 +1,31 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+chanjo_report
+~~~~~~~~~~~~~
 
-from __future__ import print_function, division, absolute_import
+Chanjo Report automatically renders a coverage report from Chanjo ouput.
 
-from flask import Flask
-from .core import API
-from .settings import DB, DIALECT
+:copyright: (c) 2014 by Robin Andeer
+:licence: MIT, see LICENCE for more details
+"""
+from __future__ import absolute_import, unicode_literals
+
+# Generate your own AsciiArt at:
+# patorjk.com/software/taag/#f=Calvin%20S&t=Chanjo Report
+__banner__ = r"""
+╦  ╦┌─┐┌┐┌┌─┐┬ ┬┌─┐┬─┐┌┬┐
+╚╗╔╝├─┤││││ ┬│ │├─┤├┬┘ ││  by Robin Andeer
+ ╚╝ ┴ ┴┘└┘└─┘└─┘┴ ┴┴└──┴┘
+"""
+
+__title__ = 'chanjo-report'
+__summary__ = 'Chanjo Report automatically renders a coverage report from Chanjo ouput.'
+__uri__ = 'https://github.com/robinandeer/chanjo-report'
 
 __version__ = '0.0.1'
-__title__ = 'Chanjo Coverage Report'
+
 __author__ = 'Robin Andeer'
-__licence__ = 'All rights reserved'
+__email__ = 'robin.andeer@scilifelab.se'
+
+__license__ = 'MIT'
 __copyright__ = 'Copyright 2014 Robin Andeer'
-
-app = Flask(__name__, static_url_path='/static')
-app.config.from_object('chanjo_report.settings')
-
-db = API(DB, DIALECT)
-
-from . import views, assets
