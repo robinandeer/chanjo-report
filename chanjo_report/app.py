@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from flask import Flask
 
+from .config import DefaultConfig
 from .extensions import api
 from .report import report
 
@@ -26,6 +27,16 @@ def create_app(config=None, app_name=None, blueprints=None):
   register_blueprints(app, blueprints)
 
   return app
+
+
+def configure_app(app, config=None):
+  """Expose different ways of configuring the app."""
+  # http://flask.pocoo.org/docs/api/#configuration
+  app.config.from_object(DefaultConfig)
+
+  # http://flask.pocoo.org/docs/config/#instance-folders
+  config_file = (config or ("%s.cfg" % app.config['NAME']))
+  app.config.from_pyfile(config_file, silent=True)
 
 
 def register_extensions(app):
