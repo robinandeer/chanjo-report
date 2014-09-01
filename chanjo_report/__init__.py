@@ -13,9 +13,9 @@ from __future__ import absolute_import, unicode_literals
 # Generate your own AsciiArt at:
 # patorjk.com/software/taag/#f=Calvin%20S&t=Chanjo Report
 __banner__ = r"""
-╦  ╦┌─┐┌┐┌┌─┐┬ ┬┌─┐┬─┐┌┬┐
-╚╗╔╝├─┤││││ ┬│ │├─┤├┬┘ ││  by Robin Andeer
- ╚╝ ┴ ┴┘└┘└─┘└─┘┴ ┴┴└──┴┘
+╔═╗┬ ┬┌─┐┌┐┌ ┬┌─┐  ╦═╗┌─┐┌─┐┌─┐┬─┐┌┬┐
+║  ├─┤├─┤│││ ││ │  ╠╦╝├┤ ├─┘│ │├┬┘ │   by Robin Andeer
+╚═╝┴ ┴┴ ┴┘└┘└┘└─┘  ╩╚═└─┘┴  └─┘┴└─ ┴
 """
 
 __title__ = 'chanjo-report'

@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from flask import Flask
 
+from .extensions import api
 from .report import report
 
 DEFAULT_BLUEPRINTS = (report,)
@@ -21,13 +22,22 @@ def create_app(config=None, app_name=None, blueprints=None):
   if blueprints is None:
     blueprints = DEFAULT_BLUEPRINTS
 
-  # load blueprints
-  configure_blueprints(app, blueprints)
+  register_extensions(app)
+  register_blueprints(app, blueprints)
 
   return app
 
 
-def configure_blueprints(app, blueprints):
+def register_extensions(app):
+  """Configure extensions."""
+  api.init_app(app)
+
+  return None
+
+
+def register_blueprints(app, blueprints):
   """Configure blueprints in views."""
   for blueprint in blueprints:
     app.register_blueprint(blueprint)
+
+  return None

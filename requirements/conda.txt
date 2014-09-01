@@ -5,3 +5,4 @@ cairo
 cffi
 Flask
 six
+SQLAlchemy
