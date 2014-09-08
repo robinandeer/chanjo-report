@@ -42,6 +42,8 @@ coverage.xml
 .project
 .pydevproject
 .vagrant
+*.sublime-workspace
+dev/
 
 # Rope
 .ropeproject
