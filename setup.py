@@ -77,6 +77,16 @@ setup(
 
   install_requires=[
     'setuptools',
+    'chanjo>=2.1.0',
+    'Flask-WeasyPrint',
+    'Flask-Assets',
+    'pyscss',
+    'cairocffi',
+    'toml',
+    'lxml>=3.0',
+    'cffi',
+    'Flask',
+    'SQLAlchemy'
   ],
   tests_require=[
     'pytest',
