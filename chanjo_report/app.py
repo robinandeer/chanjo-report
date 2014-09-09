@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from flask import Flask
+import os
 
+from flask import Flask
+import toml
+
+from ._compat import iteritems
 from .config import DefaultConfig
-from .extensions import api
+from .extensions import api, assets
 from .report import report
 
 DEFAULT_BLUEPRINTS = (report,)
@@ -23,6 +27,7 @@ def create_app(config=None, app_name=None, blueprints=None):
   if blueprints is None:
     blueprints = DEFAULT_BLUEPRINTS
 
+  configure_app(app, config=config)
   register_extensions(app)
   register_blueprints(app, blueprints)
 
@@ -34,14 +39,25 @@ def configure_app(app, config=None):
   # http://flask.pocoo.org/docs/api/#configuration
   app.config.from_object(DefaultConfig)
 
-  # http://flask.pocoo.org/docs/config/#instance-folders
-  config_file = (config or ("%s.cfg" % app.config['NAME']))
-  app.config.from_pyfile(config_file, silent=True)
+  if os.path.exists('chanjo.toml') and (config is None):
+    with open('chanjo.toml') as handle:
+      config = toml.load(handle)
+
+  app.config['CHANJO_DB'] = config.get('db')
+  app.config['CHANJO_DIALECT'] = config.get('dialect')
+
+  # report specific config
+  for key, value in iteritems(config.get('report', {})):
+    app.config['CHANJO_' + key.upper()] = value
+
+  # config_file = (config or ("%s.cfg" % app.config['NAME']))
+  # app.config.from_pyfile(config_file, silent=True)
 
 
 def register_extensions(app):
   """Configure extensions."""
   api.init_app(app)
+  assets.init_app(app)
 
   return None
 

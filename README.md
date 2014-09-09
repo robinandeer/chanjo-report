@@ -39,6 +39,9 @@ sudo apt-get install libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev share
 $ pip install --editable .
 ```
 
+Install Python on Ubuntu
+http://askubuntu.com/questions/101591/how-do-i-install-python-2-7-2-on-ubuntu
+
 
 ## Contributing
 Anyone can help make this project better - read [CONTRIBUTION][CONTRIBUTION.md] to get started!

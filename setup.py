@@ -48,7 +48,7 @@ setup(
   # see http://packaging.python.org/en/latest/tutorial.html#version
   version='0.0.1',
 
-  description='Chanjo Report automatically renders a coverage report from Chanjo ouput.',
+  description='Chanjo Report automatically renders coverage reports from Chanjo ouput, either as PDF or HTML.',
   long_description=long_description,
   # What does your project relate to? Separate with spaces.
   keywords='chanjo-report development',
@@ -89,11 +89,12 @@ setup(
   # "scripts" keyword. Entry points provide cross-platform support and
   # allow pip to create the appropriate form of executable for the
   # target platform.
-  entry_points=dict(
-    console_scripts=[
-      'chanjo-report = chanjo-report.__main__:cli',
-    ],
-  ),
+  entry_points={
+    'chanjo.subcommands': [
+      'report = chanjo_report.__main__:report',
+      'report-server = chanjo_report.__main__:report_server'
+    ]
+  },
 
   # See: http://pypi.python.org/pypi?%3Aaction=list_classifiers
   classifiers=[

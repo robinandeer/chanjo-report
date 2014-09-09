@@ -16,7 +16,7 @@ class ChanjoAPI(Store):
 
   def init_app(self, app, base_key='CHANJO_'):
     """Configure API (Flask style) after lazy initialization."""
-    uri = app.config.get(base_key + 'URI') or 'coverage.sqlite'
+    uri = app.config.get(base_key + 'DB') or 'coverage.sqlite'
     dialect = app.config.get(base_key + 'DIALECT') or 'sqlite'
 
     self.connect(uri, dialect=dialect)
