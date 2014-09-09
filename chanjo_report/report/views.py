@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals, division
 from codecs import open
 
-from chanjo.store import SuperblockData, IntervalData, Sample
+from chanjo.store import Block, BlockData, IntervalData, Sample
 from flask import Blueprint, current_app, render_template, request, url_for
 from flask_weasyprint import render_pdf
 import sqlalchemy as sqa
@@ -34,56 +34,56 @@ def report_html(group_id=None, sample_ids=None):
 
   # build base queries for average coverage and completeness
   metrics = api.query(
-    SuperblockData.sample_id,
-    sqa.func.avg(SuperblockData.coverage),
-    sqa.func.avg(SuperblockData.completeness)
-  ).filter(SuperblockData.parent_id.in_(superblock_ids))\
-   .group_by(SuperblockData.sample_id)
+    BlockData.sample_id,
+    sqa.func.avg(BlockData.coverage),
+    sqa.func.avg(BlockData.completeness)
+  ).join(BlockData.parent)\
+   .filter(Block.superblock_id.in_(superblock_ids))\
+   .group_by(BlockData.sample_id)
 
   # build base queries for the total number of annotated blocks
-  count = sqa.func.count(SuperblockData.sample_id)
-  total_superblocks = api.query(SuperblockData.sample_id, count)\
-                         .filter(SuperblockData.parent_id.in_(superblock_ids))\
-                         .group_by(SuperblockData.sample_id)
+  count = sqa.func.count(BlockData.sample_id)
+  total_blocks = api.query(BlockData.sample_id, count)\
+                         .join(BlockData.parent)\
+                         .filter(Block.superblock_id.in_(superblock_ids))\
+                         .group_by(BlockData.sample_id)
 
   if sample_ids:
     sample_list = sample_ids.split(',')
 
     # optionally limit by a list of samples
     samples = samples.filter(Sample.id.in_(sample_list))
-    metrics = metrics.filter(SuperblockData.sample_id.in_(sample_list))
-    total_superblocks = total_superblocks.filter(
-      SuperblockData.sample_id.in_(sample_list))
+    metrics = metrics.filter(BlockData.sample_id.in_(sample_list))
+    total_blocks = total_blocks.filter(BlockData.sample_id.in_(sample_list))
 
   elif group_id:
     # ... or limit to a group of samples
     samples = samples.filter(Sample.group_id == group_id)
     # inner join 'Sample' and filter by the 'group_id'
-    metrics = metrics.filter(SuperblockData.group_id == group_id)
+    metrics = metrics.filter(BlockData.group_id == group_id)
     # do the same for diagnostic yield calculation
-    total_superblocks = total_superblocks.filter(
-      SuperblockData.group_id == group_id)
+    total_blocks = total_blocks.filter(
+      BlockData.group_id == group_id)
 
-  # extend total set count query to include only perfectly covered sets
-  covered_superblocks = total_superblocks.filter(
-    SuperblockData.completeness == 1)
+  # extend total set count query to include only perfectly covered blocks
+  covered_blocks = total_blocks.filter(BlockData.completeness == 1)
 
   # unless sample ids or group id was submitted, all samples are included
   # let's assemble the final results
   aggregate = zip(
-    samples.all(),
+    sorted(samples.all()),
     metrics.all(),
-    total_superblocks.all(),
-    covered_superblocks.all()
+    total_blocks.all(),
+    covered_blocks.all()
   )
 
   panel_caption = current_app.config.get('CHANJO_PANEL_CAPTION', 'gene panel')
   data = []
   sample_ids = []
-  for sample, metric, total_superblocks, covered_superblocks in aggregate:
-    # calculate diagnostic yield by dividing fully covered sets by all sets
+  for sample, metric, total_blocks, covered_blocks in aggregate:
+    # calculate diagnostic yield by dividing fully covered blocks by all blocks
     diagnostic_yield = round(
-      covered_superblocks[1] / total_superblocks[1] * 100, 4)
+      covered_blocks[1] / total_blocks[1] * 100, 4)
 
     sample_ids.append(sample[0])
     data.append((
@@ -96,8 +96,8 @@ def report_html(group_id=None, sample_ids=None):
 
     # make sure we are not out of sync
     assert sample[0] == metric[0]
-    assert metric[0] == total_superblocks[0]
-    assert total_superblocks[0] == covered_superblocks[0]
+    assert metric[0] == total_blocks[0]
+    assert total_blocks[0] == covered_blocks[0]
 
   return render_template(
     'report.html', samples=sample_ids, data=data, caption=panel_caption)
