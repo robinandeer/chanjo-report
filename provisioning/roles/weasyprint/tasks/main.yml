@@ -1,0 +1,15 @@
+---
+- name: install apt packages
+  sudo: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - libcairo2  # possibly libcairo2-dev
+    - libpango1.0-0
+    - libgdk-pixbuf2.0-0
+    - libffi-dev
+    - shared-mime-info
+
+- name: install pip packages
+  pip: name={{ item }}
+  with_items:
+    - Flask-WeasyPrint

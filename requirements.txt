@@ -1,6 +1,8 @@
-livereload
-Flask
+-r requirements/conda.txt
+
+chanjo>=2.1.0
+Flask-WeasyPrint
 Flask-Assets
-Flask-Markdown
-chanjo
-SQLAlchemy
+pyscss
+cairocffi
+toml

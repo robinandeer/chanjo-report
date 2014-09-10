@@ -41,6 +41,9 @@ coverage.xml
 .mr.developer.cfg
 .project
 .pydevproject
+.vagrant
+*.sublime-workspace
+dev/
 
 # Rope
 .ropeproject
@@ -54,4 +57,3 @@ chanjo_report/static/.webassets-cache
 
 # Sphinx documentation
 docs/_build/
-
