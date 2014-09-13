@@ -11,7 +11,7 @@
     <h1>Kvalitetsrapport klinisk exomsekvensering</h1>
 
     <div id="included-samples">
-      <b>Inkluderade prov</b>: {{ samples|join(', ') }}
+      <b>Inkluderade prov</b>: {{ data.keys()|join(', ') }}
     </div>
   </header>
 
@@ -32,13 +32,13 @@
           </tr>
         </thead>
         <tbody>
-          {% for sample, cutoff, coverage, completeness, diagnostic_yield in data %}
+          {% for sample, (cutoff, coverage, completeness, total_count, covered_count) in data.items() %}
             <tr>
               <td>{{ sample }}</td>
-              <td>{{ coverage }}</td>
+              <td>{{ coverage|round(3) }}</td>
               <td>{{ cutoff }}</td>
-              <td>{{ completeness }}</td>
-              <td>{{ diagnostic_yield }}</td>
+              <td>{{ (completeness * 100)|round(3) }}</td>
+              <td>{{ (covered_count / total_count * 100)|round(3) }}</td>
             </tr>
           {% endfor %}
         </tbody>

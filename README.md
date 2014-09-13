@@ -1,46 +1,86 @@
 # Chanjo Report [![PyPI version][fury-image]][fury-url] [![Build Status][travis-image]][travis-url]
-Chanjo Report automatically renders a coverage report from Chanjo ouput.
 
-The interface is available primarily as a subcommand to "chanjo".
+## Purpose
+Chanjo Report automatically generates basic coverage reports from Chanjo SQL databaes. It works as a plugin to Chanjo by adding a subcommand to its CLI.
 
-The plugin will be able to serve HTML and PDF output to a local browser. It will be built with Flask Blueprints in mind to also be an easy block to plug into an existing server setup.
+The idea for the inital release is to define a small set of interesting coverage metrics.
 
-The configuration of the plugin will be handled inside of the default ``chanjo.toml`` config file under the subsection ``[report]``. The generated report can be configured as to what content is displayed/included.
 
-The PDF/HTML generation is built on Jinja2, Flask, and WeasyPrint technologies.
+## Features
+- Input formats
+  - Chanjo SQL database
 
-The package will be built around a basic interface to the Chanjo result SQL database. This API might in the future be released as a separate Python package (dependency).
+- Render formats
+  - text: easily parable and pipeable
+  - PDF: easily distributable (for humans)
+  - json: easily transferrable (over networks)
+  - HTML: easily deliverable
 
-Is it possible to include Flask as an optional dependency? Does it matter? The goal should be to issue a *single* command to output a finished PDF report.
+- Translations/languages
+  - English
+  - (Swedish)
 
-A "manage.py" file is used for development. The server can also be spun up using "python chanjo_report" but must then disable the reloader since it doesn't place nice with relative imports.
+- One process/one command
+
+
+## Motivation
+The HTML report comes as mostly a side effect of the PDF rendering. The plugin has a built in Flask server that can render dynamic reports on request and displays in a browser on [localhost](http://localhost:5000/).
+
+
+## Implementation
+Chanjo Report will be built as separate modules that can be combined in multiple different ways. As far as possible each module should be provided as a plugin availble through an entry point.
+
+1. The first module with handle the extraction of interesting statistics from the database. This could in the future do the same thing but use the BED output directly for example.
+
+  - The package will be built around a basic interface (API) to the Chanjo result SQL database. This API might in the future be released as a separate Python package (dependency).
+
+  - What the most interesting metrics are and what format to store these metrics in needs to be defined.
+
+2. Secondly the interesting data will be used by a report renderer. In case of the PDF, a Flask server will be used to fill in parts in a Jinja2 template that will be converted to a PDF via WeasyPrint.
+
+  - Using a Flask server will enable an interesting use case where it can be used as part of a more complex analysis interface. To accomplish this, the report generator will be contained within a "Blueprint".
+
+> I could be fun to investigate the future possibility of installing custom templates and/or style sheets. It's of cource perfectly possible to extract more data than is presented in any given template.
+
+> Would it be possible to include Flask as an optional dependency? Does it matter?
+
+### Configuration
+The configuration of the plugin will be handled inside of the default ``chanjo.toml`` config file under the subsection ``[report]``. The values will show up in the Click context object. It's important that settings can be defined in as flexible manner as possible.
+
+> In the future, it should be possible to define which what content content is displayed/included in the generated report.
+
+### Usage
+An early prototype required the server to be launched in a separate process while PDF generation ran in a different process. This wasn't an acceptable workflow, so it's important that the report is generated inside a single process with a single command.
+
+### Installation
+Especially the PDF generation requires a bunch of more or less obscure non-Python dependencies. This demands detailed and robust installations instructions. I will also set up a Vagrantfile to boot a fully functional box for development, testing, and demo purposes.
+
+> Also because of the PDF complexity I hope to be able to set up PDF support with "extras_require" dependencies.
+
+
+## Development
+A "manage.py" file is used for development. The server can also be spun up using ``python -m chanjo_report`` but must then disable the reloader since it doesn't play nice with relative imports.
 
 ```bash
 $ python manage.py runserver -r --debug --host=0.0.0.0
 ```
 
+### Install
+Start by installing Python on Ubuntu by following [these instructions](http://askubuntu.com/questions/101591/how-do-i-install-python-2-7-2-on-ubuntu).
 
-## Features
-
-```python
-# alternatively, if the PDF does not have a matching HTML page:
-@app.route('/hello_<name>.raw')
-def hello_raw(name):
-  # make a PDF straight from HTML in a string
-  html = render_template('hello.html', name=name)
-  return render_pdf(HTML(string=html))
-```
-
-
-## Install for development
-sudo apt-get install libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
+Setup Ubuntu by installing non-Python dependencies.
 
 ```bash
-$ pip install --editable .
+$ sudo apt-get install libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
 ```
 
-Install Python on Ubuntu
-http://askubuntu.com/questions/101591/how-do-i-install-python-2-7-2-on-ubuntu
+Clone the repository and install it for development.
+
+```bash
+$ git clone https://github.com/robinandeer/chanjo-report.git
+$ cd chanjo-report
+$ pip install --editable .
+```
 
 
 ## Contributing

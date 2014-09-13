@@ -6,3 +6,4 @@ Flask-Assets
 pyscss
 cairocffi
 toml
+toolz

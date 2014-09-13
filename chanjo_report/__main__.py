@@ -6,7 +6,7 @@ chanjo_report.__main__
 
 The main entry point for the command line interface.
 
-Invoke as ``chanjo-report`` (if installed)
+Invoke as ``chanjo report`` (if installed)
 or ``python -m chanjo_report`` (no install required).
 """
 from __future__ import absolute_import, unicode_literals
@@ -35,7 +35,7 @@ def report(context, out, group):
 @click.option('-d', '--debug', is_flag=True, default=False)
 @click.option('-r', '--reload', is_flag=True, default=False)
 @click.pass_context
-def report_server(context, host, port, debug):
+def report_server(context, host, port, debug, reload):
   """Start a Flask server to generate HTML report on request."""
   # spin up the Flask server
   create_app().run(host, port=port, debug=debug, use_reloader=reload)

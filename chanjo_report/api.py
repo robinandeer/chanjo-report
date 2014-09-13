@@ -34,7 +34,7 @@ class ChanjoAPI(Store):
 
     .. code-block:: python
 
-      >>> api.get_samples().all()
+      >>> api.samples.all()
       [('fam_1', 'sample_1'), ('fam_1', sample_2), ('fam_2', 'sample_3')]
     """
     return self.query(Sample.group_id, Sample.id)

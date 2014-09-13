@@ -56,3 +56,11 @@ def publish():
   run('python setup.py bdist_wheel upload', pty=True)
 
   log.info('published new release')
+
+
+@task
+def babel():
+  """Babel compile."""
+
+  run("python setup.py compile_catalog "
+      "--directory `find -name translations` --locale sv -f")
