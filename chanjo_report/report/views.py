@@ -5,7 +5,7 @@ from flask import Blueprint, current_app, render_template, request, url_for
 from flask_weasyprint import render_pdf
 import sqlalchemy as sqa
 
-from ..miner import key_metrics
+from ..miner import key_metrics_subset
 from ..extensions import api
 from .utils import read_lines
 
@@ -17,14 +17,15 @@ report = Blueprint(
 @report.route('/report/samples/<sample_ids>')
 def report_html(group_id=None, sample_ids=None):
   # load superblock ids from gene list file
-  # if 'CHANJO_SUPERBLOCK_PANEL' in current_app.config:
-  #   superblock_ids = read_lines(current_app.config['CHANJO_SUPERBLOCK_PANEL'])
-  # else:
-  #   raise TypeError(
-  #     "Missing 'report/superblock_panel' variabel in 'chanjo.toml'")
+  if 'CHANJO_SUPERBLOCK_PANEL' in current_app.config:
+    superblock_ids = read_lines(current_app.config['CHANJO_SUPERBLOCK_PANEL'])
+  else:
+    raise TypeError(
+      "Missing 'report/superblock_panel' variabel in 'chanjo.toml'")
   sample_list = (sample_ids or '').split(',')
 
-  results = key_metrics(api, sample_ids=sample_list, group_id=group_id)
+  results = key_metrics_subset(
+    api, superblock_ids, sample_ids=sample_list, group_id=group_id)
   return render_template('report.html', data=results)
 
 

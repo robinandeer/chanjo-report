@@ -9,4 +9,4 @@ Built-in abilities:
 """
 from __future__ import absolute_import, unicode_literals
 
-from .core import key_metrics
+from .core import key_metrics, key_metrics_subset
