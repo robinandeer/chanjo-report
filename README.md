@@ -44,6 +44,22 @@ Chanjo Report will be built as separate modules that can be combined in multiple
 
 > Would it be possible to include Flask as an optional dependency? Does it matter?
 
+### Components
+
+#### Miner
+The miner module includes a Flask-enables API class that can connect to a Chanjo database. It provides a number of useful methods that define interesting queries to ask the database.
+
+  > It should be rather easy to define your own, more exotic queries :)
+
+Builtin queries:
+  - Samples
+  - Average coverage/completeness across exome
+  - Sex check/prediction based on coverage
+  - Estimated extreme GC content performance
+
+#### Interfaces
+It might be possible to set up an object with all basic queries that are only ever executed when the interface loops over the query :)
+
 ### Configuration
 The configuration of the plugin will be handled inside of the default ``chanjo.toml`` config file under the subsection ``[report]``. The values will show up in the Click context object. It's important that settings can be defined in as flexible manner as possible.
 

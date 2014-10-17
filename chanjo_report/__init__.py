@@ -19,13 +19,13 @@ __banner__ = r"""
 """
 
 __title__ = 'chanjo-report'
-__summary__ = 'Chanjo Report automatically renders a coverage report from Chanjo ouput.'
+__summary__ = 'Chanjo Report automatically renders coverage reports from Chanjo ouput.'
 __uri__ = 'https://github.com/robinandeer/chanjo-report'
 
 __version__ = '0.0.1'
 
 __author__ = 'Robin Andeer'
-__email__ = 'robin.andeer@scilifelab.se'
+__email__ = 'robin.andeer@gmail.com'
 
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014 Robin Andeer'

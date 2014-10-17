@@ -101,9 +101,13 @@ setup(
   # target platform.
   entry_points={
     'chanjo.subcommands': [
-      'report = chanjo_report.__main__:report',
-      'report-server = chanjo_report.__main__:report_server'
-    ]
+      'report = chanjo_report.cli:report',
+    ],
+    'chanjo_report.interfaces': [
+      'tabular = chanjo_report.interfaces:render_tabular',
+      'html = chanjo_report.interfaces:render_html',
+      'pdf = chanjo_report.interfaces:render_pdf',
+    ],
   },
 
   # See: http://pypi.python.org/pypi?%3Aaction=list_classifiers

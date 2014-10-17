@@ -3,6 +3,9 @@
 chanjo>=2.1.0
 Flask-WeasyPrint
 Flask-Assets
+Flask-Babel
+Flask-DebugToolbar
+path.py
 pyscss
 cairocffi
 toml
