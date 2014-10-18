@@ -1,11 +1,7 @@
-# Swedish translations for PROJECT.
-# Copyright (C) 2014 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
-
-msgid "Project"
-msgstr "Flask App"
+# Swedish translations for Chanjo Report.
+# Copyright (C) 2014 Robin Andeer
+# This file is distributed under the same license as the Chanjo Report project.
+# Robin Andeer <robin.andeer@gmail.com>, 2014.
 
 # use {{ _("home") }} in templates.
 # or _("Home") in python codes.
@@ -15,5 +11,36 @@ msgstr "Hem"
 msgid "Page not found"
 msgstr "Sidan kunde inte hittas"
 
-msgid "Flask App Template"
-msgstr "Flask-applikationsmall"
+# Coverage report
+msgid "Quality report clinical exome sequencing"
+msgstr "Kvalitetsrapport klinisk exomsekvensering"
+
+msgid "Included samples"
+msgstr "Inkluderade prov"
+
+msgid "Generally important metrics for"
+msgstr "Allmänt viktiga mått för"
+
+msgid "Sample ID"
+msgstr "Prov ID"
+
+msgid "Average coverage"
+msgstr "Medelsekvensdjup"
+
+msgid "Cutoff"
+msgstr "Gränsvärde"
+
+msgid "Average completeness"
+msgstr "Medeltäckningsgrad"
+
+msgid "Diagnostic yield"
+msgstr "Fullständighet"
+
+msgid "Explanations"
+msgstr "Förklaringar"
+
+msgid "General"
+msgstr "Allmänt"
+
+#msgid ""
+#msgstr ""

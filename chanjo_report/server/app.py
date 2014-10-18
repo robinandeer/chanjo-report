@@ -8,13 +8,13 @@ from path import path
 
 from .blueprints import report_bp
 from .config import DefaultConfig
-from .extensions import debug_toolbar
+from .extensions import api
 from .utils import pretty_date
 
 DEFAULT_BLUEPRINTS = (report_bp,)
 
 
-def create_app(app_name=None, config=None, blueprints=None):
+def create_app(app_name=None, config=None, config_file=None, blueprints=None):
   """Create a Flask app (Flask Application Factory)."""
   if app_name is None:
     app_name = DefaultConfig.PROJECT
@@ -23,9 +23,9 @@ def create_app(app_name=None, config=None, blueprints=None):
     blueprints = DEFAULT_BLUEPRINTS
 
   # relative instance path (not root)
-  app = Flask(__name__, instance_relative_config=True)
+  app = Flask(__name__, instance_relative_config=True, static_folder='static')
 
-  configure_app(app, config=config)
+  configure_app(app, config=config, config_file=config_file)
   configure_extensions(app)
   configure_blueprints(app, blueprints)
   configure_extensions(app)
@@ -35,20 +35,23 @@ def create_app(app_name=None, config=None, blueprints=None):
   return app
 
 
-def configure_app(app, config=None):
+def configure_app(app, config=None, config_file=None):
   """Configure app in different ways."""
   # http://flask.pocoo.org/docs/api/#configuration
   app.config.from_object(DefaultConfig)
 
+  if config:
+    app.config.from_object(config)
+
   # http://flask.pocoo.org/docs/config/#instance-folders
   default_config = os.path.join(app.instance_path, "%s.cfg" % app.name)
-  app.config.from_pyfile(config or default_config, silent=True)
+  app.config.from_pyfile(config_file or default_config, silent=True)
 
 
 def configure_extensions(app):
   """Initialize Flask extensions."""
-  # Flask-DebugToolsbar
-  debug_toolbar.init_app(app)
+  # Miner Chanjo API
+  api.init_app(app)
 
   # Flask-babel
   babel = Babel(app)

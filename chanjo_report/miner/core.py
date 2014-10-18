@@ -9,11 +9,12 @@ import sqlalchemy as sqa
 from toolz import concat, concatv, groupby, unique
 from toolz.curried import get
 
-from .utils import getitem
+from .utils import getitem, limit_query
 from .._compat import itervalues
 
 
 class Miner(Store):
+
   """Thin wrapper around the Chanjo Store to expose a basic API.
 
   Also works as a basic Flask extensions with lazy loading via the
@@ -23,6 +24,7 @@ class Miner(Store):
     uri (str): path or URI of Chanjo database
     dialect (str): [adapter +] database type
   """
+
   def __init__(self, uri=None, dialect='sqlite'):
     super(Miner, self).__init__(uri, dialect)
 
@@ -144,8 +146,12 @@ class Miner(Store):
 
   def sex_checker(self, group_id=None, sample_ids=None):
     """Predict gender based on coverage on X/Y chromosomes."""
+    # limit query on request
+    query = limit_query(
+      self.sex_chromosome_coverage(), group=group_id, samples=sample_ids)
+
     # group tuples (rows) based on first item (sample ID)
-    samples = itertools.groupby(self.sex_chromosome_coverage(), getitem(0))
+    samples = itertools.groupby(query, getitem(0))
 
     for sample in samples:
       # extract X and Y coverage from the sample group
@@ -231,7 +237,7 @@ class Miner(Store):
                .filter(metric_column >= cutoff)
 
   def diagnostic_yield(self, metric='completeness', cutoff=1,
-                       superblock_ids=None):
+                       superblock_ids=None, group_id=None, sample_ids=None):
     """pass"""
     # extract column to filter on
     metric_column = getattr(BlockData, metric)
@@ -247,8 +253,12 @@ class Miner(Store):
     # extend base query to include only passed blocks
     pass_query = total_query.filter(metric_column >= cutoff)
 
+    # optionally limit query
+    queries = [limit_query(query, group=group_id, samples=sample_ids)
+               for query in (total_query, pass_query)]
+
     # group multiple queries by sample ID (first column)
-    metrics = groupby(get(0), concatv(total_query, pass_query))
+    metrics = groupby(get(0), concat(queries))
 
     # iterate over all values, concat different query results, and keep
     # only the unique values (excluding second sample_id)

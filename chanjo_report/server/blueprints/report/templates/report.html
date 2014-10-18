@@ -1,0 +1,76 @@
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+  <div class="layout">
+
+    <nav class="menu-bar">
+      <div>Chanjo Report</div>
+
+      <a href="{{ url_for('report.index') }}">Home</a>
+    </nav>
+
+    <div class="layout__main content">
+
+      <header>
+        <h1>{{ _('Quality report clinical exome sequencing') }}</h1>
+      </header>
+
+      <section id="samples">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Sample ID</th>
+              <th>Group</th>
+              <th>Cutoff [x]</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for sample in samples %}
+              <tr>
+                <td>{{ sample.id }}</td>
+                <td>{{ sample.group_id }}</td>
+                <td class="right-align">{{ sample.cutoff }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="key-metrics">
+        <h2 class="component__title">
+          {{ _('Generally important metrics') }}
+        </h2>
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>{{ _('Sample ID') }}</th>
+              <th>{{ _('Average coverage') }} [x]</th>
+              <th>{{ _('Average completeness') }} [%]</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for sample_id, _, coverage, completeness in key_metrics %}
+              <tr>
+                <td>{{ sample_id }}</td>
+                <td class="right-align">
+                  {{ coverage|round(3) }}
+                </td>
+                <td class="right-align">
+                  {{ (completeness * 100)|round(3) }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </section>
+
+    </div>
+
+  </div>
+
+{% endblock %}

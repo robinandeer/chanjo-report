@@ -4,8 +4,5 @@ located in app.py
 """
 from __future__ import absolute_import, unicode_literals
 
-# +--------------------------------------------------------------------+
-# | Flask-DebugToolbar
-# +--------------------------------------------------------------------+
-from flask.ext.debugtoolbar import DebugToolbarExtension
-debug_toolbar = DebugToolbarExtension()
+from ..miner import Miner
+api = Miner()

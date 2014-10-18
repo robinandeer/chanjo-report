@@ -31,7 +31,7 @@ def extract_class(query):
 
 
 @curry
-def limit_query(self, query, group=None, samples=None, base_class=None):
+def limit_query(query, group=None, samples=None, base_class=None):
   """Limit a query to a subset of samples.
 
   You can choose to filter by either a shared group ID or a list of

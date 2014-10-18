@@ -23,6 +23,11 @@ class DefaultConfig(BaseConfig):
   """Default config values during development."""
   DEBUG = True
 
+  ACCEPT_LANGUAGES = {
+    'en': 'English',
+    'sv': 'Svenska'
+  }
+
 
 class TestConfig(BaseConfig):
   TESTING = True
