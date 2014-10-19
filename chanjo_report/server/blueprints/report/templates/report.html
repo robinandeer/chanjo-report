@@ -69,6 +69,67 @@
         </table>
       </section>
 
+      <section id="diagnostic-yield">
+        <h2 class="component__title">
+          {{ _('Diagnostic yield') }}
+        </h2>
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>{{ _('Sample ID') }}</th>
+              <th>{{ _('Diagnostic yield') }} [%]</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for sample_id, _, value in diagnostic_yield %}
+              <tr>
+                <td>{{ sample_id }}</td>
+                <td class="right-align">
+                  {{ (value * 100)|round(3) }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </section>
+
+      <section id="gender">
+        <h2 class="component__title">{{ _('Gender confirmation') }}</h2>
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th rowspan="2">{{ _('Sample ID') }}</th>
+              <th rowspan="2">{{ _('Gender') }}</th>
+              <th colspan="2" class="center-align">
+                {{ _('Average coverage') }} [x]
+              </th>
+            </tr>
+            <tr>
+              <th>{{ _('Chromosome X') }}</th>
+              <th>{{ _('Chromosome Y') }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for sample_id, gender, x_coverage, y_coverage in genders %}
+              <tr>
+                <td>{{ sample_id }}</td>
+                <td>{{ gender }}</td>
+                <td class="right-align">{{ x_coverage|round(3) }}</td>
+                <td class="right-align">{{ y_coverage|round(3) }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>        
+      </section>
+
     </div>
 
   </div>

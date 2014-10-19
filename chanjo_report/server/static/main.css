@@ -29,8 +29,6 @@ h1, h2 {
 .layout__main {
   flex-basis: 100%;
   overflow: auto;
-
-  background: #f9f9f9;
 }
 
 .menu-bar {
@@ -55,6 +53,11 @@ h1, h2 {
 
 .content {
   padding: 2em 0;
+  background: #fff;
+}
+
+.list__wrapper {
+  background: #f9f9f9;
 }
 
 .list {
@@ -139,4 +142,8 @@ td, th {
 
 .right-align {
   text-align: right;
+}
+
+.center-align {
+  text-align: center;
 }

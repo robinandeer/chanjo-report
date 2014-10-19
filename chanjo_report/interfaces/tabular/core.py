@@ -31,6 +31,11 @@ def render_tabular(api, options=None):
   else:
     superblock_ids = None
 
+  # get sample ID, group and cutoff from metadata
+  sample_query = limit_query(api.samples(), group=group, samples=samples)
+  metadata = ((sample.id, sample.group_id, sample.cutoff)
+              for sample in sample_query)
+
   # get the data
   base_query = limit_query(
     api.average_metrics(superblock_ids=superblock_ids),
@@ -39,6 +44,7 @@ def render_tabular(api, options=None):
   )
 
   queries = [
+    metadata,
     base_query,
     api.diagnostic_yield(superblock_ids=superblock_ids, group_id=group,
                          sample_ids=samples),
@@ -50,6 +56,7 @@ def render_tabular(api, options=None):
 
   # get the column names dynamically from the query
   headers = concatv(
+    ['sample_id', 'group_id', 'cutoff'],
     (column['name'] for column in base_query.column_descriptions),
     ['diagnostic yield', 'gender']
   )

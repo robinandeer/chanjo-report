@@ -6,7 +6,7 @@ from chanjo import Store
 from chanjo.sex_checker import predict_gender
 from chanjo.store import Block, BlockData, Interval, IntervalData, Sample, SuperblockData
 import sqlalchemy as sqa
-from toolz import concat, concatv, groupby, unique
+from toolz import concat, groupby, unique
 from toolz.curried import get
 
 from .utils import getitem, limit_query
@@ -144,7 +144,8 @@ class Miner(Store):
     # aggregate the result on sample id and contig
     return query.group_by(IntervalData.sample_id, Interval.contig)
 
-  def sex_checker(self, group_id=None, sample_ids=None):
+  def sex_checker(self, group_id=None, sample_ids=None,
+                  include_coverage=False):
     """Predict gender based on coverage on X/Y chromosomes."""
     # limit query on request
     query = limit_query(
@@ -158,8 +159,15 @@ class Miner(Store):
       sample_id, data_group = sample
       sex_coverage = [coverage for _, _, coverage in data_group]
 
-      # run the predictor and return also raw coverage numbers
-      yield sample_id, predict_gender(*sex_coverage)
+      # run the predictor
+      gender = predict_gender(*sex_coverage)
+
+      if include_coverage:
+        # return also raw coverage numbers
+        yield sample_id, gender, sex_coverage[0], sex_coverage[1]
+
+      else:
+        yield sample_id, gender
 
   def gc_content(self, query=None, gc_amount='high', gene_ids=None):
     """Generate query to estimate coverage performace.

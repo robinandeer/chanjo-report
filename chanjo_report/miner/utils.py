@@ -27,7 +27,15 @@ def extract_class(query):
   Returns:
     class: base class use when setting up the SQL query
   """
-  return query.column_descriptions[0]['expr'].class_
+  first_expression = query.column_descriptions[0]['expr']
+
+  try:
+    # query returns subset of columns as tuples
+    return first_expression.class_
+
+  except AttributeError:
+    # query returns a full class ORM object
+    return first_expression
 
 
 @curry
