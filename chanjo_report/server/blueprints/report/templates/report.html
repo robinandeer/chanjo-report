@@ -136,6 +136,63 @@
         </table>        
       </section>
 
+      <section id="thesaurus" class="break-here">
+
+        <h2>{{ _('Explanations') }}</h2>
+        
+        <div class="explanation">
+          <h3 class="explanation__title">{{ _('General') }}</h3>
+
+          <p>
+            {{ _('The parts of the genome that has been analyzsed') }}
+            {{ _('is composed of all protein coding, exonic intervals') }}
+            {{ _('referenced in the') }}
+            <a href="http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi">
+              {{ _('CCDS database') }}
+            </a>.
+            {{ _('Additionally, the data also includes spicing sites') }}
+            ({{ _('donator and acceptor positions') }},
+            {{ _('two bases on either of each exon') }}.)
+          </p>
+
+          <p>
+            <strong>{{ _('Coverage') }}</strong>:
+            {{ _('An alternative measure of sequence depth') }}.
+            {{ _('It is defined as the ratio of bases') }}
+            {{ _('sequenced deeper than a specified cutoff') }},
+            {{ _('e.g. 10x') }}.
+            {{ _('The current cutoff is defined per sample') }}
+            {{ _('and is found i the "Cutoff" column (first table)') }}.
+          </p>
+
+          <p>
+            <strong>{{ _('Completeness') }}</strong>:
+            {{ _('gives an overview of the success of sequencing') }}.
+            {{ _("It's defined as the ratio of transcripts") }}
+            {{ _('with a completeness of') }}100%.
+          </p>
+        </div>
+
+
+        {% if config.CHANJO_PANEL %}
+          <div class="explanation">
+            <h3 class="explanation__title">
+              {{ _('Generally important metrics') }}
+              {{ _('for') }}
+              {{ config.CHANJO_PANEL_CAPTION }}
+            </h3>
+
+            <p>
+              {{ _('The measure of coverage was genereated through matching of gene IDs from') }}
+              <code>{{ config.CHANJO_PANEL_CAPTION }}</code>.
+              {{ _('Note that estimations were made regarding coverage and completeness') }}
+              {{ _('on the level of transcripts') }}.
+            </p>
+          </div>
+        {% endif %}
+
+      </section>
+
     </div>
 
   </div>
