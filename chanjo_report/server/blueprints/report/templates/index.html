@@ -12,18 +12,18 @@
 
         <div class="list__container">
           <div class="list__header">
-            <div>Sample ID</div>
-            <div>Group</div>
+            <div>{{ _('Sample') }}</div>
+            <div>{{ _('Group') }}</div>
           </div>
 
           <div class="list__section">
             {% for sample in samples %}
               <div class="list__item">
-                <a href="{{ url_for('report.samples', sample_id=sample.id) }}">
+                <a href="{{ url_for('report.samples', filter_id=sample.id) }}">
                   {{ sample.id }}
                 </a>
 
-                <a href="{{ url_for('report.groups', group_id=sample.group_id) }}">
+                <a href="{{ url_for('report.groups', filter_id=sample.group_id) }}">
                   {{ sample.group_id }}
                 </a>
               </div>

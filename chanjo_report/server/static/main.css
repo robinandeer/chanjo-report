@@ -147,3 +147,23 @@ td, th {
 .center-align {
   text-align: center;
 }
+
+/* PDF restrictions */
+@page {
+  size: A4;
+  margin: 1cm;
+}
+
+@media print {
+  .page-break {
+    page-break-after: always;
+  }
+
+  .menu-bar {
+    display: none;
+  }
+
+  .content {
+    padding: 0;
+  }
+}

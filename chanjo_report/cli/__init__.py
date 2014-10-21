@@ -15,13 +15,14 @@ ROOT_PACKAGE = __package__.split('.')[0]
   '-r', '--render', type=click.Choice(list_interfaces()), default='tabular')
 @click.option('-s', '--samples', type=str, multiple=True)
 @click.option('-g', '--group', type=str)
+@click.option('-l', '--language', type=click.Choice(['en', 'sv']))
 @click.option('--human', is_flag=True, help='Make output more human readable')
 @click.option(
   '-p', '--panel',
   type=click.File('r', encoding='utf-8'),
   help='Gene panel file with (superblock) IDs')
 @click.pass_context
-def report(context, render, samples, group, human, panel):
+def report(context, render, language, samples, group, human, panel):
   """Generate reports from Chanjo SQL output."""
   # get uri + dialect of Chanjo database
   uri, dialect = context.obj.get('db'), context.obj.get('dialect')
@@ -31,6 +32,7 @@ def report(context, render, samples, group, human, panel):
   context.obj.set('report.panel', panel)
   context.obj.set('report.samples', samples)
   context.obj.set('report.group', group)
+  context.obj.set('report.language', language)
 
   if uri is None:
     # chanjo executed without "--db" set, prompt user input

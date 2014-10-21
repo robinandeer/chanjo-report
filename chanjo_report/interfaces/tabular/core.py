@@ -60,6 +60,7 @@ def render_tabular(api, options=None):
     (column['name'] for column in base_query.column_descriptions),
     ['diagnostic yield', 'gender']
   )
+  unique_headers = unique(headers)
 
   # iterate over all values, concat different query results, and keep
   # only the unique values (excluding second sample_id)
@@ -67,10 +68,10 @@ def render_tabular(api, options=None):
 
   if human:
     # export key_metrics in a more human friendly format
-    return tabulate(data, headers)
+    return tabulate(data, unique_headers)
 
   return '\n'.join(cons(
     # yield headers
-    '#' + separator.join(headers),
+    '#' + separator.join(unique_headers),
     stringify_list(data, separator=separator)
   ))

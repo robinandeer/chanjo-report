@@ -6,7 +6,7 @@
     <nav class="menu-bar">
       <div>Chanjo Report</div>
 
-      <a href="{{ url_for('report.index') }}">Home</a>
+      <a href="{{ url_for('report.index') }}">{{ _('Home') }}</a>
     </nav>
 
     <div class="layout__main content">
@@ -19,9 +19,9 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Sample ID</th>
-              <th>Group</th>
-              <th>Cutoff [x]</th>
+              <th>{{ _('Sample') }}</th>
+              <th>{{ _('Group') }}</th>
+              <th>{{ _('Cutoff') }} [x]</th>
             </tr>
           </thead>
 
@@ -40,13 +40,16 @@
       <section id="key-metrics">
         <h2 class="component__title">
           {{ _('Generally important metrics') }}
+          {% if config.CHANJO_PANEL %}
+            {{ _('for') }} {{ config.CHANJO_PANEL_CAPTION }}
+          {% endif %}
         </h2>
 
         <table class="table">
 
           <thead>
             <tr>
-              <th>{{ _('Sample ID') }}</th>
+              <th>{{ _('Sample') }}</th>
               <th>{{ _('Average coverage') }} [x]</th>
               <th>{{ _('Average completeness') }} [%]</th>
             </tr>
@@ -72,13 +75,16 @@
       <section id="diagnostic-yield">
         <h2 class="component__title">
           {{ _('Diagnostic yield') }}
+          {% if config.CHANJO_PANEL %}
+            {{ _('for') }} {{ config.CHANJO_PANEL_CAPTION }}
+          {% endif %}
         </h2>
 
         <table class="table">
 
           <thead>
             <tr>
-              <th>{{ _('Sample ID') }}</th>
+              <th>{{ _('Sample') }}</th>
               <th>{{ _('Diagnostic yield') }} [%]</th>
             </tr>
           </thead>
@@ -104,15 +110,15 @@
 
           <thead>
             <tr>
-              <th rowspan="2">{{ _('Sample ID') }}</th>
+              <th rowspan="2">{{ _('Sample') }}</th>
               <th rowspan="2">{{ _('Gender') }}</th>
               <th colspan="2" class="center-align">
                 {{ _('Average coverage') }} [x]
               </th>
             </tr>
             <tr>
-              <th>{{ _('Chromosome X') }}</th>
-              <th>{{ _('Chromosome Y') }}</th>
+              <th>{{ _('Chromosome') }} X</th>
+              <th>{{ _('Chromosome') }} Y</th>
             </tr>
           </thead>
 

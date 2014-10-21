@@ -58,6 +58,12 @@ def configure_extensions(app):
 
   @babel.localeselector
   def get_locale():
+    # language can be forced in config
+    user_language = app.config.get('CHANJO_LANGUAGE')
+    if user_language:
+      return user_language
+
+    # unless forced, go on with the guessing
     accept_languages = app.config.get('ACCEPT_LANGUAGES')
 
     # try to guess the language from the user accept header that

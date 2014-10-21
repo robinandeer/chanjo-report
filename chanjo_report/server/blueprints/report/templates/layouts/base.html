@@ -29,10 +29,6 @@
 <body>
   {% block body %}{% endblock %}
 
-  {% block js_btm %}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js">
-    </script>
-    <script src="{{ url_for('report.static', filename='js/main.js') }}"></script>
-  {% endblock %}
+  {% block js_btm %}{% endblock %}
 </body>
 </html>
