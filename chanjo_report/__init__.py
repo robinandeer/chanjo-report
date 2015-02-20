@@ -10,7 +10,7 @@ Chanjo Report automatically renders a coverage report from Chanjo ouput.
 """
 from __future__ import absolute_import, unicode_literals
 
-# Generate your own AsciiArt at:
+# generate your own AsciiArt at:
 # patorjk.com/software/taag/#f=Calvin%20S&t=Chanjo Report
 __banner__ = r"""
 ╔═╗┬ ┬┌─┐┌┐┌ ┬┌─┐  ╦═╗┌─┐┌─┐┌─┐┬─┐┌┬┐

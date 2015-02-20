@@ -14,12 +14,9 @@ report_bp = Blueprint('report', __name__, template_folder='templates',
 
 @report_bp.route('/')
 def index():
-  samples = api.samples()
+  sample_models = api.samples()
 
-  return render_template(
-    'index.html',
-    samples=samples
-  )
+  return render_template('index.html', samples=sample_models)
 
 
 @report_bp.route('/samples/<filter_id>')

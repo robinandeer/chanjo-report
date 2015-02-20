@@ -8,5 +8,6 @@ Flask-DebugToolbar
 path.py
 pyscss
 cairocffi
+tabulate
 toml
 toolz

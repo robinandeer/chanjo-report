@@ -78,8 +78,8 @@ def limit_query(query, group=None, samples=None, base_class=None):
 
     except AttributeError:
       # no explicit data class was submitted, raise error
-      raise ValueError(
-        "You need to supply a 'base_class' to filter a list of samples")
+      raise ValueError("You need to supply a 'base_class' to filter a"
+                       "list of samples")
 
   else:
     # enable passing query cleanly through as an optional filter step

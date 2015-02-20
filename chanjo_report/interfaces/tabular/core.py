@@ -37,29 +37,25 @@ def render_tabular(api, options=None):
               for sample in sample_query)
 
   # get the data
-  base_query = limit_query(
-    api.average_metrics(superblock_ids=superblock_ids),
-    group=group,
-    samples=samples
-  )
+  base_query = limit_query(api.average_metrics(superblock_ids=superblock_ids),
+                           group=group,
+                           samples=samples)
 
-  queries = [
-    metadata,
-    base_query,
-    api.diagnostic_yield(superblock_ids=superblock_ids, group_id=group,
-                         sample_ids=samples),
-    api.sex_checker(group_id=group, sample_ids=samples)
-  ]
+  queries = [metadata,
+             base_query,
+             api.diagnostic_yield(superblock_ids=superblock_ids,
+                                  group_id=group, sample_ids=samples),
+             api.sex_checker(group_id=group, sample_ids=samples)]
 
   # group multiple queries by sample ID (first column)
   key_metrics = groupby(get(0), concat(queries))
 
   # get the column names dynamically from the query
-  headers = concatv(
-    ['sample_id', 'group_id', 'cutoff'],
-    (column['name'] for column in base_query.column_descriptions),
-    ['diagnostic yield', 'gender']
-  )
+  headers = concatv(['sample_id', 'group_id', 'cutoff'],
+                    (column['name'] for column
+                     in base_query.column_descriptions),
+                    ['diagnostic yield', 'gender'])
+
   unique_headers = unique(headers)
 
   # iterate over all values, concat different query results, and keep
@@ -70,8 +66,6 @@ def render_tabular(api, options=None):
     # export key_metrics in a more human friendly format
     return tabulate(data, unique_headers)
 
-  return '\n'.join(cons(
-    # yield headers
-    '#' + separator.join(unique_headers),
-    stringify_list(data, separator=separator)
-  ))
+  # yield headers
+  return '\n'.join(cons('#' + separator.join(unique_headers),
+                        stringify_list(data, separator=separator)))

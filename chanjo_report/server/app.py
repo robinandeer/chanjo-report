@@ -58,6 +58,7 @@ def configure_extensions(app):
 
   @babel.localeselector
   def get_locale():
+    """Determine locale to use for translations."""
     # language can be forced in config
     user_language = app.config.get('CHANJO_LANGUAGE')
     if user_language:
@@ -83,10 +84,12 @@ def configure_template_filters(app):
 
   @app.template_filter()
   def human_date(value):
+    """Prettify dates for humans."""
     return pretty_date(value)
 
   @app.template_filter()
   def format_date(value, format="%Y-%m-%d"):
+    """Format date on a specified format."""
     return value.strftime(format)
 
 
@@ -107,15 +110,12 @@ def configure_logging(app):
   app.logger.setLevel(logging.INFO)
 
   info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
-  info_file_handler = logging.handlers.RotatingFileHandler(
-    info_log, maxBytes=100000, backupCount=10)
+  info_file_handler = logging.handlers.RotatingFileHandler(info_log,
+    maxBytes=100000, backupCount=10)
   info_file_handler.setLevel(logging.INFO)
-  info_file_handler.setFormatter(
-    logging.Formatter(
-      "%(asctime)s %(levelname)s: %(message)s "
-      "[in %(pathname)s:%(lineno)d]"
-    )
-  )
+  info_file_handler.setFormatter(logging.Formatter(
+    "%(asctime)s %(levelname)s: %(message)s "
+    "[in %(pathname)s:%(lineno)d]"))
   app.logger.addHandler(info_file_handler)
 
 

@@ -88,15 +88,14 @@ class Miner(Store):
     """
     if superblock_ids:
       # overwrite the default if limiting to a subset of superblocks
-      data_class = BlockData
+      data_cls = BlockData
 
     # set up base query
-    query = self.query(
-      data_class.sample_id,
-      data_class.group_id,
-      sqa.func.avg(data_class.coverage).label('avg. coverage'),
-      sqa.func.avg(data_class.completeness).label('avg. completeness')
-    )
+    query = self.query(data_cls.sample_id,
+                       data_cls.group_id,
+                       sqa.func.avg(data_cls.coverage).label('avg. coverage'),
+                       (sqa.func.avg(data_cls.completeness)
+                        .label('avg. completeness')))
 
     if superblock_ids:
       # apply the superblock filter on the Block class level
@@ -104,7 +103,7 @@ class Miner(Store):
                    .filter(Block.superblock_id.in_(superblock_ids))
 
     # group and order by "sample_id" => return
-    return query.group_by(data_class.sample_id).order_by(data_class.sample_id)
+    return query.group_by(data_cls.sample_id).order_by(data_cls.sample_id)
 
   def total_count(self, data_class=IntervalData):
     """Count all rows in a given table.
@@ -119,11 +118,12 @@ class Miner(Store):
       query: non-executed SQLAlchemy query
     """
     # build base queries for the total number of annotated elements
-    return self.query(
-      data_class.sample_id,
-      data_class.group_id,
-      sqa.func.count(data_class.id).label(data_class.__tablename__ + ' count')
-    ).group_by(data_class.sample_id).order_by(data_class.sample_id)
+    return self.query(data_class.sample_id,
+                      data_class.group_id,
+                      (sqa.func.count(data_class.id)
+                       .label(data_class.__tablename__ + ' count'))
+                     ).group_by(data_class.sample_id)\
+                      .order_by(data_class.sample_id)
 
   def sex_chromosome_coverage(self):
     """Build query for average coverage on X/Y chromosomes.
@@ -131,11 +131,11 @@ class Miner(Store):
     Useful when predicting the gender of a sample based on the alignment.
     """
     # build the query by inner joining Interval and IntervalData
-    query = self.query(
-      IntervalData.sample_id,
-      Interval.contig.label('chromosome'),
-      sqa.func.avg(IntervalData.coverage).label('avg. coverage')
-    ).join(IntervalData.parent)
+    query = self.query(IntervalData.sample_id,
+                       Interval.contig.label('chromosome'),
+                       (sqa.func.avg(IntervalData.coverage)
+                        .label('avg. coverage'))
+                      ).join(IntervalData.parent)
 
     # filter by sex chromosomes
     sex_chromosomes = ('X', 'Y')
@@ -148,8 +148,8 @@ class Miner(Store):
                   include_coverage=False):
     """Predict gender based on coverage on X/Y chromosomes."""
     # limit query on request
-    query = limit_query(
-      self.sex_chromosome_coverage(), group=group_id, samples=sample_ids)
+    query = limit_query(self.sex_chromosome_coverage(), group=group_id,
+                        samples=sample_ids)
 
     # group tuples (rows) based on first item (sample ID)
     samples = itertools.groupby(query, getitem(0))
@@ -208,12 +208,12 @@ class Miner(Store):
     covered_bp_per_interval = bp_per_interval * IntervalData.completeness
 
     # compose SQL query for all samples in database
-    return self.query(
-      IntervalData.sample_id,
-      IntervalData.group_id,
-      (sqa.func.sum(covered_bp_per_interval)
-       / sqa.func.sum(bp_per_interval)).label('covered bases')
-    ).group_by(IntervalData.sample_id).order_by(IntervalData.sample_id)
+    return self.query(IntervalData.sample_id,
+                      IntervalData.group_id,
+                      (sqa.func.sum(covered_bp_per_interval)
+                       / sqa.func.sum(bp_per_interval)).label('covered bases')
+                     ).group_by(IntervalData.sample_id)\
+                      .order_by(IntervalData.sample_id)
 
   def pass_filter(self, sample_id, data_class=BlockData,
                   metric='completeness', cutoff=1):
@@ -246,7 +246,7 @@ class Miner(Store):
 
   def diagnostic_yield(self, metric='completeness', cutoff=1,
                        superblock_ids=None, group_id=None, sample_ids=None):
-    """pass"""
+    """Calculate diagnostic yield."""
     # extract column to filter on
     metric_column = getattr(BlockData, metric)
 

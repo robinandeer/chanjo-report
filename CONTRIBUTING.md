@@ -13,8 +13,6 @@ You should expect a considerably faster turn around if you submit two or more PR
 ## Issue tracker
 chanjo-report uses the excellent [GitHub issue tracker][issues].
 
-Personally, I also recommend giving [ZenHub][zenhub] a try. After installing the Google Chrome plugin, visit the [chanjo-report boards][repo-boards]. This way, it's very easy to get an overview of the current bug/feature request situation.
-
 
 ## Types of Contributions
 There are many ways you can help out and improve this repository.
@@ -62,7 +60,7 @@ Ready to contribute? Here's how to set up `Chanjo Report` for local development.
   $ git clone git@github.com:<your github username>/chanjo-report.git
   ```
 
-  I would personally recommend [GitHub for Mac][gh-mac] to easily manage pull requests and [SourceTree][sourcetree] as an excellent GUI for git.
+  I would personally recommend [SourceTree][sourcetree] as an excellent GUI for git.
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development:
 
@@ -141,10 +139,7 @@ $ python -m pytest tests.test_find
 
 [cookie-contrib]: https://github.com/audreyr/cookiecutter/blob/master/CONTRIBUTING.rst
 [editorconfig]: http://editorconfig.org/
-[gh-mac]: https://mac.github.com/
 [issues]: https://github.com/robinandeer/chanjo-report/issues
 [repo]: https://github.com/robinandeer/chanjo-report
-[repo-boards]: https://github.com/robinandeer/chanjo-report/issues#boards
 [sourcetree]: http://www.sourcetreeapp.com/
 [travis]: https://travis-ci.org/robinandeer/chanjo-report/pull_requests
-[zenhub]: https://www.zenhub.io/

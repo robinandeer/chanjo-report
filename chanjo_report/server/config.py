@@ -4,7 +4,9 @@ import os
 
 
 class BaseConfig(object):
+
   """Base for config objects."""
+
   PROJECT = 'chanjo_report.server'
   NAME = PROJECT
 
@@ -20,13 +22,12 @@ class BaseConfig(object):
 
 
 class DefaultConfig(BaseConfig):
+
   """Default config values during development."""
+
   DEBUG = True
 
-  ACCEPT_LANGUAGES = {
-    'en': 'English',
-    'sv': 'Svenska'
-  }
+  ACCEPT_LANGUAGES = {'en': 'English', 'sv': 'Svenska'}
 
 
 class TestConfig(BaseConfig):

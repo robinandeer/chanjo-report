@@ -1,77 +1,28 @@
 # Chanjo Report [![PyPI version][fury-image]][fury-url] [![Build Status][travis-image]][travis-url]
 
 ## Purpose
-Chanjo Report automatically generates basic coverage reports from Chanjo SQL databaes. It works as a plugin to Chanjo by adding a subcommand to its CLI.
-
-The idea for the inital release is to define a small set of interesting coverage metrics.
+Chanjo Report automatically generates basic coverage reports from Chanjo SQL databases. It works as a plugin to Chanjo by adding a subcommand to the CLI.
 
 
 ## Features
-- Input formats
+- Supported input
   - Chanjo SQL database
 
-- Render formats
-  - text: easily parable and pipeable
+- Supported output formats
+  - text: easily parsable and pipeable
   - PDF: easily distributable (for humans)
   - json: easily transferrable (over networks)
-  - HTML: easily deliverable
+  - HTML: easily deliverable on the web
 
 - Translations/languages
   - English
   - (Swedish)
 
-- One process/one command
-
 
 ## Motivation
-The HTML report comes as mostly a side effect of the PDF rendering. The plugin has a built in Flask server that can render dynamic reports on request and displays in a browser on [localhost](http://localhost:5000/).
+We are using the output from Chanjo at Clincal Genomics to report success of sequencing across the exome based on coverage. Our customers, clinicians mostly, are specifically interested in knowing to what degree their genes of interest are covered by sequencing along with some intuitive overall coverage metrics. They want the output in PDF format to file it in their system.
 
-
-## Implementation
-Chanjo Report will be built as separate modules that can be combined in multiple different ways. As far as possible each module should be provided as a plugin availble through an entry point.
-
-1. The first module with handle the extraction of interesting statistics from the database. This could in the future do the same thing but use the BED output directly for example.
-
-  - The package will be built around a basic interface (API) to the Chanjo result SQL database. This API might in the future be released as a separate Python package (dependency).
-
-  - What the most interesting metrics are and what format to store these metrics in needs to be defined.
-
-2. Secondly the interesting data will be used by a report renderer. In case of the PDF, a Flask server will be used to fill in parts in a Jinja2 template that will be converted to a PDF via WeasyPrint.
-
-  - Using a Flask server will enable an interesting use case where it can be used as part of a more complex analysis interface. To accomplish this, the report generator will be contained within a "Blueprint".
-
-> I could be fun to investigate the future possibility of installing custom templates and/or style sheets. It's of cource perfectly possible to extract more data than is presented in any given template.
-
-> Would it be possible to include Flask as an optional dependency? Does it matter?
-
-### Components
-
-#### Miner
-The miner module includes a Flask-enables API class that can connect to a Chanjo database. It provides a number of useful methods that define interesting queries to ask the database.
-
-  > It should be rather easy to define your own, more exotic queries :)
-
-Builtin queries:
-  - Samples
-  - Average coverage/completeness across exome
-  - Sex check/prediction based on coverage
-  - Estimated extreme GC content performance
-
-#### Interfaces
-It might be possible to set up an object with all basic queries that are only ever executed when the interface loops over the query :)
-
-### Configuration
-The configuration of the plugin will be handled inside of the default ``chanjo.toml`` config file under the subsection ``[report]``. The values will show up in the Click context object. It's important that settings can be defined in as flexible manner as possible.
-
-> In the future, it should be possible to define which what content content is displayed/included in the generated report.
-
-### Usage
-An early prototype required the server to be launched in a separate process while PDF generation ran in a different process. This wasn't an acceptable workflow, so it's important that the report is generated inside a single process with a single command.
-
-### Installation
-Especially the PDF generation requires a bunch of more or less obscure non-Python dependencies. This demands detailed and robust installations instructions. I will also set up a Vagrantfile to boot a fully functional box for development, testing, and demo purposes.
-
-> Also because of the PDF complexity I hope to be able to set up PDF support with "extras_require" dependencies.
+As a side effect of finding it easiest to convert HTML to PDF, Chanjo Report has a built in Flask server that can be used to render reports dynamically and even be plugged into other Flask servers as a Blueprint.
 
 
 ## Development
@@ -82,6 +33,8 @@ $ python manage.py runserver -r --debug --host=0.0.0.0
 ```
 
 ### Install
+Especially the PDF generation requires a bunch of more or less obscure non-Python dependencies. This demands detailed and robust installation instructions. I will set up a Vagrantfile to provision a fully functional box for development, testing, and demo purposes.
+
 Start by installing Python on Ubuntu by following [these instructions](http://askubuntu.com/questions/101591/how-do-i-install-python-2-7-2-on-ubuntu).
 
 Setup Ubuntu by installing non-Python dependencies.
