@@ -126,7 +126,7 @@
             {% for sample_id, gender, x_coverage, y_coverage in genders %}
               <tr>
                 <td>{{ sample_id }}</td>
-                <td>{{ gender }}</td>
+                <td>{{ _(gender) }}</td>
                 <td class="right-align">{{ x_coverage|round(3) }}</td>
                 <td class="right-align">{{ y_coverage|round(3) }}</td>
               </tr>

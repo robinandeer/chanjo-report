@@ -1,5 +1,7 @@
 # Chanjo Report [![PyPI version][fury-image]][fury-url] [![Build Status][travis-image]][travis-url]
 
+![Example report (eng)](artwork/report-example-en.png)
+
 ## Purpose
 Chanjo Report automatically generates basic coverage reports from Chanjo SQL databases. It works as a plugin to Chanjo by adding a subcommand to the CLI.
 

@@ -97,7 +97,7 @@ msgstr "t.ex. 10x"
 msgid "The current cutoff is defined per sample"
 msgstr "Den aktuella gränsen definieras per prov"
 
-msgid "and is found i the "Cutoff" column (first table"
+msgid "and is found i the "Cutoff" column (first table)"
 msgstr "och återfinns i kolumnen "Gränsvärde" (första tabellen)"
 
 
@@ -108,7 +108,7 @@ msgid "gives an overview of the success of sequencing"
 msgstr "ger en översiktlig bild av sekvenseringens framgång"
 
 msgid "It's defined as the ratio of transcripts"
-msgstr "Det definieras som andel transcript"
+msgstr "Det definieras som andel transkript"
 
 msgid "with a completeness of"
 msgstr "som har en fullständighet lika med"
@@ -122,3 +122,11 @@ msgstr "Notera att uppskattningar av medelsekvensdjup och medeltäckningsgrad"
 
 msgid "on the level of transcripts"
 msgstr "har gjorts på transkriptnivå"
+
+
+# genders
+msgid "female"
+msgstr "kvinna"
+
+msgid "male"
+msgstr "man"
