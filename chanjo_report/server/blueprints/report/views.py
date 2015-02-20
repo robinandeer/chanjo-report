@@ -9,7 +9,7 @@ from flask_weasyprint import render_pdf
 from ...extensions import api
 
 report_bp = Blueprint('report', __name__, template_folder='templates',
-                      static_folder='static')
+                      static_folder='static', static_url_path='/static/report')
 
 
 @report_bp.route('/')
@@ -61,13 +61,14 @@ def groups(filter_id):
 def pdf(route, filter_id):
   # make a PDF from another view
   if route in ('samples', 'groups'):
-    response = render_pdf(url_for("report." + route, filter_id=filter_id))
+    response = render_pdf(url_for("report.{}".format(route),
+                          filter_id=filter_id))
   else:
     return abort(404)
 
   # check if the request is to download the file right away
   if 'dl' in request.args:
-    fname = "coverage-report_%s.pdf" % filter_id
+    fname = "coverage-report_{}.pdf".format(filter_id)
     response.headers['Content-Disposition'] = 'attachment; filename=' + fname
 
   return response

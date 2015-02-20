@@ -5,7 +5,7 @@
 
   <title>{% block title %}{% endblock %}</title>
 
-  <meta name="description" content="The Chanjo Report plugin.">
+  <meta name="description" content="Chanjo Report: coverage report generator">
   <meta name="author" content="Robin Andeer">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -17,7 +17,7 @@
   {% block css %}
     <link rel="stylesheet"
           type="text/css"
-          href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.css">
+          href="{{ url_for('report.static', filename='vendor/normalize.css') }}">
     <link rel="stylesheet"
           href="{{ url_for('report.static', filename='main.css') }}">
   {% endblock %}
