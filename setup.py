@@ -86,7 +86,9 @@ setup(
     'lxml>=3.0',
     'cffi',
     'Flask',
-    'SQLAlchemy'
+    'SQLAlchemy',
+    'Flask-Babel',
+    'tabulate',
   ],
   tests_require=[
     'pytest',
