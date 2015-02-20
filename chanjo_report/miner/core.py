@@ -88,13 +88,14 @@ class Miner(Store):
     """
     if superblock_ids:
       # overwrite the default if limiting to a subset of superblocks
-      data_cls = BlockData
+      data_class = BlockData
 
     # set up base query
-    query = self.query(data_cls.sample_id,
-                       data_cls.group_id,
-                       sqa.func.avg(data_cls.coverage).label('avg. coverage'),
-                       (sqa.func.avg(data_cls.completeness)
+    query = self.query(data_class.sample_id,
+                       data_class.group_id,
+                       (sqa.func.avg(data_class.coverage)
+                        .label('avg. coverage')),
+                       (sqa.func.avg(data_class.completeness)
                         .label('avg. completeness')))
 
     if superblock_ids:
@@ -103,7 +104,7 @@ class Miner(Store):
                    .filter(Block.superblock_id.in_(superblock_ids))
 
     # group and order by "sample_id" => return
-    return query.group_by(data_cls.sample_id).order_by(data_cls.sample_id)
+    return query.group_by(data_class.sample_id).order_by(data_class.sample_id)
 
   def total_count(self, data_class=IntervalData):
     """Count all rows in a given table.
