@@ -16,9 +16,9 @@ Chanjo Report automatically generates basic coverage reports from Chanjo SQL dat
   - json: easily transferrable (over networks)
   - HTML: easily deliverable on the web
 
-- Translations/languages
+- Supported languages (translations)
   - English
-  - (Swedish)
+  - Swedish
 
 
 ## Motivation
