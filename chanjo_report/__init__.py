@@ -22,7 +22,7 @@ __title__ = 'chanjo-report'
 __summary__ = 'Chanjo Report automatically renders coverage reports from Chanjo ouput.'
 __uri__ = 'https://github.com/robinandeer/chanjo-report'
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 __author__ = 'Robin Andeer'
 __email__ = 'robin.andeer@gmail.com'
