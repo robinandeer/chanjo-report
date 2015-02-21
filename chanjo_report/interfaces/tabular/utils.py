@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from toolz import map
+import toolz
 
 from ..._compat import text_type
 
@@ -15,4 +15,4 @@ def stringify_list(rows, separator='\t'):
   Yields:
     str: stringified line of rows
   """
-  return (separator.join(map(text_type, row)) for row in rows)
+  return (separator.join(toolz.map(text_type, row)) for row in rows)

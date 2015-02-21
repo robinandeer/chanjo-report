@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Based on https://github.com/pypa/sampleproject/blob/master/setup.py."""
 from __future__ import unicode_literals
-from codecs import open
+import codecs
 import os
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
@@ -33,7 +33,7 @@ class PyTest(TestCommand):
 
 # get the long description from the relevant file
 HERE = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
+with codecs.open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
   LONG_DESCRIPTION = f.read()
 
 
@@ -53,56 +53,36 @@ setup(name='chanjo-report',
       # if there are data files included in your packages
       include_package_data=True,
       zip_safe=False,
-      package_data={
-        '': ['README.md', 'LICENSE', 'AUTHORS'],
-      },
-      install_requires=[
-        'setuptools',
-        'chanjo>=2.1.0',
-        'Flask-WeasyPrint',
-        'cairocffi',
-        'toml',
-        'lxml>=3.0',
-        'cffi',
-        'Flask',
-        'SQLAlchemy',
-        'Flask-Babel',
-        'tabulate',
-      ],
-      tests_require=[
-        'pytest',
-      ],
-      cmdclass=dict(
-        test=PyTest,
-      ),
+      install_requires=['setuptools',
+                        'chanjo>=2.1.0',
+                        'Flask-WeasyPrint',
+                        'cairocffi',
+                        'toml',
+                        'lxml>=3.0',
+                        'cffi',
+                        'Flask',
+                        'SQLAlchemy',
+                        'Flask-Babel',
+                        'tabulate'],
+      tests_require=['pytest'],
+      cmdclass=dict(test=PyTest),
       # to provide executable scripts, use entry points
-      entry_points={
-        'chanjo.subcommands': [
-          'report = chanjo_report.cli:report',
-        ],
-        'chanjo_report.interfaces': [
-          'tabular = chanjo_report.interfaces:render_tabular',
-          'html = chanjo_report.interfaces:render_html',
-          'pdf = chanjo_report.interfaces:render_pdf',
-        ],
-      },
+      entry_points={'chanjo.subcommands':
+                      ['report = chanjo_report.cli:report'],
+                    'chanjo_report.interfaces': [
+                      'tabular = chanjo_report.interfaces:render_tabular',
+                      'html = chanjo_report.interfaces:render_html',
+                      'pdf = chanjo_report.interfaces:render_pdf']},
       # see: http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[
-        # how mature is this project?
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
-        # indicate who your project is intended for
-        'Intended Audience :: Developers',
-        'Topic :: Software Development',
-        # pick your license as you wish (should match "license" above)
-        'License :: OSI Approved :: MIT License',
-        # specify the Python versions you support here.
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Environment :: Console',
-      ])
+      classifiers=['Development Status :: 3 - Alpha',
+                   'Intended Audience :: Developers',
+                   'Topic :: Software Development',
+                   'License :: OSI Approved :: MIT License',
+                   'Programming Language :: Python :: 2',
+                   'Programming Language :: Python :: 2.7',
+                   'Programming Language :: Python :: 3',
+                   'Programming Language :: Python :: 3.3',
+                   'Programming Language :: Python :: 3.4',
+                   'Environment :: Console'
+                  ]
+     )

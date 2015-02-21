@@ -40,9 +40,8 @@ def report(context, render, language, samples, group, human, panel):
   api = Miner(uri, dialect=dialect)
 
   # determine which render method to use and initialize it
-  render_method = load_entry_point(
-    ROOT_PACKAGE, 'chanjo_report.interfaces', render
-  )
+  render_method = load_entry_point(ROOT_PACKAGE, 'chanjo_report.interfaces',
+                                   render)
 
   # run the render_method and print the result to STDOUT
   click.echo(render_method(api, options=context.obj))

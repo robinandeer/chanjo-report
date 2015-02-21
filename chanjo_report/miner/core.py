@@ -15,7 +15,7 @@ from .._compat import itervalues
 
 class Miner(Store):
 
-  """Thin wrapper around the Chanjo Store to expose a basic API.
+  """Thin wrapper around the Chanjo Store to expose an extended API.
 
   Also works as a basic Flask extensions with lazy loading via the
   ``.init_app`` method.

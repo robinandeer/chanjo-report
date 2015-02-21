@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Utilities related to entry point interfaces loaded by the CLI."""
 from __future__ import absolute_import, unicode_literals
 from pkg_resources import iter_entry_points
 
