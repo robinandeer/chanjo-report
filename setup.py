@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Based on https://github.com/pypa/sampleproject/blob/master/setup.py."""
-from __future__ import unicode_literals
 import codecs
 import os
 from setuptools import setup, find_packages
@@ -82,7 +81,7 @@ setup(name='chanjo-report',
         'tabulate'
       ],
       tests_require=['pytest'],
-      cmdclass=dict(test=PyTest),
+      cmdclass={'test': PyTest},
       # to provide executable scripts, use entry points
       entry_points={
         'chanjo.subcommands': ['report = chanjo_report.cli:report'],
