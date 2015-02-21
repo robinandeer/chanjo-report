@@ -23,4 +23,5 @@ def render_html(api, options=None):
 
   app = create_app(config=config)
 
-  return app.run('0.0.0.0', port=5000, debug=True, use_reloader=True)
+  return app.run(options.get('report.host', '0.0.0.0'),
+                 port=options.get('report.port', 5000))
