@@ -4,7 +4,7 @@
 Automatically generate basic coverage reports from Chanjo SQL databases. This plugin installs as a subcommand ("report") to the Chanjo command line interface.
 
 ## Usage
-Chanjo Report supports a number of output formats: tabular, PDF, json, and HTML. To print a PDF coverage report for a group of samples "WGS-prep" do:
+Chanjo Report supports a number of output formats: tabular, PDF, and HTML. To print a PDF coverage report for a group of samples "WGS-prep" do:
 
 ```bash
 $ chanjo report --render pdf --group "WGS-prep" > ./coverage-report.pdf
@@ -17,7 +17,6 @@ Chanjo Reports multiple output formats:
 
   - tabular: easily parsable and pipeable
   - PDF: easily distributable (for humans)
-  - json: easily transferrable (over networks)
   - HTML: easily deliverable on the web
 
 ### Supported languages (translations)
