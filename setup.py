@@ -94,14 +94,14 @@ setup(name='chanjo-report',
       # see: http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         'Development Status :: 3 - Alpha',
-       'Intended Audience :: Developers',
-       'Topic :: Software Development',
-       'License :: OSI Approved :: MIT License',
-       'Programming Language :: Python :: 2',
-       'Programming Language :: Python :: 2.7',
-       'Programming Language :: Python :: 3',
-       'Programming Language :: Python :: 3.3',
-       'Programming Language :: Python :: 3.4',
-       'Environment :: Console'
+        'Intended Audience :: Developers',
+        'Topic :: Software Development',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Environment :: Console'
       ]
      )

@@ -16,7 +16,7 @@ report_bp = Blueprint('report', __name__, template_folder='templates',
 def index():
   sample_models = api.samples()
 
-  return render_template('index.html', samples=sample_models)
+  return render_template('report/index.html', samples=sample_models)
 
 
 @report_bp.route('/samples/<filter_id>')
@@ -28,7 +28,7 @@ def samples(filter_id):
     data_class = IntervalData
 
   return render_template(
-    'report.html',
+    'report/report.html',
     samples=api.samples().filter_by(id=filter_id),
     key_metrics=api.average_metrics(superblock_ids=superblock_ids)\
                    .filter(data_class.sample_id == filter_id),
@@ -47,7 +47,7 @@ def groups(filter_id):
     data_class = IntervalData
 
   return render_template(
-    'report.html',
+    'report/report.html',
     samples=api.samples().filter_by(group_id=filter_id),
     key_metrics=api.average_metrics(superblock_ids=superblock_ids)\
                    .filter(data_class.group_id == filter_id),
