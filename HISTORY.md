@@ -1,4 +1,5 @@
 # History
 
-## 0.0.1 (2014-07-08)
-* First release on PyPI.
+## 0.0.5 (2015-02-25)
+### Fixed
+- Namespace templates for "report" Blueprint under "report"
