@@ -44,7 +44,7 @@ with codecs.open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
 
 setup(name='chanjo-report',
       # versions should comply with PEP440
-      version='0.0.4',
+      version='0.0.5',
       description='Automatically render coverage reports from Chanjo ouput',
       long_description=LONG_DESCRIPTION,
       # what does your project relate to?
@@ -94,14 +94,14 @@ setup(name='chanjo-report',
       # see: http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         'Development Status :: 3 - Alpha',
-       'Intended Audience :: Developers',
-       'Topic :: Software Development',
-       'License :: OSI Approved :: MIT License',
-       'Programming Language :: Python :: 2',
-       'Programming Language :: Python :: 2.7',
-       'Programming Language :: Python :: 3',
-       'Programming Language :: Python :: 3.3',
-       'Programming Language :: Python :: 3.4',
-       'Environment :: Console'
+        'Intended Audience :: Developers',
+        'Topic :: Software Development',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Environment :: Console'
       ]
      )
