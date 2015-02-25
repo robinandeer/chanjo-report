@@ -61,8 +61,8 @@ setup(name='chanjo-report',
         'chanjo_report': [
           'server/blueprints/report/static/*.css',
           'server/blueprints/report/static/vendor/*.css',
-          'server/blueprints/report/templates/*.html',
-          'server/blueprints/report/templates/layouts/*.html',
+          'server/blueprints/report/templates/report/*.html',
+          'server/blueprints/report/templates/report/layouts/*.html',
           'server/translations/sv/LC_MESSAGES/*',
         ]
       },
