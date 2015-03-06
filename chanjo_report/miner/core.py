@@ -4,12 +4,12 @@ import itertools
 
 from chanjo import Store
 from chanjo.sex_checker import predict_gender
-from chanjo.store import Block, BlockData, Interval, IntervalData, Sample, SuperblockData
+from chanjo.store import Block, BlockData, Interval, IntervalData, Sample, SuperblockData, Interval_Block
 import sqlalchemy as sqa
 from toolz import concat, groupby, unique
 from toolz.curried import get
 
-from .utils import getitem, limit_query
+from .utils import getitem, limit_query, get_columns
 from .._compat import itervalues
 
 
@@ -66,6 +66,105 @@ class Miner(Store):
       query = query.filter(Sample.group_id == group)
 
     # return the non-exucuted query
+    return query
+
+  def get_set_info(self, attributes=None, subset=None,
+                     element_class='superblock'):
+    """Fetch (sub)set and attributes loaded in the database.
+
+    Args:
+      attribute (list, optional): List columns in database. Limit to
+                                  subset using first attribute element.
+                                  Group by first attribute element.
+      subset (str, optional): Limit query to subset
+      element_class (str, optional): Id of the element class e.g.
+                                     'superblock'
+
+    Returns:
+      list: Results (sub)set with attributes from element_class 
+            grouped by first attribute
+    """
+    # Fetch the requested data class ORM
+    data_class = self.get('class', element_class)
+    
+    # Populate attribute with column names if not supplied
+    if attributes is None:
+      c = data_class.__table__.columns
+      attributes = c.keys()
+
+    # Fetch columns from class
+    columns = get_columns(attributes, data_class)
+    query = self.query(*columns)
+
+    # Filter for subset
+    if subset:
+      query = query.filter(columns[0].in_(subset))
+
+    # Aggregate result by first attribute
+    query = query.group_by(columns[0]) 
+    
+    # Return query
+    return query
+
+  def element_coverage(self, attribute="coverage", samples=None, threshold=10,
+                       element_class="superblock_data"):
+    """Fetch all elements below threshold for samples
+    Args:
+      attribute (str, optional): Element attribute to apply threshold for
+                                 samples (list, optional): Samples to be queried
+      threshold (int, optional): Elements below threshold are returned
+      element_class (str, optional): Id of the element class e.g. 'superblock'
+
+    Returns:
+      list: Intersect of elements for all samples
+    """
+    data_class = self.get('class', element_class)
+    
+    # Collect all samples if none were supplied
+    if samples is None:
+      samples = self.fetch_samples_list()
+
+    # Holds the queries for each sample
+    elements_per_sample = []
+
+    # Irrespective of samples i.e. all genes below threshold for later intersect
+    elements = self.query(data_class.parent_id).filter(getattr(data_class, attribute) <= threshold)\
+    .group_by(data_class.parent_id)
+    
+    for sample in samples:
+      # Fetch all elements below threshold for each sample
+      query = self.query(data_class.parent_id).filter(getattr(data_class, attribute) <= threshold,\
+      data_class.sample_id == sample).group_by(data_class.parent_id)
+      # Add to list for later intersect
+      elements_per_sample.append(query)
+    
+    # Intersect all elements for all samples
+    for query in elements_per_sample: 
+      elements = elements.intersect(query)
+
+    # Return list of elements
+    return elements
+
+  def interval_to_block(self, subset=None):
+    """Fetch all intervals associated with block (sub)set
+    Args:
+    subset  (str, optional): Limit query to subset
+    Returns:
+    list:   Result of query
+    """
+    query = self.query(IntervalData.parent_id, Block.id).\
+    join(Interval, IntervalData, Interval_Block, Block)
+
+    samples = self.fetch_samples_list()
+    sample = samples.pop()
+
+    # Filter for subset
+    if subset:
+      query = query.filter(Block.id.in_(subset))
+
+    # Collapse output to singel sample since all blocks are identical for every sample
+    query = query.filter(IntervalData.sample_id == sample).group_by(IntervalData.parent_id)
+    
     return query
 
   def average_metrics(self, data_class=IntervalData, superblock_ids=None):
@@ -276,3 +375,37 @@ class Miner(Store):
     # calculate diagnostic yield by simple division
     for sample_id, group_id, total, covered in combined:
       yield sample_id, group_id, (covered / total)
+
+  def contig_coverage(self, contigs=None, samples=None, group=None):
+    """Calculates coverage on contig(s)
+
+    Args:
+      contigs (str, optional): Contig(s) to calculate average for
+      samples (str, optional): Id of sample(s)
+      group (str, optional): Id of group 
+
+    Returns:
+      list: Result grouped with sample Id
+    """
+    # Three columns are needed for the prediction
+    average = sqa.func.avg(IntervalData.coverage)
+    columns = (IntervalData.sample_id, Interval.contig_id, average)
+    # Build the query by inner joining Interval and IntervalData
+    query = self.query(*columns)\
+                .join(Interval, IntervalData.parent_id == Interval.id)
+  
+    if contigs:
+      # Filter by contig
+      query = query.filter(Interval.contig_id.in_(contigs))
+
+    if samples:
+      # Filter either by a list of samples...
+      query = query.filter(IntervalData.sample_id.in_(samples))
+
+    elif group:
+      # ... or by a defined group of samples (e.g. group Id)
+      query = query.join(Sample, IntervalData.sample_id == Sample.id)\
+                   .filter(Sample.group_id == group)
+
+    # Aggregate the result on sample Id and contig
+    return query.group_by(IntervalData.sample_id, Interval.contig_id)
