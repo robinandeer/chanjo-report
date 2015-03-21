@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import logging
 import os
 
 from flask import Flask, request
@@ -95,21 +96,21 @@ def configure_template_filters(app):
 
 def configure_logging(app):
   """Configure file(info) and email(error) logging."""
+  if app.config.get('LOG_FOLDER') is None:
+    # set a default LOG_FOLDER in the global tmp directory
+    app.config['LOG_FOLDER'] = os.path.join('/tmp', 'logs')
 
-  app.config['LOG_FOLDER'] = os.path.join(app.instance_path, 'logs')
   path(app.config['LOG_FOLDER']).makedirs_p()
 
   if app.debug or app.testing:
     # skip debug and test mode - just check standard output
     return
 
-  import logging
-
   # set info level on logger, which might be overwritten by handers
   # suppress DEBUG messages
   app.logger.setLevel(logging.INFO)
 
-  info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
+  info_log = os.path.join(app.config['LOG_FOLDER'], 'chanjo-report.info.log')
   info_file_handler = logging.handlers.RotatingFileHandler(info_log,
     maxBytes=100000, backupCount=10)
   info_file_handler.setLevel(logging.INFO)
