@@ -32,7 +32,7 @@ def render_pdf(api, options=None):
   else:
     config.CHANJO_PANEL = None
 
-  app = create_app(config=config)
+  app = create_app(config=config, chanjo_api=api)
   with app.test_request_context(base_url='http://localhost/'):
     # /hello/ is resolved relative to the context’s URL.
     return HTML(url).write_pdf()
