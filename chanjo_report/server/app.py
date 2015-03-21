@@ -15,7 +15,8 @@ from .utils import pretty_date
 DEFAULT_BLUEPRINTS = (report_bp,)
 
 
-def create_app(app_name=None, config=None, config_file=None, blueprints=None):
+def create_app(app_name=None, config=None, config_file=None, blueprints=None,
+               chanjo_api=None):
   """Create a Flask app (Flask Application Factory)."""
   if app_name is None:
     app_name = DefaultConfig.PROJECT
@@ -27,7 +28,7 @@ def create_app(app_name=None, config=None, config_file=None, blueprints=None):
   app = Flask(__name__, instance_relative_config=True, static_folder='static')
 
   configure_app(app, config=config, config_file=config_file)
-  configure_extensions(app)
+  configure_extensions(app, chanjo_api=chanjo_api)
   configure_blueprints(app, blueprints)
   configure_extensions(app)
   configure_logging(app)
@@ -49,10 +50,13 @@ def configure_app(app, config=None, config_file=None):
   app.config.from_pyfile(config_file or default_config, silent=True)
 
 
-def configure_extensions(app):
+def configure_extensions(app, chanjo_api=None):
   """Initialize Flask extensions."""
   # Miner Chanjo API
-  api.init_app(app)
+  if chanjo_api is None:
+    api.init_app(app)
+  
+  app.chanjo_api = chanjo_api or api
 
   # Flask-babel
   babel = Babel(app)

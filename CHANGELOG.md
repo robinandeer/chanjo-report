@@ -17,3 +17,7 @@
 ### Changed
 - Change default log folder to ``/tmp/logs``
 - Rename info log to more specific ``chanjo-report.info.log``
+
+## 0.0.9 (2015-03-21)
+### Changed
+- Keep scoped session chanjo api inside ``current_app`` object
