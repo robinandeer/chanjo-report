@@ -2,11 +2,9 @@
 from __future__ import absolute_import, unicode_literals
 
 from chanjo.store import BlockData, IntervalData
-from flask import (abort, Blueprint, current_app, render_template, request,
-                   url_for)
+from flask import (abort, Blueprint, current_app as app, render_template,
+                   request, url_for)
 from flask_weasyprint import render_pdf
-
-from ...extensions import api
 
 report_bp = Blueprint('report', __name__, template_folder='templates',
                       static_folder='static', static_url_path='/static/report')
@@ -14,19 +12,20 @@ report_bp = Blueprint('report', __name__, template_folder='templates',
 
 @report_bp.route('/')
 def index():
-  sample_models = api.samples()
+  sample_models = app.chanjo_api.samples()
 
   return render_template('report/index.html', samples=sample_models)
 
 
 @report_bp.route('/samples/<filter_id>')
 def samples(filter_id):
-  superblock_ids = current_app.config.get('CHANJO_PANEL')
+  superblock_ids = app.config.get('CHANJO_PANEL')
   if superblock_ids:
     data_class = BlockData
   else:
     data_class = IntervalData
 
+  api = app.chanjo_api
   return render_template(
     'report/report.html',
     samples=api.samples().filter_by(id=filter_id),
@@ -40,12 +39,13 @@ def samples(filter_id):
 
 @report_bp.route('/groups/<filter_id>')
 def groups(filter_id):
-  superblock_ids = current_app.config.get('CHANJO_PANEL')
+  superblock_ids = app.config.get('CHANJO_PANEL')
   if superblock_ids:
     data_class = BlockData
   else:
     data_class = IntervalData
 
+  api = app.chanjo_api
   return render_template(
     'report/report.html',
     samples=api.samples().filter_by(group_id=filter_id),

@@ -21,7 +21,7 @@ def render_html(api, options=None):
   else:
     config.CHANJO_PANEL = None
 
-  app = create_app(config=config)
+  app = create_app(config=config, chanjo_api=api)
 
   return app.run(options.get('report.host', '0.0.0.0'),
                  port=options.get('report.port', 5000))
