@@ -84,3 +84,17 @@ def limit_query(query, group=None, samples=None, base_class=None):
   else:
     # enable passing query cleanly through as an optional filter step
     return query
+
+
+def get_columns(attributes, data_class):
+  """Fetch attributes from class
+
+  Args:
+    attribute     (list): Columns in data class to fetch attributes for.
+    data_class    (model): The model to collect attributes from
+
+  Returns:
+    list:         List of attributes
+  """
+  # collect attributes from model
+  return [getattr(data_class, attribute) for attribute in attributes]
