@@ -30,7 +30,6 @@ def create_app(app_name=None, config=None, config_file=None, blueprints=None,
   configure_app(app, config=config, config_file=config_file)
   configure_extensions(app, chanjo_api=chanjo_api)
   configure_blueprints(app, blueprints)
-  configure_extensions(app)
   configure_logging(app)
   configure_template_filters(app)
 
