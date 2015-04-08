@@ -1,5 +1,9 @@
 # Change log
 
+## 0.0.11 (2015-04-08)
+### Changed
+- Enable setting name of gene panel (PANEL_NAME) from command line
+
 ## 0.0.10 (2015-03-22)
 ### Fixed
 - Remove duplicate call to ``configure_extensions``
