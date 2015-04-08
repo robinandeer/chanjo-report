@@ -41,7 +41,7 @@
         <h2 class="component__title">
           {{ _('Generally important metrics') }}
           {% if config.CHANJO_PANEL %}
-            {{ _('for') }} {{ config.CHANJO_PANEL_CAPTION }}
+            {{ _('for') }} {{ config.CHANJO_PANEL_NAME }}
           {% endif %}
         </h2>
 
@@ -76,7 +76,7 @@
         <h2 class="component__title">
           {{ _('Diagnostic yield') }}
           {% if config.CHANJO_PANEL %}
-            {{ _('for') }} {{ config.CHANJO_PANEL_CAPTION }}
+            {{ _('for') }} {{ config.CHANJO_PANEL_NAME }}
           {% endif %}
         </h2>
 
@@ -179,12 +179,12 @@
             <h3 class="explanation__title">
               {{ _('Generally important metrics') }}
               {{ _('for') }}
-              {{ config.CHANJO_PANEL_CAPTION }}
+              {{ config.CHANJO_PANEL_NAME }}
             </h3>
 
             <p>
               {{ _('The measure of coverage was genereated through matching of gene IDs from') }}
-              <code>{{ config.CHANJO_PANEL_CAPTION }}</code>.
+              <code>{{ config.CHANJO_PANEL_NAME }}</code>.
               {{ _('Note that estimations were made regarding coverage and completeness') }}
               {{ _('on the level of transcripts') }}.
             </p>
