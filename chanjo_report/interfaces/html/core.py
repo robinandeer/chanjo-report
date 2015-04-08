@@ -11,7 +11,7 @@ def render_html(api, options=None):
   config = DefaultConfig
   config.CHANJO_DB = options.get('db')
   config.CHANJO_DIALECT = options.get('dialect')
-  config.CHANJO_PANEL_CAPTION = options.get('report.panel_caption')
+  config.CHANJO_PANEL_NAME = options.get('report.panel_name')
   config.CHANJO_LANGUAGE = options.get('report.language')
 
   # read gene panel file if it has been set

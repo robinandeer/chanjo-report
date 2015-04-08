@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from pkg_resources import load_entry_point
 
 import click
+from path import path
 
 from .utils import list_interfaces
 from ..miner import Miner
@@ -19,15 +20,21 @@ ROOT_PACKAGE = __package__.split('.')[0]
 @click.option('--human', is_flag=True, help='Make output more human readable')
 @click.option('-p', '--panel', type=click.File('r', encoding='utf-8'),
               help='Gene panel file with (superblock) IDs')
+@click.option('-n', '--panel-name', type=str, help='Name of gene panel')
 @click.pass_context
-def report(context, render, language, samples, group, human, panel):
+def report(context, render, language, samples, group, human, panel,
+           panel_name):
   """Generate a coverage report from Chanjo SQL output."""
   # get uri + dialect of Chanjo database
   uri, dialect = context.obj.get('db'), context.obj.get('dialect')
 
+  # guess name of gene panel unless explicitly set
+  name_of_panel = panel_name or path(panel.name).basename().splitext()[0]
+
   # set the custom option
   context.obj.set('report.human', human)
   context.obj.set('report.panel', panel)
+  context.obj.set('report.panel_name', name_of_panel)
   context.obj.set('report.samples', samples)
   context.obj.set('report.group', group)
   context.obj.set('report.language', language)
