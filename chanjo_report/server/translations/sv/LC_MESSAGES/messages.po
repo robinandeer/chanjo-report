@@ -44,8 +44,8 @@ msgstr "Medeltäckningsgrad"
 msgid "Diagnostic yield"
 msgstr "Fullständighet"
 
-msgid "Gender confirmation"
-msgstr "Bekräftelse av kön"
+msgid "Gender prediction from data"
+msgstr "Könsbestämning utifrån data"
 
 msgid "Gender"
 msgstr "Kön"
