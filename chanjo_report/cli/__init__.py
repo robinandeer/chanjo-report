@@ -28,17 +28,17 @@ def report(context, render, language, samples, group, human, panel,
   # get uri + dialect of Chanjo database
   uri, dialect = context.obj.get('db'), context.obj.get('dialect')
 
-  # guess name of gene panel unless explicitly set
-  if panel:
-    name_of_panel = panel_name or path(panel.name).basename().splitext()[0]
-
   # set the custom option
   context.obj.set('report.human', human)
   context.obj.set('report.panel', panel)
-  context.obj.set('report.panel_name', name_of_panel)
   context.obj.set('report.samples', samples)
   context.obj.set('report.group', group)
   context.obj.set('report.language', language)
+
+  # guess name of gene panel unless explicitly set
+  if panel:
+    name_of_panel = panel_name or path(panel.name).basename().splitext()[0]
+    context.obj.set('report.panel_name', name_of_panel)
 
   if uri is None:
     # chanjo executed without "--db" set, prompt user input
