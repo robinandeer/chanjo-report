@@ -78,6 +78,15 @@ msgstr "donator- och acceptorpositioner"
 msgid "bases on either of each exon"
 msgstr "baser i vardera ände utanför alla exoner"
 
+msgid "Final coverage metrics were calculated for genes from the clinical panels"
+msgstr "Slutgiltiga medelsekvensedjup beräknades för gener från de kliniska listorna"
+
+msgid "Note that estimations were made regarding coverage and completeness"
+msgstr "Notera att uppskattningar av medelsekvensdjup och medeltäckningsgrad"
+
+msgid "on the level of transcripts"
+msgstr "har gjorts på transkriptnivå"
+
 
 msgid "Coverage"
 msgstr "Täckningsgrad"
@@ -114,14 +123,14 @@ msgid "with a completeness of"
 msgstr "som har en fullständighet lika med"
 
 
-msgid "Final coverage metrics were calculated for genes from the clinical panels"
-msgstr "Slutgiltiga medelsekvensedjup beräknades för gener från de kliniska listorna"
+msgid "calculated by comparing relative chromosome coverage"
+msgstr "beräknades genom jämförelse av relativa kromosomsekvensdjup"
 
-msgid "Note that estimations were made regarding coverage and completeness"
-msgstr "Notera att uppskattningar av medelsekvensdjup och medeltäckningsgrad"
+msgid "Some reads randomly map to the Y chromosome"
+msgstr "Vissa läspar mappar slumpmässigt till Y-kromosomen"
 
-msgid "on the level of transcripts"
-msgstr "har gjorts på transkriptnivå"
+msgid "Therefore, a less than 10 fold difference is used to infer a "male" sample"
+msgstr "En mindre än 10 gångers skillnad används därför, för att indikera "manligt" prov"
 
 
 # genders
