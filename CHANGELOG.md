@@ -1,5 +1,16 @@
 # Change log
 
+## 0.0.12 (2015-04-13)
+### Added
+- Add explanation of gender prediction in report
+
+### Changed
+- Handle extensions of intervals (splice sites) transparently in report
+- Update text in report (eng + swe)
+
+### Fixed
+- Avoid error when not setting a gene panel + name in CLI
+
 ## 0.0.11 (2015-04-08)
 ### Changed
 - Enable setting name of gene panel (PANEL_NAME) from command line
