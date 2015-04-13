@@ -29,7 +29,8 @@ def report(context, render, language, samples, group, human, panel,
   uri, dialect = context.obj.get('db'), context.obj.get('dialect')
 
   # guess name of gene panel unless explicitly set
-  name_of_panel = panel_name or path(panel.name).basename().splitext()[0]
+  if panel:
+    name_of_panel = panel_name or path(panel.name).basename().splitext()[0]
 
   # set the custom option
   context.obj.set('report.human', human)

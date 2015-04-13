@@ -20,17 +20,17 @@ msgid "Page not found"
 msgstr "Sidan kunde inte hittas"
 
 # coverage report
-msgid "Quality report clinical exome sequencing"
-msgstr "Kvalitetsrapport klinisk exomsekvensering"
+msgid "Quality report clinical sequencing"
+msgstr "Kvalitetsrapport klinisk sekvensering"
 
 msgid "Cutoff"
 msgstr "Gränsvärde"
 
+msgif "Included splice sites"
+msgstr "Inkluderade splitsningpositioner"
+
 msgid "Generally important metrics"
 msgstr "Allmänt viktiga mått"
-
-msgid "for"
-msgstr "för"
 
 msgid "Average coverage"
 msgstr "Medelsekvensdjup"
@@ -41,8 +41,8 @@ msgstr "Medeltäckningsgrad"
 msgid "Diagnostic yield"
 msgstr "Fullständighet"
 
-msgid "Gender confirmation"
-msgstr "Bekräftelse av kön"
+msgid "Gender prediction from data"
+msgstr "Könsbestämning utifrån data"
 
 msgid "Gender"
 msgstr "Kön"
@@ -57,7 +57,7 @@ msgstr "Förklaringar"
 msgid "General"
 msgstr "Allmänt"
 
-msgid "The parts of the genome that has been analyzsed"
+msgid "The parts of the genome that has been analyzed"
 msgstr "De delar av genomet som har analyserats"
 
 msgid "is composed of all protein coding, exonic intervals"
@@ -75,8 +75,17 @@ msgstr "Därutöver, inkluderas även splitsningpositioner"
 msgid "donator and acceptor positions"
 msgstr "donator- och acceptorpositioner"
 
-msgid "two bases on either of each exon"
-msgstr "två baser i vardera ände utanför alla exoner"
+msgid "bases on either of each exon"
+msgstr "baser i vardera ände utanför alla exoner"
+
+msgid "Final coverage metrics were calculated for genes from the clinical panels"
+msgstr "Slutgiltiga medelsekvensedjup beräknades för gener från de kliniska listorna"
+
+msgid "Note that estimations were made regarding coverage and completeness"
+msgstr "Notera att uppskattningar av medelsekvensdjup och medeltäckningsgrad"
+
+msgid "on the level of transcripts"
+msgstr "har gjorts på transkriptnivå"
 
 
 msgid "Coverage"
@@ -114,14 +123,14 @@ msgid "with a completeness of"
 msgstr "som har en fullständighet lika med"
 
 
-msgid "The measure of coverage was genereated through matching of gene IDs from"
-msgstr "Mått på sekvensdjup genererades genom matchning av gen-IDn från"
+msgid "calculated by comparing relative chromosome coverage"
+msgstr "beräknades genom jämförelse av relativa kromosomsekvensdjup"
 
-msgid "Note that estimations were made regarding coverage and completeness"
-msgstr "Notera att uppskattningar av medelsekvensdjup och medeltäckningsgrad"
+msgid "Some reads randomly map to the Y chromosome"
+msgstr "Vissa läspar mappar slumpmässigt till Y-kromosomen"
 
-msgid "on the level of transcripts"
-msgstr "har gjorts på transkriptnivå"
+msgid "Therefore, a less than 10 fold difference is used to infer a "male" sample"
+msgstr "En mindre än 10 gångers skillnad används därför, för att indikera "manligt" prov"
 
 
 # genders
