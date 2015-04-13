@@ -1,5 +1,9 @@
 # Change log
 
+## 0.0.13 (2015-04-13)
+### Fixed
+- Breaking bug in CLI when not setting gene panel
+
 ## 0.0.12 (2015-04-13)
 ### Added
 - Add explanation of gender prediction in report
