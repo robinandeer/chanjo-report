@@ -20,11 +20,14 @@ msgid "Page not found"
 msgstr "Sidan kunde inte hittas"
 
 # coverage report
-msgid "Quality report clinical exome sequencing"
-msgstr "Kvalitetsrapport klinisk exomsekvensering"
+msgid "Quality report clinical sequencing"
+msgstr "Kvalitetsrapport klinisk sekvensering"
 
 msgid "Cutoff"
 msgstr "Gränsvärde"
+
+msgif "Included splice sites"
+msgstr "Inkluderade splitsningpositioner"
 
 msgid "Generally important metrics"
 msgstr "Allmänt viktiga mått"
@@ -57,7 +60,7 @@ msgstr "Förklaringar"
 msgid "General"
 msgstr "Allmänt"
 
-msgid "The parts of the genome that has been analyzsed"
+msgid "The parts of the genome that has been analyzed"
 msgstr "De delar av genomet som har analyserats"
 
 msgid "is composed of all protein coding, exonic intervals"
@@ -75,8 +78,8 @@ msgstr "Därutöver, inkluderas även splitsningpositioner"
 msgid "donator and acceptor positions"
 msgstr "donator- och acceptorpositioner"
 
-msgid "two bases on either of each exon"
-msgstr "två baser i vardera ände utanför alla exoner"
+msgid "bases on either of each exon"
+msgstr "baser i vardera ände utanför alla exoner"
 
 
 msgid "Coverage"

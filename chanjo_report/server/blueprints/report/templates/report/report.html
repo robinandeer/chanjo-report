@@ -12,7 +12,7 @@
     <div class="layout__main content">
 
       <header>
-        <h1>{{ _('Quality report clinical exome sequencing') }}</h1>
+        <h1>{{ _('Quality report clinical sequencing') }}</h1>
       </header>
 
       <section id="samples">
@@ -22,6 +22,9 @@
               <th>{{ _('Sample') }}</th>
               <th>{{ _('Group') }}</th>
               <th>{{ _('Cutoff') }} [x]</th>
+              {% if includes_splice_sites %}
+                <th>{{ _('Included splice sites') }}</th>
+              {% endif %}
             </tr>
           </thead>
 
@@ -31,6 +34,9 @@
                 <td>{{ sample.id }}</td>
                 <td>{{ sample.group_id }}</td>
                 <td class="right-align">{{ sample.cutoff }}</td>
+                {% if includes_splice_sites %}
+                  <td class="right-align">{{ sample.extension }}</td>
+                {% endif %}
               </tr>
             {% endfor %}
           </tbody>
@@ -144,15 +150,17 @@
           <h3 class="explanation__title">{{ _('General') }}</h3>
 
           <p>
-            {{ _('The parts of the genome that has been analyzsed') }}
+            {{ _('The parts of the genome that has been analyzed') }}
             {{ _('is composed of all protein coding, exonic intervals') }}
             {{ _('referenced in the') }}
-            <a href="http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi">
-              {{ _('CCDS database') }}
-            </a>.
-            {{ _('Additionally, the data also includes spicing sites') }}
-            ({{ _('donator and acceptor positions') }},
-            {{ _('two bases on either of each exon') }}.)
+            <a href="http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi">{{ _('CCDS database') }}</a>.
+
+            {% if includes_splice_sites %}
+              {{ _('Additionally, the data also includes spicing sites') }}
+              ({{ _('donator and acceptor positions') }},
+              {{ splice_site_interval }}
+              {{ _('bases on either of each exon') }}).
+            {% endif %}
           </p>
 
           <p>
@@ -169,7 +177,7 @@
             <strong>{{ _('Completeness') }}</strong>:
             {{ _('gives an overview of the success of sequencing') }}.
             {{ _("It's defined as the ratio of transcripts") }}
-            {{ _('with a completeness of') }}100%.
+            {{ _('with a completeness of') }} 100%.
           </p>
         </div>
 
