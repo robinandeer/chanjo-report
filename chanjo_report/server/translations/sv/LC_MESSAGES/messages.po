@@ -117,8 +117,8 @@ msgid "with a completeness of"
 msgstr "som har en fullständighet lika med"
 
 
-msgid "The measure of coverage was genereated through matching of gene IDs from"
-msgstr "Mått på sekvensdjup genererades genom matchning av gen-IDn från"
+msgid "Final coverage metrics were generated through matching of gene IDs from"
+msgstr "Slutgiltiga mått på sekvensdjup genererades genom matchning av gen-IDn från"
 
 msgid "Note that estimations were made regarding coverage and completeness"
 msgstr "Notera att uppskattningar av medelsekvensdjup och medeltäckningsgrad"

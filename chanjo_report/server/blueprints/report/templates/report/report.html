@@ -165,6 +165,15 @@
             {% endif %}
           </p>
 
+          {% if config.CHANJO_PANEL %}
+            <p>
+              {{ _('Final coverage metrics were generated through matching of gene IDs from') }}
+              <code>{{ config.CHANJO_PANEL_NAME }}</code>.
+              {{ _('Note that estimations were made regarding coverage and completeness') }}
+              {{ _('on the level of transcripts') }}.
+            </p>
+          {% endif %}
+
           <p>
             <strong>{{ _('Coverage') }}</strong>:
             {{ _('An alternative measure of sequence depth') }}.
@@ -182,24 +191,6 @@
             {{ _('with a completeness of') }} 100%.
           </p>
         </div>
-
-
-        {% if config.CHANJO_PANEL %}
-          <div class="explanation">
-            <h3 class="explanation__title">
-              {{ _('Generally important metrics') }}
-              {{ _('for') }}
-              {{ config.CHANJO_PANEL_NAME }}
-            </h3>
-
-            <p>
-              {{ _('The measure of coverage was genereated through matching of gene IDs from') }}
-              <code>{{ config.CHANJO_PANEL_NAME }}</code>.
-              {{ _('Note that estimations were made regarding coverage and completeness') }}
-              {{ _('on the level of transcripts') }}.
-            </p>
-          </div>
-        {% endif %}
 
       </section>
 
