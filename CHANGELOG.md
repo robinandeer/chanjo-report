@@ -1,5 +1,9 @@
 # Change log
 
+## 1.0.0-rc1 (2015-04-15)
+### Fixed
+- Changes label for gender prediction
+
 ## 0.0.13 (2015-04-13)
 ### Fixed
 - Breaking bug in CLI when not setting gene panel
