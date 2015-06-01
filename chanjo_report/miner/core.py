@@ -6,7 +6,7 @@ from chanjo import Store
 from chanjo.sex_checker import predict_gender
 from chanjo.store import Block, BlockData, Interval, IntervalData, Sample, SuperblockData, Interval_Block
 import sqlalchemy as sqa
-from toolz import concat, groupby, unique
+from toolz import concat, groupby, pluck
 from toolz.curried import get
 
 from .utils import getitem, limit_query, get_columns
@@ -371,8 +371,11 @@ class Miner(Store):
     # iterate over all values, concat different query results
     combined = (concat(values) for values in itervalues(metrics))
 
-    # keep only the unique values (excluding second sample_id)
-    combined_min = ((result[:3] + result[-1]) for result in combined)
+    # keep only the unique values (excluding second sample_id/group_id)
+    combined_min = []
+    for result_gen in combined:
+      result = list(result_gen)
+      combined_min.append(result[:3] + result[-1:])
 
     # calculate diagnostic yield by simple division
     for sample_id, group_id, total, covered in combined_min:

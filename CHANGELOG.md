@@ -1,5 +1,9 @@
 # Change log
 
+## 1.0.1 (2015-06-01)
+### Fixed
+- Fix bug in diagnostic yield method
+
 ## 1.0.0 (2015-06-01)
 ### Fixed
 - Fix issue in diagnostic yield for small gene panels
