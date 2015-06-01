@@ -1,5 +1,9 @@
 # Change log
 
+## 1.0.0 (2015-06-01)
+### Fixed
+- Fix issue in diagnostic yield for small gene panels
+
 ## 1.0.0-rc1 (2015-04-15)
 ### Fixed
 - Changes label for gender prediction
