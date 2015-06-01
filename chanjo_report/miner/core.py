@@ -368,12 +368,14 @@ class Miner(Store):
     # group multiple queries by sample ID (first column)
     metrics = groupby(get(0), concat(queries))
 
-    # iterate over all values, concat different query results, and keep
-    # only the unique values (excluding second sample_id)
-    combined = (unique(concat(values)) for values in itervalues(metrics))
+    # iterate over all values, concat different query results
+    combined = (concat(values) for values in itervalues(metrics))
+
+    # keep only the unique values (excluding second sample_id)
+    combined_min = ((result[:3] + result[-1]) for result in combined)
 
     # calculate diagnostic yield by simple division
-    for sample_id, group_id, total, covered in combined:
+    for sample_id, group_id, total, covered in combined_min:
       yield sample_id, group_id, (covered / total)
 
   def contig_coverage(self, contigs=None, samples=None, group=None):
