@@ -1,40 +1,26 @@
 {% extends 'report/layouts/base.html' %}
 
-{% block body %}
-
-  <div class="layout">
-
-    <nav class="menu-bar">Chanjo Report</nav>
-
-    <div class="layout__main content list__wrapper">
-      
-      <div class="list">
-
-        <div class="list__container">
-          <div class="list__header">
-            <div>{{ _('Sample') }}</div>
-            <div>{{ _('Group') }}</div>
-          </div>
-
-          <div class="list__section">
-            {% for sample in samples %}
-              <div class="list__item">
-                <a href="{{ url_for('report.samples', filter_id=sample.id) }}">
-                  {{ sample.id }}
-                </a>
-
-                <a href="{{ url_for('report.groups', filter_id=sample.group_id) }}">
-                  {{ sample.group_id }}
-                </a>
-              </div>
+{% block main %}
+	<div class="container">
+		<table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>{{ _('Sample') }}</th>
+                <th>{{ _('Group') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        		{% for sample in samples %}
+        			<tr>
+        				<td><a href="#">{{ sample.id }}</a></td>
+        				<td>
+        					<a href="{{ url_for('report.group', group_id=sample.group_id) }}">
+	                  {{ sample.group_id }}
+	                </a>
+        				</td>
+        			</tr>
             {% endfor %}
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-  
+        </tbody>
+    </table>
+	</div>
 {% endblock %}

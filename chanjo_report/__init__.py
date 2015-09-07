@@ -19,7 +19,7 @@ __banner__ = r"""
 """
 
 __title__ = 'chanjo-report'
-__summary__ = 'Chanjo Report automatically renders coverage reports from Chanjo ouput.'
+__summary__ = 'Automatically renders coverage reports from Chanjo ouput.'
 __uri__ = 'https://github.com/robinandeer/chanjo-report'
 
 __version__ = '1.0.1'
