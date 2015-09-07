@@ -83,9 +83,8 @@ setup(name='chanjo-report',
       cmdclass={'test': PyTest},
       # to provide executable scripts, use entry points
       entry_points={
-          'chanjo.subcommands': ['report = chanjo_report.cli:report'],
+          'chanjo.subcommands.3': ['report = chanjo_report.cli:report'],
           'chanjo_report.interfaces': [
-              'tabular = chanjo_report.interfaces:render_tabular',
               'html = chanjo_report.interfaces:render_html',
               'pdf = chanjo_report.interfaces:render_pdf'
           ]
