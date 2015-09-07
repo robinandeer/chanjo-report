@@ -5,5 +5,3 @@ cffi
 Flask
 six
 SQLAlchemy
-numpy
-cython

@@ -8,8 +8,3 @@
     - libgdk-pixbuf2.0-0
     - libffi-dev
     - shared-mime-info
-
-- name: install pip packages
-  pip: name={{ item }}
-  with_items:
-    - Flask-WeasyPrint
