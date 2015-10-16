@@ -2,25 +2,48 @@
 
 {% block main %}
 	<div class="container">
+		<h3>Samples</h3>
 		<table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>{{ _('Sample') }}</th>
-                <th>{{ _('Group') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-        		{% for sample in samples %}
-        			<tr>
-        				<td><a href="{{ url_for('report.group', sample_id=[sample.sample_id]) }}">{{ sample.sample_id }}</a></td>
-        				<td>
-        					<a href="{{ url_for('report.group', group_id=sample.group_id) }}">
-	                  {{ sample.group_id }}
-	                </a>
-        				</td>
-        			</tr>
-            {% endfor %}
-        </tbody>
-    </table>
+			<thead>
+				<tr>
+					<th>{{ _('Sample') }}</th>
+					<th>{{ _('Group') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for sample in samples %}
+					<tr>
+						<td><a href="{{ url_for('report.group', sample_id=[sample.sample_id]) }}">{{ sample.sample_id }}</a></td>
+						<td>
+							<a href="{{ url_for('report.group', group_id=sample.group_id) }}">
+								{{ sample.group_id }}
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<h3>Genes</h3>
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>Chromosome</th>
+					<th>Gene</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for gene in genes %}
+					<tr>
+						<td>{{ gene.chromosome or '-' }}</td>
+						<td>
+							<a href="{{ url_for('report.gene', gene_id=gene.gene_id) }}">
+								{{ gene.gene_id }}
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 	</div>
 {% endblock %}

@@ -3,7 +3,7 @@ from __future__ import division
 import logging
 
 from chanjo.store.api import filter_samples
-from chanjo.store import Exon
+from chanjo.store import Exon, Gene
 from flask import abort, Blueprint, render_template, request, url_for
 from flask_weasyprint import render_pdf
 
@@ -17,20 +17,17 @@ report_bp = Blueprint('report', __name__, template_folder='templates',
 @report_bp.route('/')
 def index():
     sample_objs = api.samples()
-    return render_template('report/index.html', samples=sample_objs)
+    gene_objs = api.query(Gene).limit(50)
+    return render_template('report/index.html', samples=sample_objs,
+                           genes=gene_objs)
 
 
-@report_bp.route('/<sample_id>/<gene_id>')
-def gene(sample_id, gene_id):
+@report_bp.route('/<gene_id>')
+def gene(gene_id):
     """Display coverage information on a gene."""
     sample_vals = api.gene(gene_id)
-    tx_ids = api.gene_to_transcripts(gene_id)
-    query = api.transcript_to_exons(*tx_ids)
-    query = filter_samples(query, sample_ids=[sample_id])
-
-    for sample_dict in sample_vals:
-        if sample_dict['sample_id'] == sample_id:
-            return render_template('report/gene.html', sample=sample_dict)
+    return render_template('report/gene.html', samples=sample_vals,
+                           gene_id=gene_id)
 
 
 @report_bp.route('/group/<group_id>')

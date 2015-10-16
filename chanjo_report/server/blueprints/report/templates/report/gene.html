@@ -1,17 +1,26 @@
 {% extends 'report/layouts/base.html' %}
 
-{% block body %}
-
-	<div class="layout">
-
-		<nav class="menu-bar">Chanjo Report</nav>
-
-		<div class="layout__main content list__wrapper">
-			<div class="list__item">
-				{{ sample.sample_id }}
-			</div>
-		</div>
-
-	</div>
-	
+{% block main %}
+<div class="container">
+	{% for sample in samples %}
+		<table class="table table-bordered table-hover">
+			<caption>{{ sample.sample_id }}</caption>
+			<thead>
+				<tr>
+					{% for label, value in sample.genes[gene_id].iteritems() %}
+						<td>{{ label }}</td>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					{% for label, value in sample.genes[gene_id].iteritems() %}
+						<td>{{ value }}</td>
+					{% endfor %}
+				</tr>
+			</tbody>
+		</table>
+	{% endfor %}
+</div>
 {% endblock %}
+
