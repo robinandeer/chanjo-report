@@ -1,6 +1,6 @@
 -r requirements/conda.txt
 
-chanjo>=2.1.0
+chanjo==3.0.0b2
 Flask-WeasyPrint
 Flask-Assets
 Flask-Babel
