@@ -8,24 +8,21 @@
 
 	<div class="container">
 		<h2>{{ _('Quality report clinical sequencing') }}</h2>
+		{% if panel_name %}
+			<p>{{ _('Based on the genes in') }}: <strong>{{ panel_name }}</strong></p>
+		{% endif %}
 		{{ overview.table(samples, genders) }}
 
 		<h3>
 			{{ _('Generally important metrics') }}
-			{% if panel_name %}
-				({{ panel_name }})
-			{% endif %}
     	</h3>
     	{{ important_metrics.table(key_metrics, levels, selected_level) }}
 		
 
 		<h3>
 			{{ _('Diagnostic yield') }}
-			{% if config.CHANJO_PANEL %}
-				({{ config.CHANJO_PANEL_NAME }})
-			{% endif %}
 		</h3>
-		{{ transcript_stats.table(diagnostic_yield) }}
+		{{ transcript_stats.table(diagnostic_yield, show_genes=show_genes) }}
 
 		<h3>{{ _('Explanations') }}</h3>
 		{{ explanations.text() }}		

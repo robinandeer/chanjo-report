@@ -37,9 +37,7 @@
 	        </div>
 
 	        <ul class="nav navbar-nav">
-	        	{% block nav %}
-	        		
-	        	{% endblock %}
+	        	{% block nav %}{% endblock %}
 	        </ul>
 	    </div>
 		</nav>
@@ -47,9 +45,6 @@
 		{% block main %}{% endblock %}
   {% endblock %}
 
-  {% block js_btm %}
-  	<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  {% endblock %}
+  {% block js_btm %}{% endblock %}
 </body>
 </html>

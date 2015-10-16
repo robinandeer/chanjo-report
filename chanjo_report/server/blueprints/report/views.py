@@ -38,6 +38,7 @@ def group(group_id=None):
     level = request.args.get('level', 10)
     panel_name = request.args.get('panel_name')
     sample_ids = request.args.getlist('sample_id')
+    show_genes = 'show_genes' in request.args
 
     logger.debug('fetch samples for group %s', group_id)
     sample_objs = api.samples(group_id=group_id, sample_ids=sample_ids)
@@ -72,6 +73,7 @@ def group(group_id=None):
         selected_level=level,
         diagnostic_yield=tx_samples,
         genders=api.sex_check(group_id=group_id, sample_ids=sample_ids),
+        show_genes=show_genes,
     )
 
 

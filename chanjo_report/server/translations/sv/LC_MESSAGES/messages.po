@@ -23,6 +23,9 @@ msgstr "Sidan kunde inte hittas"
 msgid "Quality report clinical sequencing"
 msgstr "Kvalitetsrapport klinisk sekvensering"
 
+msgid "Based on the genes in"
+msgstr "Baserat på generna i"
+
 msgid "Cutoff"
 msgstr "Gränsvärde"
 
@@ -111,7 +114,7 @@ msgstr "och återfinns i kolumnen "Gränsvärde" (första tabellen)"
 
 
 msgid "Completeness"
-msgstr "Fullständighet"
+msgstr "Täckningsgrad"
 
 msgid "gives an overview of the success of sequencing"
 msgstr "ger en översiktlig bild av sekvenseringens framgång"
