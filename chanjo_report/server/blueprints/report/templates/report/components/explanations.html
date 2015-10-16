@@ -1,0 +1,48 @@
+{% macro text() %}
+<h4>{{ _('General') }}</h4>
+<p>
+	{{ _('The parts of the genome that has been analyzed') }}
+	{{ _('is composed of all protein coding, exonic intervals') }}
+	{{ _('referenced in the') }}
+	<a href="http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi">{{ _('CCDS database') }}</a>.
+
+	{% if includes_splice_sites %}
+		{{ _('Additionally, the data also includes spicing sites') }}
+		({{ _('donator and acceptor positions') }},
+		{{ splice_site_interval }}
+		{{ _('bases on either of each exon') }}).
+	{% endif %}
+</p>
+
+{% if config.CHANJO_PANEL %}
+	<p>
+		{{ _('Final coverage metrics were calculated for genes from the clinical panels') }}:
+		<code>{{ config.CHANJO_PANEL_NAME }}</code>.
+		{{ _('Note that estimations were made regarding coverage and completeness') }}
+		{{ _('on the level of transcripts') }}.
+	</p>
+{% endif %}
+
+<p>
+	<strong>{{ _('Completeness') }}</strong>:
+	{{ _('An alternative measure of sequence depth') }}.
+	{{ _('It is defined as the ratio of bases') }}
+	{{ _('sequenced deeper than a specified cutoff') }},
+	{{ _('e.g. 10x') }}.
+</p>
+
+<p>
+	<strong>{{ _('Diagnostic yield') }}</strong>:
+	{{ _('gives an overview of the success of sequencing') }}.
+	{{ _("It's defined as the ratio of transcripts") }}
+	{{ _('with a completeness of') }} 100%.
+</p>
+
+<p>
+	<strong>{{ _('Gender prediction from data') }}</strong>:
+	{{ _('calculated by comparing relative chromosome coverage') }}
+	(X/Y).
+	{{ _('Some reads randomly map to the Y chromosome') }}.
+	{{ _('Therefore, a less than 10 fold difference is used to infer a "male" sample') }}.
+</p>
+{% endmacro %}

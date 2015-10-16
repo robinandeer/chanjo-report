@@ -1,158 +1,34 @@
 {% extends 'report/layouts/base.html' %}
+{% import 'report/components/overview.html' as overview %}
+{% import 'report/components/important_metrics.html' as important_metrics %}
+{% import 'report/components/transcript_stats.html' as transcript_stats %}
+{% import 'report/components/explanations.html' as explanations %}
 
 {% block main %}
 
 	<div class="container">
-		<h1>{{ _('Quality report clinical sequencing') }}</h1>
-	  <div class="table-responsive">
-	  	<table class="table table-bordered table-hover">
-				<thead>
-					<tr>
-						<th rowspan="2">{{ _('Sample') }}</th>
-						<th rowspan="2">{{ _('Group') }}</th>
-	          <th rowspan="2">{{ _('Gender') }}</th>
-	          <th colspan="2" class="center-align">
-	            {{ _('Average coverage') }} [x]
-	          </th>
-	        </tr>
-	        <tr>
-	          <th class="th-secondary">{{ _('Chromosome') }} X</th>
-	          <th class="th-secondary">{{ _('Chromosome') }} Y</th>
-	        </tr>
-				</thead>
-				<tbody>
-					{% for sample_id, gender, x_coverage, y_coverage in genders %}
-	          <tr>
-	            <td>{{ sample_id }}</td>
-	            <td>{{ samples[sample_id].group_id }}</td>
-	            <td>{{ _(gender) }}</td>
-	            <td class="text-right">{{ x_coverage|round(3) }}</td>
-	            <td class="text-right">{{ y_coverage|round(3) }}</td>
-	          </tr>
-	        {% endfor %}
-				</tbody>
-			</table>
-	  </div>
+		<h2>{{ _('Quality report clinical sequencing') }}</h2>
+		{{ overview.table(samples, genders) }}
 
-		<h2 class="component__title">
-      {{ _('Generally important metrics') }}
-      {% if panel_name %}
-        ({{ panel_name }})
-      {% endif %}
-    </h2>
-		<div class="table-responsive">
-			<table class="table table-bordered table-hover">
-				<thead>
-					<tr>
-	          <th>{{ _('Sample') }}</th>
-	          <th>{{ _('Average coverage') }} [x]</th>
-	          {% for level_int, level_key in levels %}
-	          	<th>{{ _('Completeness') }} {{ level_int }}x [%]</th>
-	          {% endfor %}
-	        </tr>
-				</thead>
-				<tbody>
-					{% for sample_id, data in key_metrics %}
-						{% set completeness = data["completeness_%s"|format(selected_level)] %}
-						{% if completeness < 90 %}
-							<tr class="danger">
-						{% elif completeness < 100 %}
-							<tr class="warning">
-						{% else %}
-							<tr>
-						{% endif %}
-	          
-	         		<td>{{ sample_id }}</td>
-	         		<td class="text-right">{{ data.mean_coverage|round(3) }}</td>
-	          	{% for level_int, level_key in levels %}
-	          		<td class="text-right">{{ data[level_key]|round(3) }}</td>
-	          	{% endfor %}
-	          </tr>
-	        {% endfor %}
-				</tbody>
-			</table>
-		</div>
+		<h3>
+			{{ _('Generally important metrics') }}
+			{% if panel_name %}
+				({{ panel_name }})
+			{% endif %}
+    	</h3>
+    	{{ important_metrics.table(key_metrics, levels, selected_level) }}
+		
 
-		<h2 class="component__title">
-      {{ _('Diagnostic yield') }}
-      {% if config.CHANJO_PANEL %}
-        ({{ config.CHANJO_PANEL_NAME }})
-      {% endif %}
-    </h2>
-    <table class="table table-bordered table-hover">
-			<thead>
-				<tr>
-					<th>{{ _('Sample') }}</th>
-					<th>{{ _('Diagnostic yield') }} [%]</th>
-					<th>{{ _('Incomplete') }} {{ _('transcripts') }}</th>
-					<th>{{ _('Incomplete') }} {{ _('genes') }}</th>
-        </tr>
-			</thead>
-			<tbody>
-				{% for sample, data in diagnostic_yield %}
-          <tr>
-            <td>{{ sample.sample_id }}</td>
-            <td class="text-right">{{ data.diagnostic_yield|round(3) }}</td>
-            <td>{{ data.count }} <small>({{ data.total_count }})</small></td>
-            <td>
-            	{% for transcript in data.transcripts %}
-            		{{ transcript.gene.gene_id }}
-            	{% else %}
-            		-
-            	{% endfor %}
-            </td>
-          </tr>
-        {% endfor %}
-			</tbody>
-		</table>
+		<h3>
+			{{ _('Diagnostic yield') }}
+			{% if config.CHANJO_PANEL %}
+				({{ config.CHANJO_PANEL_NAME }})
+			{% endif %}
+		</h3>
+		{{ transcript_stats.table(diagnostic_yield) }}
 
-		<h2>{{ _('Explanations') }}</h2>
-		<h3 class="explanation__title">{{ _('General') }}</h3>
-		<p>
-      {{ _('The parts of the genome that has been analyzed') }}
-      {{ _('is composed of all protein coding, exonic intervals') }}
-      {{ _('referenced in the') }}
-      <a href="http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi">{{ _('CCDS database') }}</a>.
-
-      {% if includes_splice_sites %}
-        {{ _('Additionally, the data also includes spicing sites') }}
-        ({{ _('donator and acceptor positions') }},
-        {{ splice_site_interval }}
-        {{ _('bases on either of each exon') }}).
-      {% endif %}
-    </p>
-
-    {% if config.CHANJO_PANEL %}
-      <p>
-        {{ _('Final coverage metrics were calculated for genes from the clinical panels') }}:
-        <code>{{ config.CHANJO_PANEL_NAME }}</code>.
-        {{ _('Note that estimations were made regarding coverage and completeness') }}
-        {{ _('on the level of transcripts') }}.
-      </p>
-    {% endif %}
-
-    <p>
-      <strong>{{ _('Completeness') }}</strong>:
-      {{ _('An alternative measure of sequence depth') }}.
-      {{ _('It is defined as the ratio of bases') }}
-      {{ _('sequenced deeper than a specified cutoff') }},
-      {{ _('e.g. 10x') }}.
-    </p>
-
-    <p>
-      <strong>{{ _('Diagnostic yield') }}</strong>:
-      {{ _('gives an overview of the success of sequencing') }}.
-      {{ _("It's defined as the ratio of transcripts") }}
-      {{ _('with a completeness of') }} 100%.
-    </p>
-
-    <p>
-      <strong>{{ _('Gender prediction from data') }}</strong>:
-      {{ _('calculated by comparing relative chromosome coverage') }}
-      (X/Y).
-      {{ _('Some reads randomly map to the Y chromosome') }}.
-      {{ _('Therefore, a less than 10 fold difference is used to infer a "male" sample') }}.
-    </p>
+		<h3>{{ _('Explanations') }}</h3>
+		{{ explanations.text() }}		
 	</div>
 
 {% endblock %}

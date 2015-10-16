@@ -1,0 +1,28 @@
+{% macro table(diagnostic_yield) %}
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>{{ _('Sample') }}</th>
+			<th>{{ _('Diagnostic yield') }} [%]</th>
+			<th>{{ _('Incomplete') }} {{ _('transcripts') }}</th>
+			<th>{{ _('Incomplete') }} {{ _('genes') }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for sample, data in diagnostic_yield %}
+			<tr>
+				<td>{{ sample.sample_id }}</td>
+				<td class="text-right">{{ data.diagnostic_yield|round(3) }}</td>
+				<td>{{ data.count }} <small>({{ data.total_count }})</small></td>
+				<td><small>
+				{% for transcript in data.transcripts %}
+					{{ transcript.gene.gene_id }}
+				{% else %}
+					-
+				{% endfor %}
+				</small></td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endmacro %}

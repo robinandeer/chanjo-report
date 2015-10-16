@@ -3,9 +3,8 @@ from __future__ import division
 import logging
 
 from chanjo.store.api import filter_samples
-from chanjo.store import Exon, Sample
-from flask import (abort, Blueprint, current_app as app, render_template,
-                   request, url_for)
+from chanjo.store import Exon
+from flask import abort, Blueprint, render_template, request, url_for
 from flask_weasyprint import render_pdf
 
 from chanjo_report.server.extensions import api
