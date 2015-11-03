@@ -27,7 +27,7 @@ install:
   - source activate test-environment
 
   # install (the rest of the) dependencies
-  - pip install -r requirements/development.txt
+  - pip install -r requirements/dev.txt
 
   # install your own package + executables
   - python setup.py install
