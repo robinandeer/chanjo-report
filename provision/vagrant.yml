@@ -1,0 +1,13 @@
+---
+- hosts: all
+  sudo: yes
+  roles:
+    - common
+    - weasyprint
+    - robinandeer.miniconda
+    - package
+
+  vars:
+    miniconda_home: /home/vagrant/miniconda
+    miniconda_modify_path: yes
+    install_dir: /vagrant

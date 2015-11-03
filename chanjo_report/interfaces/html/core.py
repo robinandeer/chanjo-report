@@ -6,22 +6,15 @@ from ...server.config import DefaultConfig
 
 
 def render_html(api, options=None):
-  """Start a Flask server to generate HTML report on request."""
-  # spin up the Flask server
-  config = DefaultConfig
-  config.CHANJO_DB = options.get('db')
-  config.CHANJO_DIALECT = options.get('dialect')
-  config.CHANJO_PANEL_NAME = options.get('report.panel_name')
-  config.CHANJO_LANGUAGE = options.get('report.language')
+    """Start a Flask server to generate HTML report on request."""
+    # spin up the Flask server
+    config = DefaultConfig
+    config.CHANJO_URI = options.get('database')
+    report_options = options['report']
+    config.CHANJO_PANEL_NAME = report_options.get('panel_name')
+    config.CHANJO_LANGUAGE = report_options.get('language')
+    config.CHANJO_PANEL = report_options.get('panel')
 
-  # read gene panel file if it has been set
-  gene_panel = options.get('report.panel')
-  if gene_panel:
-    config.CHANJO_PANEL = [line.rstrip() for line in gene_panel]
-  else:
-    config.CHANJO_PANEL = None
-
-  app = create_app(config=config, chanjo_api=api)
-
-  return app.run(options.get('report.host', '0.0.0.0'),
-                 port=options.get('report.port', 5000))
+    app = create_app(config=config)
+    return app.run(report_options.get('host', '0.0.0.0'),
+                   port=report_options.get('port', 5000))

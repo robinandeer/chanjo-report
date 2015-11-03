@@ -11,35 +11,35 @@ import sys
 # the hard link only saves a little disk space, so you should not care
 # http://stackoverflow.com/a/22147112/2310187
 if os.environ.get('USER', '') == 'vagrant':
-  del os.link
+    del os.link
 
 # shortcut for building/publishing to Pypi
 if sys.argv[-1] == 'publish':
-  os.system('python setup.py sdist bdist_wheel upload')
-  sys.exit()
+    os.system('python setup.py sdist bdist_wheel upload')
+    sys.exit()
 
 
 # this is a plug-in for setuptools that will invoke py.test
 class PyTest(TestCommand):
 
-  """Set up the py.test test runner."""
+    """Set up the py.test test runner."""
 
-  def finalize_options(self):
-    """Set options for the command line."""
-    TestCommand.finalize_options(self)
-    self.test_args = []
-    self.test_suite = True
+    def finalize_options(self):
+        """Set options for the command line."""
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
 
-  def run_tests(self):
-    """Execute the test runner command."""
-    # import here, because outside the required eggs aren't loaded yet
-    import pytest
-    sys.exit(pytest.main(self.test_args))
+    def run_tests(self):
+        """Execute the test runner command."""
+        # import here, because outside the required eggs aren't loaded yet
+        import pytest
+        sys.exit(pytest.main(self.test_args))
 
 # get the long description from the relevant file
 HERE = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
-  LONG_DESCRIPTION = f.read()
+    LONG_DESCRIPTION = f.read()
 
 
 setup(name='chanjo-report',
@@ -58,50 +58,47 @@ setup(name='chanjo-report',
       # if there are data files included in your packages
       include_package_data=True,
       package_data={
-        'chanjo_report': [
-          'server/blueprints/report/static/*.css',
-          'server/blueprints/report/static/vendor/*.css',
-          'server/blueprints/report/templates/report/*.html',
-          'server/blueprints/report/templates/report/layouts/*.html',
-          'server/translations/sv/LC_MESSAGES/*',
-        ]
+          'chanjo_report': [
+              'server/blueprints/report/static/*.css',
+              'server/blueprints/report/static/vendor/*.css',
+              'server/blueprints/report/templates/report/*.html',
+              'server/blueprints/report/templates/report/layouts/*.html',
+              'server/translations/sv/LC_MESSAGES/*',
+          ]
       },
       zip_safe=False,
       install_requires=[
-        'setuptools',
-        'chanjo>=2.1.0',
-        'Flask-WeasyPrint',
-        'cairocffi',
-        'toml',
-        'lxml>=3.0',
-        'cffi',
-        'Flask',
-        'SQLAlchemy',
-        'Flask-Babel',
-        'tabulate'
+          'setuptools',
+          'chanjo==3.0.0b2',
+          'Flask-WeasyPrint',
+          'cairocffi',
+          'lxml>=3.0',
+          'cffi',
+          'Flask',
+          'SQLAlchemy',
+          'Flask-Babel',
+          'tabulate'
       ],
       tests_require=['pytest'],
       cmdclass={'test': PyTest},
       # to provide executable scripts, use entry points
       entry_points={
-        'chanjo.subcommands': ['report = chanjo_report.cli:report'],
-        'chanjo_report.interfaces': [
-          'tabular = chanjo_report.interfaces:render_tabular',
-          'html = chanjo_report.interfaces:render_html',
-          'pdf = chanjo_report.interfaces:render_pdf'
-        ]
+          'chanjo.subcommands.3': ['report = chanjo_report.cli:report'],
+          'chanjo_report.interfaces': [
+              'html = chanjo_report.interfaces:render_html',
+              'pdf = chanjo_report.interfaces:render_pdf'
+          ]
       },
       # see: http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers',
-        'Topic :: Software Development',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Environment :: Console'
-      ]
-     )
+          'Development Status :: 3 - Alpha',
+          'Intended Audience :: Developers',
+          'Topic :: Software Development',
+          'License :: OSI Approved :: MIT License',
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Environment :: Console'
+      ])

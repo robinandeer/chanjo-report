@@ -1,0 +1,32 @@
+{% macro table(diagnostic_yield, show_genes=False) %}
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>{{ _('Sample') }}</th>
+			<th>{{ _('Fully covered transcripts') }} [%]</th>
+			<th>{{ _('Incomplete') }} {{ _('transcripts') }}</th>
+			{% if show_genes %}
+				<th>{{ _('Incomplete') }} {{ _('genes') }}</th>
+			{% endif %}
+		</tr>
+	</thead>
+	<tbody>
+		{% for sample, data in diagnostic_yield %}
+			<tr>
+				<td>{{ sample.sample_id }}</td>
+				<td class="text-right">{{ data.diagnostic_yield|round(3) }}</td>
+				<td>{{ data.count }} <small>({{ data.total_count }})</small></td>
+				{% if show_genes %}
+					<td><small>
+						{% for transcript in data.transcripts %}
+							{{ transcript.gene.gene_id }}
+						{% else %}
+							-
+						{% endfor %}
+					</small></td>
+				{% endif %}
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endmacro %}

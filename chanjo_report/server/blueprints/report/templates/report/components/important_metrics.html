@@ -1,0 +1,33 @@
+{% macro table(key_metrics, levels, selected_level) %}
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>{{ _('Sample') }}</th>
+				<th>{{ _('Average coverage') }} [x]</th>
+				{% for level_int, level_key in levels %}
+					<th>{{ _('Completeness') }} {{ level_int }}x [%]</th>
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for sample_id, data in key_metrics %}
+				{% set completeness = data["completeness_%s"|format(selected_level)] %}
+				{% if completeness < 90 %}
+					<tr class="danger">
+				{% elif completeness < 100 %}
+					<tr class="warning">
+				{% else %}
+					<tr>
+				{% endif %}
+					<td>{{ sample_id }}</td>
+					<td class="text-right">{{ data.mean_coverage|round(3) }}</td>
+					{% for level_int, level_key in levels %}
+						<td class="text-right">{{ data[level_key]|round(3) }}</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endmacro %}

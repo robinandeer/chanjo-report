@@ -1,209 +1,36 @@
 {% extends 'report/layouts/base.html' %}
+{% import 'report/components/overview.html' as overview %}
+{% import 'report/components/important_metrics.html' as important_metrics %}
+{% import 'report/components/transcript_stats.html' as transcript_stats %}
+{% import 'report/components/explanations.html' as explanations %}
 
-{% block body %}
-  <div class="layout">
+{% block main %}
 
-    <nav class="menu-bar">
-      <div>Chanjo Report</div>
+	<div class="container">
+		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
+		{% if panel_name %}
+			<p>{{ _('Based on the genes in') }}: <strong>{{ panel_name }}</strong></p>
+		{% endif %}
+		{{ overview.table(samples, genders) }}
 
-      <a href="{{ url_for('report.index') }}">{{ _('Home') }}</a>
-    </nav>
+		<h3>
+			{{ _('Generally important metrics') }}
+    	</h3>
+    	{{ important_metrics.table(key_metrics, levels, selected_level) }}
+		
 
-    <div class="layout__main content">
+		<h3>
+			{{ _('Transcript coverage') }}
+		</h3>
+		{{ transcript_stats.table(diagnostic_yield, show_genes=show_genes) }}
 
-      <header>
-        <h1>{{ _('Quality report clinical sequencing') }}</h1>
-      </header>
+		<h3>{{ _('Explanations') }}</h3>
+		{{ explanations.text() }}
 
-      <section id="samples">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{ _('Sample') }}</th>
-              <th>{{ _('Group') }}</th>
-              <th>{{ _('Cutoff') }} [x]</th>
-              {% if includes_splice_sites %}
-                <th>{{ _('Included splice sites') }}</th>
-              {% endif %}
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for sample in samples %}
-              <tr>
-                <td>{{ sample.id }}</td>
-                <td>{{ sample.group_id }}</td>
-                <td class="right-align">{{ sample.cutoff }}</td>
-                {% if includes_splice_sites %}
-                  <td class="right-align">{{ sample.extension }}</td>
-                {% endif %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </section>
-
-      <section id="key-metrics">
-        <h2 class="component__title">
-          {{ _('Generally important metrics') }}
-          {% if config.CHANJO_PANEL %}
-            ({{ config.CHANJO_PANEL_NAME }})
-          {% endif %}
-        </h2>
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th>{{ _('Sample') }}</th>
-              <th>{{ _('Average coverage') }} [x]</th>
-              <th>{{ _('Average completeness') }} [%]</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for sample_id, _, coverage, completeness in key_metrics %}
-              <tr>
-                <td>{{ sample_id }}</td>
-                <td class="right-align">
-                  {{ coverage|round(3) }}
-                </td>
-                <td class="right-align">
-                  {{ (completeness * 100)|round(3) }}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-
-        </table>
-      </section>
-
-      <section id="diagnostic-yield">
-        <h2 class="component__title">
-          {{ _('Diagnostic yield') }}
-          {% if config.CHANJO_PANEL %}
-            ({{ config.CHANJO_PANEL_NAME }})
-          {% endif %}
-        </h2>
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th>{{ _('Sample') }}</th>
-              <th>{{ _('Diagnostic yield') }} [%]</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for sample_id, _, value in diagnostic_yield %}
-              <tr>
-                <td>{{ sample_id }}</td>
-                <td class="right-align">
-                  {{ (value * 100)|round(3) }}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-
-        </table>
-      </section>
-
-      <section id="gender">
-        <h2 class="component__title">
-          {{ _('Gender prediction from sequencing data') }}
-        </h2>
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th rowspan="2">{{ _('Sample') }}</th>
-              <th rowspan="2">{{ _('Gender') }}</th>
-              <th colspan="2" class="center-align">
-                {{ _('Average coverage') }} [x]
-              </th>
-            </tr>
-            <tr>
-              <th class="th-secondary">{{ _('Chromosome') }} X</th>
-              <th class="th-secondary">{{ _('Chromosome') }} Y</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for sample_id, gender, x_coverage, y_coverage in genders %}
-              <tr>
-                <td>{{ sample_id }}</td>
-                <td>{{ _(gender) }}</td>
-                <td class="right-align">{{ x_coverage|round(3) }}</td>
-                <td class="right-align">{{ y_coverage|round(3) }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-
-        </table>        
-      </section>
-
-      <section id="thesaurus" class="break-here">
-
-        <h2>{{ _('Explanations') }}</h2>
-        
-        <div class="explanation">
-          <h3 class="explanation__title">{{ _('General') }}</h3>
-
-          <p>
-            {{ _('The parts of the genome that has been analyzed') }}
-            {{ _('is composed of all protein coding, exonic intervals') }}
-            {{ _('referenced in the') }}
-            <a href="http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi">{{ _('CCDS database') }}</a>.
-
-            {% if includes_splice_sites %}
-              {{ _('Additionally, the data also includes spicing sites') }}
-              ({{ _('donator and acceptor positions') }},
-              {{ splice_site_interval }}
-              {{ _('bases on either of each exon') }}).
-            {% endif %}
-          </p>
-
-          {% if config.CHANJO_PANEL %}
-            <p>
-              {{ _('Final coverage metrics were calculated for genes from the clinical panels') }}:
-              <code>{{ config.CHANJO_PANEL_NAME }}</code>.
-              {{ _('Note that estimations were made regarding coverage and completeness') }}
-              {{ _('on the level of transcripts') }}.
-            </p>
-          {% endif %}
-
-          <p>
-            <strong>{{ _('Coverage') }}</strong>:
-            {{ _('An alternative measure of sequence depth') }}.
-            {{ _('It is defined as the ratio of bases') }}
-            {{ _('sequenced deeper than a specified cutoff') }},
-            {{ _('e.g. 10x') }}.
-            {{ _('The current cutoff is defined per sample') }}
-            {{ _('and is found i the "Cutoff" column (first table)') }}.
-          </p>
-
-          <p>
-            <strong>{{ _('Completeness') }}</strong>:
-            {{ _('gives an overview of the success of sequencing') }}.
-            {{ _("It's defined as the ratio of transcripts") }}
-            {{ _('with a completeness of') }} 100%.
-          </p>
-
-          <p>
-            <strong>{{ _('Gender prediction from data') }}</strong>:
-            {{ _('calculated by comparing relative chromosome coverage') }}
-            (X/Y).
-            {{ _('Some reads randomly map to the Y chromosome') }}.
-            {{ _('Therefore, a less than 10 fold difference is used to infer a "male" sample') }}.
-          </p>
-        </div>
-
-      </section>
-
-    </div>
-
-  </div>
+		<hr>
+		<div class="text-center">
+			{{ _('Generated') }}: {{ created_at }} | {{ _('End of report') }}
+		</div>
+	</div>
 
 {% endblock %}

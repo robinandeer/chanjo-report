@@ -20,8 +20,14 @@ msgid "Page not found"
 msgstr "Sidan kunde inte hittas"
 
 # coverage report
-msgid "Quality report clinical sequencing"
-msgstr "Kvalitetsrapport klinisk sekvensering"
+msgid "Quality report"
+msgstr "Kvalitetsrapport"
+
+msgid "clinical sequencing"
+msgstr "klinisk sekvensering"
+
+msgid "Based on the genes in"
+msgstr "Baserat på generna i"
 
 msgid "Cutoff"
 msgstr "Gränsvärde"
@@ -38,8 +44,14 @@ msgstr "Medelsekvensdjup"
 msgid "Average completeness"
 msgstr "Medeltäckningsgrad"
 
-msgid "Diagnostic yield"
-msgstr "Fullständighet"
+msgid "Transcript coverage"
+msgstr "Täckning av transkript"
+
+msgid "Fully covered transcripts"
+msgstr "Helt täckta transkript"
+
+msgid "Incomplete transcripts"
+msgstr "Ofullständiga transkript"
 
 msgid "Gender prediction from sequencing data"
 msgstr "Könsbestämning utifrån sekvenseringsdata"
@@ -49,6 +61,12 @@ msgstr "Kön"
 
 msgid "Chromosome"
 msgstr "Kromosom"
+
+msgid "Generated"
+msgstr "Skapad"
+
+msgid "End of report"
+msgstr "Slut på rapport"
 
 # Explanations
 msgid "Explanations"
@@ -111,7 +129,7 @@ msgstr "och återfinns i kolumnen "Gränsvärde" (första tabellen)"
 
 
 msgid "Completeness"
-msgstr "Fullständighet"
+msgstr "Täckningsgrad"
 
 msgid "gives an overview of the success of sequencing"
 msgstr "ger en översiktlig bild av sekvenseringens framgång"
@@ -134,6 +152,9 @@ msgstr "En mindre än 10 gångers skillnad används därför, för att indikera 
 
 
 # genders
+msgid "Gender prediction from data"
+msgstr "Könsprediktion från data"
+
 msgid "female"
 msgstr "kvinna"
 

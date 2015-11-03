@@ -1,38 +1,26 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
+from flask import url_for
 from flask_weasyprint import HTML
 
-from ...server.app import create_app
-from ...server.config import DefaultConfig
+from chanjo_report.server.app import create_app
+from chanjo_report.server.config import DefaultConfig
 
 
 def render_pdf(api, options=None):
-  """Generate a PDF report for a given group of samples."""
-  samples = options.get('report.samples')
-  group = options.get('report.group')
+    """Generate a PDF report for a given group of samples."""
+    group_id = options['report']['group']
+    url = "/groups/{}".format(group_id)
 
-  if samples:
-    url = '/samples/' + samples[0]
-  elif group:
-    url = '/groups/' + group
-  else:
-    raise NotImplementedError("PDF report for all samples not supported.")
+    # spin up the Flask server
+    config = DefaultConfig
+    report_options = options['report']
+    config.CHANJO_URI = report_options.get('database')
+    panel_name = report_options.get('panel_name')
+    config.CHANJO_LANGUAGE = report_options.get('language')
+    config.CHANJO_PANEL = report_options.get('panel')
 
-  # spin up the Flask server
-  config = DefaultConfig
-  config.CHANJO_DB = options.get('db')
-  config.CHANJO_DIALECT = options.get('dialect')
-  config.CHANJO_PANEL_NAME = options.get('report.panel_name')
-  config.CHANJO_LANGUAGE = options.get('report.language')
-
-  # read gene panel file if it has been set
-  gene_panel = options.get('report.panel')
-  if gene_panel:
-    config.CHANJO_PANEL = [line.rstrip() for line in gene_panel]
-  else:
-    config.CHANJO_PANEL = None
-
-  app = create_app(config=config, chanjo_api=api)
-  with app.test_request_context(base_url='http://localhost/'):
-    # /hello/ is resolved relative to the context’s URL.
-    return HTML(url).write_pdf()
+    app = create_app(config=config)
+    with app.test_request_context(base_url='http://localhost/'):
+        url = url_for('report.group', group_id=group_id, panel_name=panel_name)
+        # /hello/ is resolved relative to the context’s URL.
+        return HTML(url).write_pdf()
