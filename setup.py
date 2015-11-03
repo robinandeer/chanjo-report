@@ -44,7 +44,7 @@ with codecs.open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
 
 setup(name='chanjo-report',
       # versions should comply with PEP440
-      version='2.0.0',
+      version='2.0.1',
       description='Automatically render coverage reports from Chanjo ouput',
       long_description=LONG_DESCRIPTION,
       # what does your project relate to?
@@ -63,6 +63,7 @@ setup(name='chanjo-report',
               'server/blueprints/report/static/vendor/*.css',
               'server/blueprints/report/templates/report/*.html',
               'server/blueprints/report/templates/report/layouts/*.html',
+              'server/blueprints/report/templates/report/components/*.html',
               'server/translations/sv/LC_MESSAGES/*',
           ]
       },

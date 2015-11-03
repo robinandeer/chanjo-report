@@ -1,5 +1,10 @@
 # Change log
 
+## 2.0.1 (2015-11-03)
+### Fixed
+- Include missing template files in dist
+- Include more translations
+
 ## 2.0.0 (2015-11-03)
 ### Changed
 - Adds support for Chanjo 3
