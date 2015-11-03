@@ -4,6 +4,16 @@
 {% import 'report/components/transcript_stats.html' as transcript_stats %}
 {% import 'report/components/explanations.html' as explanations %}
 
+{% block nav %}
+
+	<li>
+		<a href="{{ url_for('report.pdf', route='group', filter_id=group_id, **query_args) }}">
+			PDF
+		</a>
+	</li>
+
+{% endblock %}
+
 {% block main %}
 
 	<div class="container">

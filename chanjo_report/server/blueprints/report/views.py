@@ -76,6 +76,8 @@ def group(group_id=None):
         genders=api.sex_check(group_id=group_id, sample_ids=sample_ids),
         show_genes=show_genes,
         created_at=datetime.date.today(),
+        group_id=group_id,
+        query_args=request.args,
     )
 
 
