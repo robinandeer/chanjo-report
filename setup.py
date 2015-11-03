@@ -70,7 +70,7 @@ setup(name='chanjo-report',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'chanjo==3.0.0b2',
+          'chanjo>=3.0.0',
           'Flask-WeasyPrint',
           'cairocffi',
           'lxml>=3.0',
