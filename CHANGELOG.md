@@ -1,5 +1,11 @@
 # Change log
 
+## 2.0.0 (2015-11-03)
+### Changed
+- Adds support for Chanjo 3
+- Layout of report is more condensed
+- Updated APIs across the board
+
 ## 1.0.1 (2015-06-01)
 ### Fixed
 - Fix bug in diagnostic yield method
