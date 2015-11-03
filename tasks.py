@@ -41,17 +41,17 @@ def coverage():
     log.info('collected test coverage stats')
 
 
-@task(clean)
-def publish():
-    """publish - package and upload a release to the cheeseshop."""
-    run('python setup.py sdist upload', pty=True)
-    run('python setup.py bdist_wheel upload', pty=True)
-    log.info('published new release')
-
-
 @task
 def babel(locale='sv'):
     """Babel compile."""
     run("python setup.py compile_catalog "
         "--directory `find -name translations` --locale {} -f".format(locale))
     log.info("compiled Babel translations: {}".format(locale))
+
+
+@task(clean, babel)
+def publish():
+    """publish - package and upload a release to the cheeseshop."""
+    run('python setup.py sdist upload', pty=True)
+    run('python setup.py bdist_wheel upload', pty=True)
+    log.info('published new release')
