@@ -1,171 +1,5 @@
 /* Main report styles */
-
 @charset "utf-8";
-
-/* apply a natural box layout model to all elements, but allowing components to change */
-
-*, *:before, *:after {
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-  width: 100%;
-
-  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 100%;
-}
-
-h1, h2 {
-  font-weight: 500;
-  color: #009688;
-}
-
-.layout {
-  display: flex;
-  flex-direction: column;
-
-  height: 100%;
-}
-
-.layout__main {
-  flex-basis: 100%;
-  overflow: auto;
-}
-
-.menu-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  flex-basis: 4em;
-  padding: 1em;
-
-  z-index: 1;
-
-  background: #4285f4;
-  color: #fff;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, .3);
-}
-
-  .menu-bar > a {
-    color: #fff;
-    text-decoration: none;
-  }
-
-.content {
-  padding: 2em 0;
-  background: #fff;
-}
-
-.list__wrapper {
-  background: #f9f9f9;
-}
-
-.list {
-  width: 80%;
-  margin: 0 auto;
-}
-
-.list__container {
-  padding-bottom: 2em;
-}
-
-.list__header {
-  padding: .7em 1em;
-
-  display: flex;
-  justify-content: space-between;
-
-  font-size: 90%;
-  font-weight: 500;
-  color: rgba(0, 0, 0, .6);
-}
-
-.list__section {
-  border-left: 1px solid #d3d3d3;
-  border-right: 1px solid #d3d3d3;
-  border-top: 1px solid #d3d3d3;
-}
-
-.list__item {
-  padding: 1em;
-
-  display: flex;
-  justify-content: space-between;
-
-  background: #fff;
-  border-bottom: 1px solid #e3e3e3;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, .07);
-}
-
-  .list__item:hover {
-    background: #f9f9f9;
-  }
-
-header, section {
-  max-width: 50em;
-  width: 80%;
-  margin: 0 auto;
-}
-
-section {
-  padding-bottom: 1em;
-}
-
-table {
-  width: 100%;
-  table-layout: fixed;
-}
-
-thead {
-  background: #f5f5f5;
-}
-
-tbody {
-  background: #fff;
-}
-
-  tbody > tr:hover {
-    background: #f9f9f9;
-  }
-
-th {
-  font-weight: 500;
-  text-align: left;
-  font-size: .9em;
-
-  background: #009688;
-  color: white;
-}
-
-td, th {
-  padding: .5em;
-  border: 1px solid #e3e3e3;
-
-  border: 1px solid #009688;
-}
-
-.th-secondary {
-  font-size: .8em;
-  padding: .4em;
-}
-
-.right-align {
-  text-align: right;
-}
-
-.center-align {
-  text-align: center;
-}
-
-code {
-  font: 90% 'Source Code Pro', Consolas, Menlo, Courier, monospace;
-  background-color: #cfd8dc;
-  padding: 0.15em 0.3em;
-  background-color: rgba(0, 0, 0, 0.07);
-  border-radius: 3px;
-}
 
 /* PDF restrictions */
 @page {
@@ -175,7 +9,12 @@ code {
 
 @media print {
   body {
-    font-size: 80%;
+    font-size: 90%;
+  }
+
+  .table>tbody>tr>td,
+  .table>thead>tr>th {
+  	padding: 5px;
   }
 
   .page-break {
