@@ -7,7 +7,7 @@
 {% block main %}
 
 	<div class="container">
-		<h2>{{ _('Quality report clinical sequencing') }}</h2>
+		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
 		{% if panel_name %}
 			<p>{{ _('Based on the genes in') }}: <strong>{{ panel_name }}</strong></p>
 		{% endif %}
@@ -20,7 +20,7 @@
 		
 
 		<h3>
-			{{ _('Diagnostic yield') }}
+			{{ _('Transcript coverage') }}
 		</h3>
 		{{ transcript_stats.table(diagnostic_yield, show_genes=show_genes) }}
 
