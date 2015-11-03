@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
+import datetime
 import logging
 
 from chanjo.store.api import filter_samples
@@ -74,6 +75,7 @@ def group(group_id=None):
         diagnostic_yield=tx_samples,
         genders=api.sex_check(group_id=group_id, sample_ids=sample_ids),
         show_genes=show_genes,
+        created_at=datetime.date.today(),
     )
 
 

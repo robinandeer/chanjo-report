@@ -25,7 +25,12 @@
 		{{ transcript_stats.table(diagnostic_yield, show_genes=show_genes) }}
 
 		<h3>{{ _('Explanations') }}</h3>
-		{{ explanations.text() }}		
+		{{ explanations.text() }}
+
+		<hr>
+		<div class="text-center">
+			{{ _('Generated') }}: {{ created_at }} | {{ _('End of report') }}
+		</div>
 	</div>
 
 {% endblock %}

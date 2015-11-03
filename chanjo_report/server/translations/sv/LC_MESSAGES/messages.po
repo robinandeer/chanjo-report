@@ -53,6 +53,12 @@ msgstr "Kön"
 msgid "Chromosome"
 msgstr "Kromosom"
 
+msgid "Generated"
+msgstr "Skapad"
+
+msgid "End of report"
+msgstr "Slut på rapport"
+
 # Explanations
 msgid "Explanations"
 msgstr "Förklaringar"
