@@ -45,7 +45,7 @@ def coverage():
 def babel(locale='sv'):
     """Babel compile."""
     run("python setup.py compile_catalog "
-        "--directory `find -name translations` --locale {} -f".format(locale))
+        "--directory `find . -name translations` --locale {} -f".format(locale))
     log.info("compiled Babel translations: {}".format(locale))
 
 
