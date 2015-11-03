@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Utils has nothing to do with models and views."""
-from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 
 

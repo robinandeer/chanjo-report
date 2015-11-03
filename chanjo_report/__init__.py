@@ -8,8 +8,6 @@ Chanjo Report automatically renders a coverage report from Chanjo ouput.
 :copyright: (c) 2014 by Robin Andeer
 :licence: MIT, see LICENCE for more details
 """
-from __future__ import absolute_import, unicode_literals
-
 # generate your own AsciiArt at:
 # patorjk.com/software/taag/#f=Calvin%20S&t=Chanjo Report
 __banner__ = r"""

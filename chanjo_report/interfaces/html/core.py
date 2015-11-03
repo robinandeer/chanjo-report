@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 from ...server.app import create_app
 from ...server.config import DefaultConfig
 
