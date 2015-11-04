@@ -1,5 +1,13 @@
 # Change log
 
+## 2.1.0 (2015-11-04)
+### Added
+- Customization options for report
+- Link to PDF version of report
+
+### Changed
+- Updated chanjo requirement
+
 ## 2.0.1 (2015-11-03)
 ### Fixed
 - Include missing template files in dist
