@@ -3,36 +3,53 @@
 {% import 'report/components/important_metrics.html' as important_metrics %}
 {% import 'report/components/transcript_stats.html' as transcript_stats %}
 {% import 'report/components/explanations.html' as explanations %}
+{% import 'report/components/form.html' as form %}
 
 {% block nav %}
-
-	<li>
-		<a href="{{ url_for('report.pdf', route='group', filter_id=group_id, **query_args) }}">
-			PDF
-		</a>
-	</li>
-
+	{% if '/group' in request.path %}
+		<li>
+			<a href="{{ url_for('report.pdf', route='group', filter_id=group_id, **query_args) }}">
+				PDF
+			</a>
+		</li>
+	{% endif %}
 {% endblock %}
 
 {% block main %}
 
 	<div class="container">
+		<div class="panel-group hidden-print" id="filter-accordion">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a role="button" data-toggle="collapse" data-parent="#accordion" href="#view-filters">Customize</a>
+					</h4>
+				</div>
+
+				<div id="view-filters" class="panel-collapse collapse">
+					<div class="panel-body">
+						{{ form.report_form(customizations) }}
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
-		{% if panel_name %}
-			<p>{{ _('Based on the genes in') }}: <strong>{{ panel_name }}</strong></p>
+		{% if customizations.panel_name %}
+			<p>{{ _('Based on the genes in') }}: <strong>{{ customizations.panel_name }}</strong></p>
 		{% endif %}
 		{{ overview.table(samples, genders) }}
 
 		<h3>
 			{{ _('Generally important metrics') }}
     	</h3>
-    	{{ important_metrics.table(key_metrics, levels, selected_level) }}
+    	{{ important_metrics.table(key_metrics, levels, customizations.level) }}
 		
 
 		<h3>
 			{{ _('Transcript coverage') }}
 		</h3>
-		{{ transcript_stats.table(diagnostic_yield, show_genes=show_genes) }}
+		{{ transcript_stats.table(diagnostic_yield, show_genes=customizations.show_genes) }}
 
 		<h3>{{ _('Explanations') }}</h3>
 		{{ explanations.text() }}
