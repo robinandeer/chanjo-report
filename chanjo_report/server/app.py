@@ -26,7 +26,6 @@ def configure_app(app, config=None, config_file=None):
     """Configure app in different ways."""
     # http://flask.pocoo.org/docs/api/#configuration
     app.config.from_object(config or DefaultConfig)
-    app.config.from_pyfile('app.cfg', silent=True)
 
 
 def configure_extensions(app):
