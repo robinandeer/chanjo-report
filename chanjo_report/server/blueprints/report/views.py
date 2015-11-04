@@ -35,15 +35,15 @@ def gene(gene_id):
 @report_bp.route('/samples')
 def group(group_id=None):
     """Generate a coverage report for a group of samples."""
-    gene_ids = request.args.get('gene_ids')
+    gene_ids = request.args.get('gene_ids', [])
     if gene_ids:
         gene_ids = gene_ids.split(',')
-    sample_ids = request.args.get('sample_ids')
+    sample_ids = request.args.get('sample_ids', [])
     if sample_ids:
         sample_ids = sample_ids.split(',')
     try:
         level = int(request.args.get('level'))
-    except ValueError:
+    except (ValueError, TypeError):
         level = 10
     customizations = {
         'level': level,

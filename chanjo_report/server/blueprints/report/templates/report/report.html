@@ -8,7 +8,7 @@
 {% block nav %}
 	{% if '/group' in request.path %}
 		<li>
-			<a href="{{ url_for('report.pdf', route='group', filter_id=group_id, **query_args) }}">
+			<a href="{{ url_for('report.pdf', route='group', filter_id=group_id, **customizations) }}">
 				PDF
 			</a>
 		</li>
