@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request
+from flask import current_app, Flask, request
 from flask.ext.babel import Babel
 
 from .config import DefaultConfig
@@ -39,13 +39,17 @@ def configure_extensions(app):
     @babel.localeselector
     def get_locale():
         """Determine locale to use for translations."""
+        accept_languages = current_app.config.get('ACCEPT_LANGUAGES')
+
+        # first check request args
+        session_language = request.args.get('lang')
+        if session_language in accept_languages:
+            return session_language
+
         # language can be forced in config
-        user_language = app.config.get('CHANJO_LANGUAGE')
+        user_language = current_app.config.get('CHANJO_LANGUAGE')
         if user_language:
             return user_language
-
-        # unless forced, go on with the guessing
-        accept_languages = app.config.get('ACCEPT_LANGUAGES')
 
         # try to guess the language from the user accept header that
         # the browser transmits.  We support de/fr/en in this example.
