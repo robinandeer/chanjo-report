@@ -24,6 +24,12 @@ class PyTest(TestCommand):
 
     """Set up the py.test test runner."""
 
+    user_options = [('pytest-args=', 'a', 'Arguments to pass to py.test')]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = []
+
     def finalize_options(self):
         """Set options for the command line."""
         TestCommand.finalize_options(self)

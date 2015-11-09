@@ -4,7 +4,7 @@ language: python
 
 python:
   - "2.7"
-  - "3.4"
+  - "3.5"
 
 install:
   # update periodically - saves downloading if version is the same
@@ -33,7 +33,7 @@ install:
 
 script:
   # command to run tests and collect test coverage
-  - coverage run --source chanjo setup.py test
+  - coverage run --source chanjo_report setup.py test
 
 after_success:
   coveralls
