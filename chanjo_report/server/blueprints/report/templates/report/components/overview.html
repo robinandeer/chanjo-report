@@ -5,6 +5,7 @@
 			<tr>
 				<th rowspan="2">{{ _('Sample') }}</th>
 				<th rowspan="2">{{ _('Group') }}</th>
+				<th rowspan="2">{{ _('Uploaded at') }}</th>
 				<th rowspan="2">
 					{{ _('Sex') }}
 					{{ _('according to sequence data') }}
@@ -23,6 +24,7 @@
 				<tr>
 					<td>{{ sample_id }}</td>
 					<td>{{ samples[sample_id].group_id }}</td>
+					<td>{{ samples[sample_id].updated_at.date() }}</td>
 					<td>{{ _(sex) }}</td>
 					<td class="text-right">{{ x_coverage|round(3) }}</td>
 					<td class="text-right">{{ y_coverage|round(3) }}</td>

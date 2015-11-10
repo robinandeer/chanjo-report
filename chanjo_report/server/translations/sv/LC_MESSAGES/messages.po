@@ -71,8 +71,8 @@ msgstr "enligt sekvensdata"
 msgid "Chromosome"
 msgstr "Kromosom"
 
-msgid "Generated"
-msgstr "Skapad"
+msgid "Uploaded at"
+msgstr "Uppladdning"
 
 msgid "End of report"
 msgstr "Slut på rapport"
