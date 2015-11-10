@@ -47,12 +47,12 @@
 		
 
 		<h3>
-			{{ _('Transcript coverage') }}
+			{{ _('Transcript coverage') }} {{ _('at') }}: {{ customizations.level }}x
 		</h3>
 		{{ transcript_stats.table(diagnostic_yield, show_genes=customizations.show_genes) }}
 
 		<h3>{{ _('Explanations') }}</h3>
-		{{ explanations.text() }}
+		{{ explanations.text(customizations.level) }}
 
 		<hr>
 		<div class="text-center">

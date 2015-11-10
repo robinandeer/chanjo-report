@@ -47,6 +47,9 @@ msgstr "Medeltäckningsgrad"
 msgid "Transcript coverage"
 msgstr "Täckning av transkript"
 
+msgid "at"
+msgstr "vid"
+
 msgid "Fully covered transcripts"
 msgstr "Helt täckta transkript"
 
