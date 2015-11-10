@@ -1,4 +1,4 @@
-{% macro text() %}
+{% macro text(cutoff) %}
 <h4>{{ _('General') }}</h4>
 <p>
 	{{ _('The parts of the genome that has been analyzed') }}
@@ -35,7 +35,7 @@
 	<strong>{{ _('Transcript coverage') }}</strong>:
 	{{ _('gives an overview of the success of sequencing') }}.
 	{{ _("It's defined as the ratio of transcripts") }}
-	{{ _('with a completeness of') }} 100%.
+	{{ _('with a completeness of') }} 100% {{ _('at') }} {{ cutoff }}x.
 </p>
 
 <p>
