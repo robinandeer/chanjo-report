@@ -59,7 +59,7 @@ msgstr "Ofullständiga transkript"
 msgid "Sex"
 msgstr "Kön"
 
-msgid "accordning to sequencing data"
+msgid "according to sequence data"
 msgstr "enligt sekvensdata"
 
 msgid "Chromosome"
