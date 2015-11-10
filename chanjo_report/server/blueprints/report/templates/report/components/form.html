@@ -1,5 +1,5 @@
-{% macro report_form(customizations) %}
-<form method="get" action="{{ url_for('report.group') }}">
+{% macro report_form(customizations, group_id) %}
+<form method="get" action="{{ url_for('report.group', group_id=group_id) }}">
 	<div class="form-group">
 		<div class="row">
 			<div class="col-xs-6">
