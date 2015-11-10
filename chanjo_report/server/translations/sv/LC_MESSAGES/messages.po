@@ -56,11 +56,11 @@ msgstr "Helt täckta transkript"
 msgid "Incomplete transcripts"
 msgstr "Ofullständiga transkript"
 
-msgid "Gender prediction from sequencing data"
-msgstr "Könsbestämning utifrån sekvenseringsdata"
-
-msgid "Gender"
+msgid "Sex"
 msgstr "Kön"
+
+msgid "accordning to sequencing data"
+msgstr "enligt sekvensdata"
 
 msgid "Chromosome"
 msgstr "Kromosom"
