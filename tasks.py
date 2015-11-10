@@ -42,11 +42,11 @@ def coverage():
 
 
 @task
-def babel(locale='sv'):
+def babel():
     """Babel compile."""
-    run("python setup.py compile_catalog "
-        "--directory `find . -name translations` --locale {} -f".format(locale))
-    log.info("compiled Babel translations: {}".format(locale))
+    run("pybabel compile -f --statistics --directory "
+        "`find chanjo_report/ -name translations`")
+    log.info("compiled Babel translations")
 
 
 @task(clean, babel)
