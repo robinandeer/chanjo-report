@@ -31,6 +31,8 @@ install:
   # install your own package + executables
   - python setup.py install
 
+  - conda install setuptools=18.3
+
 script:
   # command to run tests and collect test coverage
   - coverage run --source chanjo_report setup.py test
