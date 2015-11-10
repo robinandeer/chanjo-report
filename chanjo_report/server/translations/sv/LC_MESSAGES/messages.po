@@ -53,8 +53,14 @@ msgstr "vid"
 msgid "Fully covered transcripts"
 msgstr "Helt täckta transkript"
 
-msgid "Incomplete transcripts"
-msgstr "Ofullständiga transkript"
+msgid "Incomplete"
+msgstr "Ofullständiga"
+
+msgid "transcripts"
+msgstr "transkript"
+
+msgid "genes"
+msgstr "gener"
 
 msgid "Sex"
 msgstr "Kön"
@@ -112,11 +118,8 @@ msgstr "har gjorts på transkriptnivå"
 msgid "Coverage"
 msgstr "Täckningsgrad"
 
-msgid "An alternative measure of sequence depth"
-msgstr "Ett alternativt mått på sekvensdjup"
-
-msgid "It is defined as the ratio of bases"
-msgstr "Det definieras som andelen baser"
+msgid "defined as the ratio of bases"
+msgstr "definieras som andelen baser"
 
 msgid "sequenced deeper than a specified cutoff"
 msgstr "som är sekvenserade med ett djup över en specificerad gräns"
