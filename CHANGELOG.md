@@ -1,5 +1,18 @@
 # Change log
 
+## 2.2.0 (2015-11-16)
+### Added
+- ability to determine lang by setting query arg in URL
+- add uploaded date to report per sample
+
+### Changed
+- rename "gender" as "sex"
+- clarify explanations, rename "diagnostic yield"
+
+### Fixed
+- update to Python 3.5 and fix travis test setup
+- stay on "groups" route for PDF report
+
 ## 2.1.0 (2015-11-04)
 ### Added
 - Customization options for report
