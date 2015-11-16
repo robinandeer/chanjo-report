@@ -15,7 +15,7 @@
 			<tr>
 				<td>{{ sample.sample_id }}</td>
 				<td class="text-right">{{ data.diagnostic_yield|round(3) }}</td>
-				<td>{{ data.count }} <small>({{ data.total_count }})</small></td>
+				<td class="text-center">{{ data.count }} / <small>{{ data.total_count }}</small></td>
 				{% if show_genes %}
 					<td><small>
 						{% for transcript in data.transcripts %}

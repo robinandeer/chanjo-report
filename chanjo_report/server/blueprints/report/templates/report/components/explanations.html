@@ -1,6 +1,10 @@
-{% macro text() %}
+{% macro text(cutoff) %}
 <h4>{{ _('General') }}</h4>
 <p>
+	<a href="http://lomereiter.github.io/sambamba/" title="Sambamba">Sambamba</a>
+	{{ _('is used to parse coverage from a BAM alignment.') }}
+	{{ _('Duplicates and reads with mapping quality of 0 are skipped.') }}
+
 	{{ _('The parts of the genome that has been analyzed') }}
 	{{ _('is composed of all protein coding, exonic intervals') }}
 	{{ _('referenced in the') }}
@@ -25,17 +29,15 @@
 
 <p>
 	<strong>{{ _('Completeness') }}</strong>:
-	{{ _('An alternative measure of sequence depth') }}.
-	{{ _('It is defined as the ratio of bases') }}
+	{{ _('defined as the ratio of bases') }}
 	{{ _('sequenced deeper than a specified cutoff') }},
 	{{ _('e.g. 10x') }}.
 </p>
 
 <p>
 	<strong>{{ _('Transcript coverage') }}</strong>:
-	{{ _('gives an overview of the success of sequencing') }}.
-	{{ _("It's defined as the ratio of transcripts") }}
-	{{ _('with a completeness of') }} 100%.
+	{{ _('defined as the ratio of transcripts that are fully covered') }},
+	{{ _('i.e. with a completeness of') }} 100% {{ _('at') }} {{ cutoff }}x.
 </p>
 
 <p>

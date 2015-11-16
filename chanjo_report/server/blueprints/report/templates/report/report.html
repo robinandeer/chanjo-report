@@ -28,7 +28,7 @@
 
 				<div id="view-filters" class="panel-collapse collapse">
 					<div class="panel-body">
-						{{ form.report_form(customizations) }}
+						{{ form.report_form(customizations, group_id) }}
 					</div>
 				</div>
 			</div>
@@ -47,17 +47,15 @@
 		
 
 		<h3>
-			{{ _('Transcript coverage') }}
+			{{ _('Transcript coverage') }} {{ _('at') }}: {{ customizations.level }}x
 		</h3>
 		{{ transcript_stats.table(diagnostic_yield, show_genes=customizations.show_genes) }}
 
 		<h3>{{ _('Explanations') }}</h3>
-		{{ explanations.text() }}
+		{{ explanations.text(customizations.level) }}
 
 		<hr>
-		<div class="text-center">
-			{{ _('Generated') }}: {{ created_at }} | {{ _('End of report') }}
-		</div>
+		<div class="text-center">{{ _('End of report') }}</div>
 	</div>
 
 {% endblock %}

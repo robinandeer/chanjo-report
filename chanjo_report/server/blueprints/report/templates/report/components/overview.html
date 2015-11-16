@@ -1,11 +1,15 @@
-{% macro table(samples, genders) %}
+{% macro table(samples, sex_guesses) %}
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th rowspan="2">{{ _('Sample') }}</th>
 				<th rowspan="2">{{ _('Group') }}</th>
-				<th rowspan="2">{{ _('Gender') }}</th>
+				<th rowspan="2">{{ _('Uploaded at') }}</th>
+				<th rowspan="2">
+					{{ _('Sex') }}
+					{{ _('according to sequence data') }}
+				</th>
 				<th colspan="2" class="center-align">
 					{{ _('Average coverage') }} [x]
 				</th>
@@ -16,11 +20,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for sample_id, gender, x_coverage, y_coverage in genders %}
+			{% for sample_id, sex, x_coverage, y_coverage in sex_guesses %}
 				<tr>
 					<td>{{ sample_id }}</td>
 					<td>{{ samples[sample_id].group_id }}</td>
-					<td>{{ _(gender) }}</td>
+					<td>{{ samples[sample_id].updated_at.date() }}</td>
+					<td>{{ _(sex) }}</td>
 					<td class="text-right">{{ x_coverage|round(3) }}</td>
 					<td class="text-right">{{ y_coverage|round(3) }}</td>
 				</tr>
