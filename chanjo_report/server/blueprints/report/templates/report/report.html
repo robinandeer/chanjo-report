@@ -38,18 +38,18 @@
 		{% if customizations.panel_name %}
 			<p>{{ _('Based on gene panel') }}: <strong>{{ customizations.panel_name }}</strong></p>
 		{% endif %}
-		{{ overview.table(samples, genders) }}
+		{{ overview.table(samples, genders, customizations.id_map) }}
 
 		<h3>
 			{{ _('Generally important metrics') }}
     	</h3>
-    	{{ important_metrics.table(key_metrics, levels, customizations.level) }}
+    	{{ important_metrics.table(key_metrics, customizations.id_map, levels, customizations.level) }}
 		
 
 		<h3>
 			{{ _('Transcript coverage') }} {{ _('at') }}: {{ customizations.level }}x
 		</h3>
-		{{ transcript_stats.table(diagnostic_yield, show_genes=customizations.show_genes) }}
+		{{ transcript_stats.table(diagnostic_yield, customizations.id_map, show_genes=customizations.show_genes) }}
 
 		<h3>{{ _('Explanations') }}</h3>
 		{{ explanations.text(customizations.level) }}

@@ -1,4 +1,4 @@
-{% macro table(key_metrics, levels, selected_level) %}
+{% macro table(key_metrics, id_map, levels, selected_level) %}
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
@@ -20,7 +20,7 @@
 				{% else %}
 					<tr>
 				{% endif %}
-					<td>{{ sample_id }}</td>
+					<td>{{ id_map[sample_id] or sample_id }}</td>
 					<td class="text-right">{{ data.mean_coverage|round(3) }}</td>
 					{% for level_int, level_key in levels %}
 						<td class="text-right">{{ data[level_key]|round(3) }}</td>

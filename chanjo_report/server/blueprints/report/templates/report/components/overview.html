@@ -1,4 +1,4 @@
-{% macro table(samples, sex_guesses) %}
+{% macro table(samples, sex_guesses, id_map) %}
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
@@ -21,9 +21,11 @@
 		</thead>
 		<tbody>
 			{% for sample_id, sex, x_coverage, y_coverage in sex_guesses %}
+				{% set group_id = samples[sample_id].group_id %}
+
 				<tr>
-					<td>{{ sample_id }}</td>
-					<td>{{ samples[sample_id].group_id }}</td>
+					<td>{{ id_map[sample_id] or sample_id }}</td>
+					<td>{{ id_map[group_id] or group_id }}</td>
 					<td>{{ samples[sample_id].updated_at.date() }}</td>
 					<td>{{ _(sex) }}</td>
 					<td class="text-right">{{ x_coverage|round(3) }}</td>

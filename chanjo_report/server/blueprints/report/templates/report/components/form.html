@@ -36,6 +36,12 @@
 				<button class="btn btn-default form-control" type="submit">Update</button>
 			</div>
 		</div>
+
+		<div class="row" hidden>
+			{% for key, value in customizations.id_map.items() %}
+				<input type="text" name="alt_{{ key }}" value="{{ value }}">
+			{% endfor %}
+		</div>
 	</div>
 </form>
 {% endmacro %}

@@ -34,7 +34,11 @@ def gene(gene_id):
 @report_bp.route('/group/<group_id>')
 @report_bp.route('/samples')
 def group(group_id=None):
-    """Generate a coverage report for a group of samples."""
+    """Generate a coverage report for a group of samples.
+
+    It's possible to map existing group and sample ids to display ids
+    by passing them as key/value pair request args.
+    """
     gene_ids = request.args.get('gene_ids', [])
     if gene_ids:
         gene_ids = gene_ids.split(',')
@@ -45,12 +49,17 @@ def group(group_id=None):
         level = int(request.args.get('level'))
     except (ValueError, TypeError):
         level = 10
+
+    # generate id map
+    id_map = {key.lstrip('alt_'): value for key, value in request.args.items()
+              if key.startswith('alt_')}
     customizations = {
         'level': level,
         'gene_ids': gene_ids,
         'panel_name': request.args.get('panel_name'),
         'sample_ids': sample_ids,
-        'show_genes': 'show_genes' in request.args
+        'show_genes': 'show_genes' in request.args,
+        'id_map': id_map
     }
 
     logger.debug('fetch samples for group %s', group_id)
