@@ -1,5 +1,9 @@
 # Change log
 
+## 2.3.0 (2015-11-18)
+### Adds
+- add ability to change sample/group id in report through query args
+
 ## 2.2.1 (2015-11-18)
 ### Changes
 - improved phrasing of explanations and other translations
