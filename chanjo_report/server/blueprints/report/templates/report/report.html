@@ -36,7 +36,7 @@
 
 		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
 		{% if customizations.panel_name %}
-			<p>{{ _('Based on the genes in') }}: <strong>{{ customizations.panel_name }}</strong></p>
+			<p>{{ _('Based on gene panel') }}: <strong>{{ customizations.panel_name }}</strong></p>
 		{% endif %}
 		{{ overview.table(samples, genders) }}
 

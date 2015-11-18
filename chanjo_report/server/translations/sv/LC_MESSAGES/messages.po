@@ -26,8 +26,8 @@ msgstr "Kvalitetsrapport"
 msgid "clinical sequencing"
 msgstr "klinisk sekvensering"
 
-msgid "Based on the genes in"
-msgstr "Baserat på generna i"
+msgid "Based on gene panel"
+msgstr "Baserat på genpanel"
 
 msgid "Cutoff"
 msgstr "Gränsvärde"
@@ -56,6 +56,9 @@ msgstr "Helt täckta transkript"
 msgid "Incomplete"
 msgstr "Ofullständiga"
 
+msgid "Incompletely covered"
+msgstr "Ofullständigt täckta"
+
 msgid "transcripts"
 msgstr "transkript"
 
@@ -71,8 +74,8 @@ msgstr "enligt sekvensdata"
 msgid "Chromosome"
 msgstr "Kromosom"
 
-msgid "Uploaded at"
-msgstr "Uppladdning"
+msgid "Analyzed at"
+msgstr "Analysdatum"
 
 msgid "End of report"
 msgstr "Slut på rapport"
@@ -84,11 +87,11 @@ msgstr "Förklaringar"
 msgid "General"
 msgstr "Allmänt"
 
-msgid "is used to parse coverage from a BAM alignment."
-msgstr "används för att läsa coverage en BAM mappning."
+msgid "is used for coverage analysis based on read alignment."
+msgstr "används för täckningsanalys baserat på sekvensmappning."
 
-msgid "Duplicates and reads with mapping quality of 0 are skipped."
-msgstr "Duplikat samt läsningar med en mappningskvalitet 0 inkluderas ej."
+msgid "Duplicates, reads with mapping quality less than 10 as well as bases with a base quality less than 10 are not included in the analysis."
+msgstr "Duplikat, läsningar med en mappningskvalitet mindre än 10 samt baser med en baskvalitet mindre än 10 inkluderas ej i analysen."
 
 msgid "The parts of the genome that has been analyzed"
 msgstr "De delar av genomet som har analyserats"

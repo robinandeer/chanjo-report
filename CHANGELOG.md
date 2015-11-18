@@ -1,5 +1,9 @@
 # Change log
 
+## 2.2.1 (2015-11-18)
+### Changes
+- improved phrasing of explanations and other translations
+
 ## 2.2.0 (2015-11-16)
 ### Added
 - ability to determine lang by setting query arg in URL

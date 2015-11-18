@@ -2,8 +2,8 @@
 <h4>{{ _('General') }}</h4>
 <p>
 	<a href="http://lomereiter.github.io/sambamba/" title="Sambamba">Sambamba</a>
-	{{ _('is used to parse coverage from a BAM alignment.') }}
-	{{ _('Duplicates and reads with mapping quality of 0 are skipped.') }}
+	{{ _('is used for coverage analysis based on read alignment.') }}
+	{{ _('Duplicates, reads with mapping quality less than 10 as well as bases with a base quality less than 10 are not included in the analysis.') }}
 
 	{{ _('The parts of the genome that has been analyzed') }}
 	{{ _('is composed of all protein coding, exonic intervals') }}
