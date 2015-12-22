@@ -1,5 +1,9 @@
 # Change log
 
+## 2.3.1 (2015-12-22)
+### Changed
+- updates how to call diagnostic yield method to explicitly send in exon ids
+
 ## 2.3.0 (2015-11-18)
 ### Adds
 - add ability to change sample/group id in report through query args

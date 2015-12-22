@@ -71,12 +71,13 @@ def group(group_id=None):
     logger.debug('generate base queries for report')
     group_query = filter_samples(api.query(), group_id=group_id,
                                  sample_ids=customizations['sample_ids'])
-    if customizations['sample_ids']:
+    if customizations['gene_ids']:
         exon_ids = [exon_obj.exon_id for exon_obj
-                    in api.gene_exons(*customizations['sample_ids'])]
+                    in api.gene_exons(*customizations['gene_ids'])]
         panel_query = group_query.filter(Exon.exon_id.in_(exon_ids))
     else:
         panel_query = group_query
+        exon_ids = None
 
     logger.debug('generate general stats (gene panel)')
     key_metrics = api.means(panel_query)
@@ -88,7 +89,7 @@ def group(group_id=None):
     logger.debug('calculate diagnostic yield for each sample')
     tx_samples = [(sample_obj,
                    api.diagnostic_yield(sample_obj.sample_id,
-                                        query=panel_query,
+                                        exon_ids=exon_ids,
                                         level=customizations['level']))
                   for sample_obj in sample_objs]
 
