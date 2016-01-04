@@ -1,5 +1,9 @@
 # Change log
 
+## 2.3.2 (2016-01-04)
+### Fixed
+- handle white-space in gene ids
+
 ## 2.3.1 (2015-12-22)
 ### Changed
 - updates how to call diagnostic yield method to explicitly send in exon ids
