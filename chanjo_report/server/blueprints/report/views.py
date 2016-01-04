@@ -41,7 +41,7 @@ def group(group_id=None):
     """
     gene_ids = request.args.get('gene_ids', [])
     if gene_ids:
-        gene_ids = gene_ids.split(',')
+        gene_ids = [gene_id.strip() for gene_id in gene_ids.split(',')]
     sample_ids = request.args.get('sample_ids', [])
     if sample_ids:
         sample_ids = sample_ids.split(',')
