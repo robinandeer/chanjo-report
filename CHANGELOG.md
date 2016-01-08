@@ -3,6 +3,10 @@
 ## 2.4.0 (2016-01-08)
 ### Added
 - handle post/get requests for the coverage report (URL limits)
+- new "index" blueprint which displays list of samples and genes
+
+### Removed
+- link to the "index" page from the report (security)
 
 ### Changed
 - use a customized version of the HTML form for the PDF link in the navbar
