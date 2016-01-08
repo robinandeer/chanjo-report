@@ -31,7 +31,7 @@ def gene(gene_id):
                            gene_id=gene_id)
 
 
-@report_bp.route('/group/<group_id>')
+@report_bp.route('/group/<group_id>', methods=['GET', 'POST'])
 @report_bp.route('/samples')
 def group(group_id=None):
     """Generate a coverage report for a group of samples.
@@ -39,24 +39,30 @@ def group(group_id=None):
     It's possible to map existing group and sample ids to display ids
     by passing them as key/value pair request args.
     """
-    gene_ids = request.args.get('gene_ids', [])
+    if request.method == 'POST':
+        data_dict = request.form
+    else:
+        data_dict = request.args
+
+    gene_ids = data_dict.get('gene_ids', [])
     if gene_ids:
         gene_ids = [gene_id.strip() for gene_id in gene_ids.split(',')]
-    sample_ids = request.args.get('sample_ids', [])
+    sample_ids = data_dict.get('sample_ids', [])
     if sample_ids:
         sample_ids = sample_ids.split(',')
     try:
-        level = int(request.args.get('level'))
+        level = int(data_dict.get('level'))
     except (ValueError, TypeError):
         level = 10
 
     # generate id map
-    id_map = {key.lstrip('alt_'): value for key, value in request.args.items()
+    id_map = {key.lstrip('alt_'): value for key, value in data_dict.items()
               if key.startswith('alt_')}
+
     customizations = {
         'level': level,
         'gene_ids': gene_ids,
-        'panel_name': request.args.get('panel_name'),
+        'panel_name': data_dict.get('panel_name'),
         'sample_ids': sample_ids,
         'show_genes': 'show_genes' in request.args,
         'id_map': id_map
@@ -65,8 +71,12 @@ def group(group_id=None):
     logger.debug('fetch samples for group %s', group_id)
     sample_objs = api.samples(group_id=group_id,
                               sample_ids=customizations['sample_ids'])
+
     sample_dict = {sample_obj.sample_id: sample_obj
                    for sample_obj in sample_objs}
+
+    if len(sample_dict) == 0:
+        return abort(404, "no samples matching group: {}".format(group_id))
 
     logger.debug('generate base queries for report')
     group_query = filter_samples(api.query(), group_id=group_id,
@@ -107,18 +117,17 @@ def group(group_id=None):
     )
 
 
-@report_bp.route('/<route>/<filter_id>.pdf')
-def pdf(route, filter_id):
+@report_bp.route('/group/<group_id>.pdf', methods=['GET', 'POST'])
+def pdf(group_id):
+    data_dict = request.form if request.method == 'POST' else request.args
+
     # make a PDF from another view
-    if route == 'group':
-        response = render_pdf(url_for('report.group', group_id=filter_id,
-                                      **request.args))
-    else:
-        return abort(404)
+    response = render_pdf(url_for('report.group', group_id=group_id,
+                                  **data_dict))
 
     # check if the request is to download the file right away
     if 'dl' in request.args:
-        fname = "coverage-report_{}.pdf".format(filter_id)
+        fname = "coverage-report_{}.pdf".format(group_id)
         header = "attachment; filename={}".format(fname)
         response.headers['Content-Disposition'] = header
 

@@ -1,5 +1,12 @@
 # Change log
 
+## 2.4.0 (2016-01-08)
+### Added
+- handle post/get requests for the coverage report (URL limits)
+
+### Changed
+- use a customized version of the HTML form for the PDF link in the navbar
+
 ## 2.3.2 (2016-01-04)
 ### Fixed
 - handle white-space in gene ids

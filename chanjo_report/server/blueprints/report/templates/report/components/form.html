@@ -1,7 +1,8 @@
-{% macro report_form(customizations, group_id) %}
-<form method="get" action="{{ url_for('report.group', group_id=group_id) }}">
-	<div class="form-group">
-		<div class="row">
+{% macro report_form(customizations, group_id, pdf=False, hidden=False) %}
+
+<form method="{{ 'post' if customizations.gene_ids|count > 100 else 'get' }}" action="{{ url_for('report.pdf' if pdf else 'report.group', group_id=group_id) }}">
+	<div class="form-group {% if hidden %}navbar-form{% endif %}">
+		<div class="row" {% if hidden %}hidden{% endif %}>
 			<div class="col-xs-6">
 				<label class="control-label">Completeness cutoff</label>
 				<input class="form-control" name="level" type="number" placeholder="0.0004" step="0.0001" value="{{ customizations.level or '' }}">
@@ -13,7 +14,7 @@
 			</div>
 		</div>
 
-		<div class="row">
+		<div class="row" {% if hidden %}hidden{% endif %}>
 			<div class="col-xs-9">
 				<label class="control-label">Included genes</label>
 				<div><input class="form-control" type="text" name="gene_ids" value="{{ customizations.gene_ids|join(', ') }}" placeholder="ADK,GIT"></div>
@@ -25,7 +26,7 @@
 			</div>
 		</div>
 
-		<div class="row">
+		<div class="row" {% if hidden %}hidden{% endif %}>
 			<div class="col-xs-9">
 				<label class="control-label">Samples</label>
 				<div><input class="form-control" type="text" name="sample_ids" value="{{ customizations.sample_ids|join(', ') }}" placeholder="sample1,sample2"></div>
@@ -36,6 +37,10 @@
 				<button class="btn btn-default form-control" type="submit">Update</button>
 			</div>
 		</div>
+
+		{% if hidden %}
+			<button class="btn btn-link" type="submit">PDF</button>
+		{% endif %}
 
 		<div class="row" hidden>
 			{% for key, value in customizations.id_map.items() %}
