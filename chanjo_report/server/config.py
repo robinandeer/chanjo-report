@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .blueprints import report_bp
+from .blueprints import report_bp, index_bp
 
 
 class BaseConfig(object):
@@ -14,7 +14,7 @@ class BaseConfig(object):
     # http://flask.pocoo.org/docs/quickstart/#sessions
     SECRET_KEY = 'secret key'
 
-    BLUEPRINTS = (report_bp,)
+    BLUEPRINTS = (index_bp, report_bp)
 
 
 class DefaultConfig(BaseConfig):

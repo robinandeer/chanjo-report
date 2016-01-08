@@ -4,7 +4,7 @@ import datetime
 import logging
 
 from chanjo.store.api import filter_samples
-from chanjo.store import Exon, Gene
+from chanjo.store import Exon
 from flask import abort, Blueprint, render_template, request, url_for
 from flask_weasyprint import render_pdf
 
@@ -13,14 +13,6 @@ from chanjo_report.server.extensions import api
 logger = logging.getLogger(__name__)
 report_bp = Blueprint('report', __name__, template_folder='templates',
                       static_folder='static', static_url_path='/static/report')
-
-
-@report_bp.route('/')
-def index():
-    sample_objs = api.samples()
-    gene_objs = api.query(Gene).limit(50)
-    return render_template('report/index.html', samples=sample_objs,
-                           genes=gene_objs)
 
 
 @report_bp.route('/<gene_id>')
