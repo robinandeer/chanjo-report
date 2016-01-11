@@ -26,7 +26,7 @@
 
 				<div id="view-filters" class="panel-collapse collapse">
 					<div class="panel-body">
-						{{ form.report_form(customizations, group_id) }}
+						{{ form.report_form(customizations, group_id, levels=levels|map('first')) }}
 					</div>
 				</div>
 			</div>

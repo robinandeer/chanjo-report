@@ -1,8 +1,9 @@
 # Change log
 
-## 2.4.1 (???)
+## 2.5.0 (???)
 ### Changed
 - avoid searching for group id if sample ids are submitted in query
+- use "select" element for picking completeness level
 
 ### Fixed
 - removes the "submit" label from the customizations form
