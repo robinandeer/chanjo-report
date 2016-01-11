@@ -56,7 +56,7 @@ def group(group_id=None):
         'gene_ids': gene_ids,
         'panel_name': data_dict.get('panel_name'),
         'sample_ids': sample_ids,
-        'show_genes': 'show_genes' in request.args,
+        'show_genes': 'show_genes' in data_dict,
         'id_map': id_map
     }
 
