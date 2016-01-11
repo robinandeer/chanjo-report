@@ -1,8 +1,11 @@
 # Change log
 
 ## 2.4.1 (???)
+### Changed
+- avoid searching for group id if sample ids are submitted in query
+
 ### Fixed
-- Removes the "submit" label from the customizations form
+- removes the "submit" label from the customizations form
 
 ## 2.4.0 (2016-01-08)
 ### Added

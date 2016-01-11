@@ -60,9 +60,14 @@ def group(group_id=None):
         'id_map': id_map
     }
 
+    # determine if searching by group or sample ids
+    if sample_ids:
+        sample_kwargs = {'sample_ids': sample_ids}
+    else:
+        sample_kwargs = {'group_id': group_id}
+
     logger.debug('fetch samples for group %s', group_id)
-    sample_objs = api.samples(group_id=group_id,
-                              sample_ids=customizations['sample_ids'])
+    sample_objs = api.samples(**sample_kwargs)
 
     sample_dict = {sample_obj.sample_id: sample_obj
                    for sample_obj in sample_objs}
@@ -71,8 +76,7 @@ def group(group_id=None):
         return abort(404, "no samples matching group: {}".format(group_id))
 
     logger.debug('generate base queries for report')
-    group_query = filter_samples(api.query(), group_id=group_id,
-                                 sample_ids=customizations['sample_ids'])
+    group_query = filter_samples(api.query(), **sample_kwargs)
     if customizations['gene_ids']:
         exon_ids = [exon_obj.exon_id for exon_obj
                     in api.gene_exons(*customizations['gene_ids'])]
@@ -102,8 +106,7 @@ def group(group_id=None):
         customizations=customizations,
         levels=levels,
         diagnostic_yield=tx_samples,
-        genders=api.sex_check(group_id=group_id,
-                              sample_ids=customizations['sample_ids']),
+        genders=api.sex_check(**sample_kwargs),
         created_at=datetime.date.today(),
         group_id=group_id,
     )
