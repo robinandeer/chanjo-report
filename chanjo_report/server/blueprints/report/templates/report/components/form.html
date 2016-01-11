@@ -8,7 +8,7 @@
 				{% if levels %}
 					<select class="form-control" name="level">
 						{% for level in levels %}
-							<option value="{{ level }}">{{ level }}x</option>
+							<option value="{{ level }}" {% if level == customizations.level %} selected {% endif %}>{{ level }}x</option>
 						{% endfor %}
 					</select>
 				{% else %}
