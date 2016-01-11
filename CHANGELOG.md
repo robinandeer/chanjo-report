@@ -1,5 +1,9 @@
 # Change log
 
+## 2.4.1 (???)
+### Fixed
+- Removes the "submit" label from the customizations form
+
 ## 2.4.0 (2016-01-08)
 ### Added
 - handle post/get requests for the coverage report (URL limits)
