@@ -1,14 +1,6 @@
 # Change log
 
-## 2.5.0 (???)
-### Changed
-- avoid searching for group id if sample ids are submitted in query
-- use "select" element for picking completeness level
-
-### Fixed
-- removes the "submit" label from the customizations form
-
-## 2.4.0 (2016-01-08)
+## 2.4.0 (2016-01-11)
 ### Added
 - handle post/get requests for the coverage report (URL limits)
 - new "index" blueprint which displays list of samples and genes
@@ -18,6 +10,12 @@
 
 ### Changed
 - use a customized version of the HTML form for the PDF link in the navbar
+- avoid searching for group id if sample ids are submitted in query
+- use "select" element for picking completeness level
+
+### Fixed
+- removes the "submit" label from the customizations form
+- look up "show_genes" from correct "args/form" dict
 
 ## 2.3.2 (2016-01-04)
 ### Fixed
