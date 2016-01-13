@@ -1,6 +1,6 @@
 # Change log
 
-## 2.4.0 (2016-01-11)
+## 2.4.0 (2016-01-13)
 ### Added
 - handle post/get requests for the coverage report (URL limits)
 - new "index" blueprint which displays list of samples and genes
