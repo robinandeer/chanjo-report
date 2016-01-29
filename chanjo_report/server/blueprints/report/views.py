@@ -7,6 +7,7 @@ from chanjo.store.api import filter_samples
 from chanjo.store import Exon
 from flask import abort, Blueprint, render_template, request, url_for
 from flask_weasyprint import render_pdf
+from sqlalchemy.exc import OperationalError
 
 from chanjo_report.server.extensions import api
 
@@ -69,8 +70,13 @@ def group(group_id=None):
     logger.debug('fetch samples for group %s', group_id)
     sample_objs = api.samples(**sample_kwargs)
 
-    sample_dict = {sample_obj.sample_id: sample_obj
-                   for sample_obj in sample_objs}
+    try:
+        sample_dict = {sample_obj.sample_id: sample_obj
+                       for sample_obj in sample_objs}
+    except OperationalError as error:
+        logger.exception(error)
+        api.session.rollback()
+        return abort(500, 'MySQL error, try again')
 
     if len(sample_dict) == 0:
         return abort(404, "no samples matching group: {}".format(group_id))
