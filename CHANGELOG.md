@@ -1,5 +1,9 @@
 # Change log
 
+## 2.4.1 (2016-01-29)
+### Fixed
+- roll back after `OperationalError`
+
 ## 2.4.0 (2016-01-13)
 ### Added
 - handle post/get requests for the coverage report (URL limits)
