@@ -14,7 +14,7 @@ def render_pdf(api, options=None):
     # spin up the Flask server
     config = DefaultConfig
     report_options = options['report']
-    config.CHANJO_URI = report_options.get('database')
+    config.CHANJO_URI = options.get('database')
     panel_name = report_options.get('panel_name')
     config.CHANJO_LANGUAGE = report_options.get('language')
     config.CHANJO_PANEL = report_options.get('panel')
