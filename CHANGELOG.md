@@ -1,5 +1,9 @@
 # Change log
 
+## 2.4.1 (2016-02-23)
+### Fixed
+- correctly fetch database uri using CLI
+
 ## 2.4.1 (2016-01-29)
 ### Fixed
 - roll back after `OperationalError`
