@@ -8,7 +8,7 @@ from chanjo_report.server.extensions import api
 
 logger = logging.getLogger(__name__)
 index_bp = Blueprint('index', __name__, template_folder='templates',
-                     static_folder='static', static_url_path='/static/report')
+                     static_folder='static', static_url_path='/static/index')
 
 
 @index_bp.route('/')

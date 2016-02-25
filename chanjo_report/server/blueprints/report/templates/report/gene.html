@@ -9,18 +9,18 @@
 {% block main %}
 <div class="container">
 	<div class="page-header">
-		<h1>{{ gene.gene_id }}</h1>
+		<h1>Gene: {{ gene.gene_id }}</h1>
 	</div>
 
 	{% for tx_id, sample_stats in tx_stats %}
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
-					<div class="panel-heading">{{ tx_id }}</div>
+					<div class="panel-heading">Transcript: {{ tx_id }}</div>
 					<table class="table table-bordered">
 						<thead>
 							<tr>
-								<th>Transcript</th>
+								<th>Sample</th>
 								<th>Mean coverage</th>
 								{% for level, _ in levels %}
 									<th>Completeness {{ level }}X</th>
