@@ -1,6 +1,11 @@
 # Change log
 
-## 2.5.+ (2016-02-25)
+## 2.5.1 (2016-02-25)
+### Changed
+- Order completeness levels in plot and update colors
+- Use CDNJS for highcharts to support also HTTPS
+
+## 2.5.0 (2016-02-25)
 ### Added
 - A new gene overview for all or a subset of samples
 - Include chanjo repo in Vagrant environment
