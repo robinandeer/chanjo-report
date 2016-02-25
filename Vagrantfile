@@ -15,6 +15,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a forwarded port mapping.
   config.vm.network "forwarded_port", guest: 5000, host: 5001
 
+  # Sync local changes made to chanjo to leverage `pip install --editable`
+  config.vm.synced_folder "../chanjo/", "/chanjo"
+
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provision/vagrant.yml"
   end
