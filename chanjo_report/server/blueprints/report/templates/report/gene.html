@@ -1,26 +1,117 @@
 {% extends 'report/layouts/base.html' %}
 
-{% block main %}
-<div class="container">
-	{% for sample in samples %}
-		<table class="table table-bordered table-hover">
-			<caption>{{ sample.sample_id }}</caption>
-			<thead>
-				<tr>
-					{% for label, value in sample.genes[gene_id].iteritems() %}
-						<td>{{ label }}</td>
-					{% endfor %}
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					{% for label, value in sample.genes[gene_id].iteritems() %}
-						<td>{{ value }}</td>
-					{% endfor %}
-				</tr>
-			</tbody>
-		</table>
-	{% endfor %}
-</div>
+{% block js_btm %}
+	{{ super() }}
+
+	<script src="http://code.highcharts.com/highcharts.js"></script>
 {% endblock %}
 
+{% block main %}
+<div class="container">
+	<div class="page-header">
+		<h1>{{ gene.gene_id }}</h1>
+	</div>
+
+	{% for tx_id, sample_stats in tx_stats %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">{{ tx_id }}</div>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Transcript</th>
+								<th>Mean coverage</th>
+								{% for level, _ in levels %}
+									<th>Completeness {{ level }}X</th>
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody>
+							{% for sample_id, sample_data in sample_stats %}
+								<tr>
+									<td>{{ id_map[sample_id]|default(sample_id) }}</td>
+									<td>{{ sample_data.mean_coverage|round(3) }}</td>
+									{% for _, field_id in levels %}
+										<td>{{ sample_data[field_id]|round(3) }}</td>
+									{% endfor %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Exon coverage</div>
+		<div class="panel-body">
+			<ul class="nav nav-tabs">
+				{% for sample_id in samples %}
+					<li {% if loop.first %}class="active"{% endif %}>
+						<a href="#{{ sample_id }}" aria-controls="{{ sample_id }}" data-toggle="tab" id="_plotContainer-{{ sample_id }}">{{ id_map[sample_id]|default(sample_id) }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+
+			<div class="tab-content">
+				{% for sample_id in samples %}
+					<div class="tab-pane {% if loop.first %}active{% endif %}" id="{{ sample_id }}">
+						<br />
+						<div id="plotContainer-{{ sample_id }}"></div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+	{% for sample_id, (labels, lines) in ex_plots %}
+		$(function () {
+			$('#plotContainer-{{ sample_id }}').highcharts({
+				title: {
+					text: '',
+				},
+				xAxis: {
+					title: {
+						text: 'Exons along gene'
+					},
+					categories: {{ labels|safe }}
+				},
+				yAxis: {
+					title: {
+						text: 'Completeness [%]'
+					},
+					max: 100,
+					min: 0
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle',
+					borderWidth: 0
+				},
+				tooltip: {
+					valueSuffix: '%'
+				},
+				series: [
+					{% for label, data in lines.items() %}
+					{
+						name: '{{ label|safe }}',
+						data: {{ data|safe }}
+					},
+					{% endfor %}
+				]
+			});
+		});
+	{% endfor %}
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		// make responsive charts resize to container
+		$('#' + e.target.id.slice(1)).highcharts().reflow();
+	})
+</script>
+
+{% endblock %}

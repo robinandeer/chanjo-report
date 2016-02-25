@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 import datetime
+import itertools
 import logging
 
 from chanjo.store.api import filter_samples
-from chanjo.store import Exon
+from chanjo.store import Exon, ExonStatistic, Transcript, Gene, Sample
 from flask import abort, Blueprint, render_template, request, url_for
 from flask_weasyprint import render_pdf
 from sqlalchemy.exc import OperationalError
@@ -16,12 +17,89 @@ report_bp = Blueprint('report', __name__, template_folder='templates',
                       static_folder='static', static_url_path='/static/report')
 
 
+def transcript_coverage(api, gene_id, *sample_ids):
+    """Return coverage metrics per transcript for a given gene."""
+    query = (api.query(Transcript.transcript_id, Sample.sample_id,
+                       ExonStatistic.metric, api.weighted_average)
+                .join(ExonStatistic.sample, ExonStatistic.exon,
+                      Exon.transcripts, Transcript.gene)
+                .filter(Gene.gene_id == gene_id)
+                .group_by(Sample.sample_id, ExonStatistic.metric,
+                          Transcript.transcript_id)
+                .order_by(Transcript.transcript_id, Sample.sample_id))
+
+    if sample_ids:
+        query = query.filter(Sample.sample_id.in_(sample_ids))
+
+    tx_groups = itertools.groupby(query, key=lambda group: group[0])
+    for tx_id, tx_group in tx_groups:
+        sample_groups = itertools.groupby(tx_group, key=lambda group: group[1])
+        results = []
+        for sample_id, sample_group in sample_groups:
+            group_data = {metric: average for _, _, metric, average
+                          in sample_group}
+            results.append((sample_id, group_data))
+        yield (tx_id, results)
+
+
+def exon_stats(api, gene_id, *sample_ids):
+    """Return exons stats for a gene per sample."""
+    query = (api.query(Sample.sample_id, ExonStatistic.metric,
+                       ExonStatistic.value)
+                .join(ExonStatistic.exon, ExonStatistic.sample,
+                      Exon.transcripts, Transcript.gene)
+                .filter(Gene.gene_id == gene_id)
+                .order_by(Sample.sample_id, Exon.start))
+    if sample_ids:
+        query = query.filter(Sample.sample_id.in_(sample_ids))
+
+    sample_groups = itertools.groupby(query, key=lambda group: group[0])
+    for sample_id, sample_group in sample_groups:
+        yield sample_id, exon_plot(sample_group)
+
+
+def exon_plot(stats):
+    """Parse exons stats and prepare Highcharts input data."""
+    lines = {}
+    labels = []
+    for index, (_, metric, value) in enumerate(stats):
+        labels.append(index + 1)
+        if metric == 'mean_coverage':
+            continue
+        if metric not in lines:
+            lines[metric] = []
+        lines[metric].append(value)
+
+    return labels, lines
+
+
+def map_samples(api, group_id=None, sample_ids=None):
+    sample_objs = api.samples(group_id=None, sample_ids=sample_ids)
+    try:
+        samples = {sample_obj.sample_id: sample_obj for sample_obj
+                   in sample_objs}
+        return samples
+    except OperationalError as error:
+        logger.exception(error)
+        api.session.rollback()
+        return abort(500, 'MySQL error, try again')
+
+
 @report_bp.route('/<gene_id>')
 def gene(gene_id):
     """Display coverage information on a gene."""
-    sample_vals = api.gene(gene_id)
-    return render_template('report/gene.html', samples=sample_vals,
-                           gene_id=gene_id)
+    sample_ids = request.args.getlist('sample_id')
+    levels = list(api.completeness_levels())
+    tx_stats = transcript_coverage(api, gene_id, *sample_ids)
+    ex_plots = exon_stats(api, gene_id, *sample_ids)
+    gene_obj = api.query(Gene).filter_by(gene_id=gene_id).first()
+    sample_dict = map_samples(api, sample_ids=sample_ids)
+    # generate id map
+    id_map = {key.lstrip('alt_'): value for key, value in request.args.items()
+              if key.startswith('alt_')}
+    return render_template('report/gene.html', gene_id=gene_id, gene=gene_obj,
+                           tx_stats=tx_stats, ex_plots=ex_plots,
+                           levels=levels, samples=sample_dict, id_map=id_map)
 
 
 @report_bp.route('/group/<group_id>', methods=['GET', 'POST'])
@@ -61,28 +139,15 @@ def group(group_id=None):
         'id_map': id_map
     }
 
-    # determine if searching by group or sample ids
-    if sample_ids:
-        sample_kwargs = {'sample_ids': sample_ids}
-    else:
-        sample_kwargs = {'group_id': group_id}
-
     logger.debug('fetch samples for group %s', group_id)
-    sample_objs = api.samples(**sample_kwargs)
-
-    try:
-        sample_dict = {sample_obj.sample_id: sample_obj
-                       for sample_obj in sample_objs}
-    except OperationalError as error:
-        logger.exception(error)
-        api.session.rollback()
-        return abort(500, 'MySQL error, try again')
+    sample_dict = map_samples(api, group_id=group_id, sample_ids=sample_ids)
 
     if len(sample_dict) == 0:
         return abort(404, "no samples matching group: {}".format(group_id))
 
     logger.debug('generate base queries for report')
-    group_query = filter_samples(api.query(), **sample_kwargs)
+    group_query = filter_samples(api.query(), group_id=group_id,
+                                 sample_ids=sample_ids)
     if customizations['gene_ids']:
         exon_ids = [exon_obj.exon_id for exon_obj
                     in api.gene_exons(*customizations['gene_ids'])]
@@ -103,7 +168,7 @@ def group(group_id=None):
                    api.diagnostic_yield(sample_obj.sample_id,
                                         exon_ids=exon_ids,
                                         level=customizations['level']))
-                  for sample_obj in sample_objs]
+                  for sample_obj in sample_dict.values()]
 
     return render_template(
         'report/report.html',
@@ -112,7 +177,7 @@ def group(group_id=None):
         customizations=customizations,
         levels=levels,
         diagnostic_yield=tx_samples,
-        genders=api.sex_check(**sample_kwargs),
+        genders=api.sex_check(group_id=group_id, sample_ids=sample_ids),
         created_at=datetime.date.today(),
         group_id=group_id,
     )
