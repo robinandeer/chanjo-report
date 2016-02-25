@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
+from collections import OrderedDict
 import datetime
 import itertools
 import logging
@@ -60,12 +61,13 @@ def exon_stats(api, gene_id, *sample_ids):
 
 def exon_plot(stats):
     """Parse exons stats and prepare Highcharts input data."""
-    lines = {}
+    lines = OrderedDict()
     labels = []
-    for index, (_, metric, value) in enumerate(stats):
+    complete_stats = (stat for stat in stats if stat[1] != 'mean_coverage')
+    sorted_stats = sorted(complete_stats,
+                          key=lambda stat: int(stat[1].split('_')[-1]))
+    for index, (_, metric, value) in enumerate(sorted_stats):
         labels.append(index + 1)
-        if metric == 'mean_coverage':
-            continue
         if metric not in lines:
             lines[metric] = []
         lines[metric].append(value)

@@ -68,6 +68,9 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+	// crimson, folly, orange, yellow
+	{% set colors = ['#DC143C', '#FF004F', '#FF7F00', '#FFEF00'] %}
+
 	{% for sample_id, (labels, lines) in ex_plots %}
 		$(function () {
 			$('#plotContainer-{{ sample_id }}').highcharts({
@@ -100,7 +103,8 @@
 					{% for label, data in lines.items() %}
 					{
 						name: '{{ label|safe }}',
-						data: {{ data|safe }}
+						data: {{ data|safe }},
+						color: '{{ colors[loop.index - 1] }}'
 					},
 					{% endfor %}
 				]
