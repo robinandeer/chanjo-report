@@ -1,5 +1,10 @@
 # Change log
 
+## 2.5.+ (2016-02-25)
+### Added
+- A new gene overview for all or a subset of samples
+- Include chanjo repo in Vagrant environment
+
 ## 2.4.1 (2016-02-23)
 ### Fixed
 - correctly fetch database uri using CLI
