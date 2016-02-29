@@ -1,0 +1,89 @@
+{% extends 'report/layouts/base.html' %}
+
+{% block js_btm %}
+	{{ super() }}
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.3/highcharts.js"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container">
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Incomplete transcripts</div>
+				<ul class="list-group">
+					{% if sample_ids %}
+					<li class="list-group-item">
+						Samples: <strong>{{ sample_ids|join(',') }}</strong>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-pills">
+				{% for level_id, _ in levels %}
+					<li {% if level_id == level|int %}class="active"{% endif %}>
+						<a href="{{ url_for('report.genes', level=level_id, sample_id=sample_ids) }}">
+							Completeness {{ level_id }}
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<br />
+
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Gene</th>
+						<th>Transcript</th>
+						<th>Sample</th>
+						<th>Approx. completeness</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for transcript, sample_id, completeness in incomplete %}
+						<tr>
+							<td>
+								<a href="{{ url_for('report.gene', gene_id=transcript.gene.gene_id, sample_id=sample_ids) }}">
+									{{ transcript.gene.gene_id }}
+								</a>
+							</td>
+							<td>{{ transcript.transcript_id }}</td>
+							<td>{{ sample_id }}</td>
+							<td class="text-right">{{ completeness|round(3) }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			{% if skip > 0 %}
+				{% set next_skip = 0 if (skip - limit) < 0 else (skip - limit) %}
+				<a href="{{ url_for('report.genes', level=level, sample_id=sample_ids, skip=next_skip, limit=limit) }}" class="btn btn-default">Previous</a>
+			{% endif %}
+		</div>
+		<div class="col-md-6">
+			{% if has_next %}
+				<div class="pull-right">
+					<a href="{{ url_for('report.genes', level=level, sample_id=sample_ids, 	skip=(skip + limit), limit=limit) }}" class="btn btn-default">Next</a>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}

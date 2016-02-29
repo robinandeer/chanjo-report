@@ -9,6 +9,7 @@ from chanjo.store.api import filter_samples
 from chanjo.store import Exon, ExonStatistic, Transcript, Gene, Sample
 from flask import abort, Blueprint, render_template, request, url_for
 from flask_weasyprint import render_pdf
+from sqlalchemy import func
 from sqlalchemy.exc import OperationalError
 
 from chanjo_report.server.extensions import api
@@ -102,6 +103,40 @@ def gene(gene_id):
     return render_template('report/gene.html', gene_id=gene_id, gene=gene_obj,
                            tx_stats=tx_stats, ex_plots=ex_plots,
                            levels=levels, samples=sample_dict, id_map=id_map)
+
+
+@report_bp.route('/genes')
+def genes():
+    """Display an overview of genes that are (un)completely covered."""
+    skip = int(request.args.get('skip', 0))
+    limit = int(request.args.get('limit', 50))
+    sample_ids = request.args.getlist('sample_id')
+    levels = list(api.completeness_levels())
+    level = request.args.get('level', levels[0][0])
+    raw_gene_ids = request.args.get('gene_ids')
+    query = (api.query(Transcript, Sample.sample_id,
+                       func.avg(ExonStatistic.value))
+                .join(ExonStatistic.exon, ExonStatistic.sample,
+                      Exon.transcripts)
+                .filter(ExonStatistic.metric == "completeness_{}".format(level))
+                .group_by(Transcript.transcript_id)
+                .order_by(func.avg(ExonStatistic.value)))
+
+    if raw_gene_ids:
+        gene_ids = raw_gene_ids.split(',')
+        tx_ids = api.gene_transcripts(*gene_ids)
+        query = query.filter(Transcript.transcript_id.in_(tx_ids))
+
+    if sample_ids:
+        query = query.filter(Sample.sample_id.in_(sample_ids))
+
+    incomplete_left = query.offset(skip).limit(limit)
+    total = query.count()
+    has_next = total > skip + limit
+
+    return render_template('report/genes.html', incomplete=incomplete_left,
+                           levels=levels, level=level, sample_ids=sample_ids,
+                           skip=skip, limit=limit, has_next=has_next)
 
 
 @report_bp.route('/group/<group_id>', methods=['GET', 'POST'])
