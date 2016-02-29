@@ -63,6 +63,10 @@
 							<td>{{ sample_id }}</td>
 							<td class="text-right">{{ completeness|round(3) }}</td>
 						</tr>
+					{% else %}
+						<tr>
+							<td colspan="4">No transcripts found</td>
+						</tr>
 					{% endfor %}
 				</tbody>
 			</table>

@@ -96,6 +96,8 @@ def gene(gene_id):
     tx_stats = transcript_coverage(api, gene_id, *sample_ids)
     ex_plots = exon_stats(api, gene_id, *sample_ids)
     gene_obj = api.query(Gene).filter_by(gene_id=gene_id).first()
+    if gene_obj is None:
+        return abort(404, "Gene ({}) not found".format(gene_id))
     sample_dict = map_samples(api, sample_ids=sample_ids)
     # generate id map
     id_map = {key.lstrip('alt_'): value for key, value in request.args.items()
