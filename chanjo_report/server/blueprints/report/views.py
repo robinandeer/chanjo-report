@@ -113,7 +113,7 @@ def genes():
     sample_ids = request.args.getlist('sample_id')
     levels = list(api.completeness_levels())
     level = request.args.get('level', levels[0][0])
-    raw_gene_ids = request.args.get('gene_ids')
+    raw_gene_ids = request.args.get('gene_id')
     query = (api.query(Transcript, Sample.sample_id,
                        func.avg(ExonStatistic.value))
                 .join(ExonStatistic.exon, ExonStatistic.sample,
@@ -122,10 +122,13 @@ def genes():
                 .group_by(Transcript.transcript_id)
                 .order_by(func.avg(ExonStatistic.value)))
 
+    gene_ids = raw_gene_ids.split(',') if raw_gene_ids else None
     if raw_gene_ids:
-        gene_ids = raw_gene_ids.split(',')
-        tx_ids = api.gene_transcripts(*gene_ids)
-        query = query.filter(Transcript.transcript_id.in_(tx_ids))
+        tx_ids = [tx_tuple[0] for tx_tuple in
+                  api.query(Transcript.id)
+                     .join(Transcript.gene)
+                     .filter(Gene.gene_id.in_(gene_ids))]
+        query = query.filter(Transcript.id.in_(tx_ids))
 
     if sample_ids:
         query = query.filter(Sample.sample_id.in_(sample_ids))
@@ -134,9 +137,19 @@ def genes():
     total = query.count()
     has_next = total > skip + limit
 
+    # generate id map
+    id_map = {key.lstrip('alt_'): value for key, value in request.args.items()
+              if key.startswith('alt_')}
+
+    link_args = {key: value for key, value in request.args.items()
+                 if key.startswith('alt_')}
+    link_args['gene_id'] = gene_ids
+    link_args['sample_id'] = sample_ids
     return render_template('report/genes.html', incomplete=incomplete_left,
                            levels=levels, level=level, sample_ids=sample_ids,
-                           skip=skip, limit=limit, has_next=has_next)
+                           skip=skip, limit=limit, has_next=has_next,
+                           id_map=id_map, gene_ids=gene_ids,
+                           link_args=link_args)
 
 
 @report_bp.route('/group/<group_id>', methods=['GET', 'POST'])
