@@ -1,5 +1,12 @@
 # Change log
 
+## 2.6.0 (2016-02-29)
+### Added
+- Add overview of transcripts (for list of genes)
+
+### Changed
+- Show 404 if gene not found for gene overview
+
 ## 2.5.1 (2016-02-25)
 ### Changed
 - Order completeness levels in plot and update colors
