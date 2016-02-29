@@ -145,7 +145,6 @@ def genes():
 
     link_args = {key: value for key, value in request.args.items()
                  if key.startswith('alt_')}
-    link_args['gene_id'] = gene_ids
     link_args['sample_id'] = sample_ids
     return render_template('report/genes.html', incomplete=incomplete_left,
                            levels=levels, level=level, sample_ids=sample_ids,
