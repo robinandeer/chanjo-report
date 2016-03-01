@@ -32,7 +32,7 @@
 			<ul class="nav nav-pills">
 				{% for level_id, _ in levels %}
 					<li {% if level_id == level|int %}class="active"{% endif %}>
-						<a href="{{ url_for('report.genes', level=level_id, gene_id=gene_ids, **link_args) }}">
+						<a href="{{ url_for('report.genes', level=level_id, gene_id=gene_ids|join(','), **link_args) }}">
 							Completeness {{ level_id }}
 						</a>
 					</li>
@@ -80,13 +80,13 @@
 		<div class="col-md-6">
 			{% if skip > 0 %}
 				{% set next_skip = 0 if (skip - limit) < 0 else (skip - limit) %}
-				<a href="{{ url_for('report.genes', level=level, skip=next_skip, limit=limit, gene_id=gene_ids, **link_args) }}" class="btn btn-default">Previous</a>
+				<a href="{{ url_for('report.genes', level=level, skip=next_skip, limit=limit, gene_id=gene_ids|join(','), **link_args) }}" class="btn btn-default">Previous</a>
 			{% endif %}
 		</div>
 		<div class="col-md-6">
 			{% if has_next %}
 				<div class="pull-right">
-					<a href="{{ url_for('report.genes', level=level, skip=(skip + limit), limit=limit, gene_id=gene_ids, **link_args) }}" class="btn btn-default">Next</a>
+					<a href="{{ url_for('report.genes', level=level, skip=(skip + limit), limit=limit, gene_id=gene_ids|join(','), **link_args) }}" class="btn btn-default">Next</a>
 				</div>
 			{% endif %}
 		</div>

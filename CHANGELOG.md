@@ -1,5 +1,9 @@
 # Change log
 
+## 2.6.1 (2016-03-01)
+### Fixed
+- generate links with joined gene ids
+
 ## 2.6.0 (2016-02-29)
 ### Added
 - Add overview of transcripts (for list of genes)
