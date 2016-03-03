@@ -11,9 +11,9 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for sample, data in diagnostic_yield %}
+		{% for data in diagnostic_yield %}
 			<tr>
-				<td>{{ id_map[sample.sample_id] or sample.sample_id }}</td>
+				<td>{{ id_map[data.sample_id] or data.sample_id }}</td>
 				<td class="text-right">{{ data.diagnostic_yield|round(3) }}</td>
 				<td class="text-center">{{ data.count }} / <small>{{ data.total_count }}</small></td>
 				{% if show_genes %}

@@ -215,11 +215,8 @@ def group(group_id=None):
                            .format(customizations['level'])))
 
     logger.debug('calculate diagnostic yield for each sample')
-    tx_samples = [(sample_obj,
-                   api.diagnostic_yield(sample_obj.sample_id,
-                                        exon_ids=exon_ids,
-                                        level=customizations['level']))
-                  for sample_obj in sample_dict.values()]
+    tx_samples = diagnostic_yield(api, genes=gene_ids, samples=sample_ids,
+                                  group=group_id, level=customizations['level'])
 
     return render_template(
         'report/report.html',
@@ -249,3 +246,51 @@ def pdf(group_id):
         response.headers['Content-Disposition'] = header
 
     return response
+
+
+def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
+    """Calculate transcripts that aren't completely covered.
+
+    This metric only applies to one sample in isolation. Otherwise
+    it's hard to know what to do with exons that are covered or
+    not covered across multiple samples.
+
+    Args:
+        sample_id (str): unique sample id
+    """
+    threshold = 100
+    str_level = "completeness_{}".format(level)
+
+    all_tx = api.query(Transcript)
+    missed_tx = (api.query(Sample.sample_id, Transcript)
+                    .distinct()
+                    .join(ExonStatistic.exon, ExonStatistic.sample,
+                          Exon.transcripts)
+                    .filter(ExonStatistic.metric == str_level,
+                            ExonStatistic.value < threshold)
+                    .order_by(Sample.sample_id))
+
+    if genes:
+        missed_tx = (missed_tx.join(Transcript.gene)
+                              .filter(Gene.gene_id.in_(genes)))
+        all_tx = all_tx.join(Transcript.gene).filter(Gene.gene_id.in_(genes))
+
+    if samples:
+        missed_tx = missed_tx.filter(Sample.sample_id.in_(samples))
+    elif group:
+        missed_tx = missed_tx.filter(Sample.group_id == group)
+
+    all_count = all_tx.count()
+    sample_groups = itertools.groupby(missed_tx, key=lambda result: result[0])
+    for sample_id, tx_rows in sample_groups:
+        transcript_objs = [tx_obj for _, tx_obj in tx_rows]
+        tx_count = len(transcript_objs)
+        diagnostic_yield = 100 - (tx_count/all_count * 100)
+        result = {
+            "sample_id": sample_id,
+            "diagnostic_yield": diagnostic_yield,
+            "count": tx_count,
+            "total_count": all_count,
+            "transcripts": transcript_objs
+        }
+        yield result
