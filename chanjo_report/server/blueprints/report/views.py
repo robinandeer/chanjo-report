@@ -263,7 +263,6 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
 
     all_tx = api.query(Transcript)
     missed_tx = (api.query(Sample.sample_id, Transcript)
-                    .distinct()
                     .join(ExonStatistic.exon, ExonStatistic.sample,
                           Exon.transcripts)
                     .filter(ExonStatistic.metric == str_level,
@@ -283,7 +282,7 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
     all_count = all_tx.count()
     sample_groups = itertools.groupby(missed_tx, key=lambda result: result[0])
     for sample_id, tx_rows in sample_groups:
-        transcript_objs = [tx_obj for _, tx_obj in tx_rows]
+        transcript_objs = set(tx_obj for _, tx_obj in tx_rows)
         tx_count = len(transcript_objs)
         diagnostic_yield = 100 - (tx_count/all_count * 100)
         result = {
