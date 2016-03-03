@@ -248,6 +248,17 @@ def pdf(group_id):
     return response
 
 
+def key_metrics(api, genes=None, samples=None, group=None):
+    """Calculate key means across potentially a gene panel."""
+    ready_query = (api.query(Sample.sample_id,
+                             ExonStatistic.metric,
+                             api.weighted_average)
+                      .join(ExonStatistic.sample, ExonStatistic.exon)
+                      .group_by(Sample.sample_id, ExonStatistic.metric)
+                      .order_by(Sample.sample_id))
+    return ready_query
+
+
 def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
     """Calculate transcripts that aren't completely covered.
 
@@ -262,34 +273,38 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
     str_level = "completeness_{}".format(level)
 
     all_tx = api.query(Transcript)
-    missed_tx = (api.query(Sample.sample_id, Transcript)
-                    .join(ExonStatistic.exon, ExonStatistic.sample,
-                          Exon.transcripts)
+    missed_tx = (api.query(Sample.sample_id, Transcript.transcript_id,
+                           Gene.gene_id)
+                    .join(Transcript.exons, Transcript.gene,
+                          Exon.stats, ExonStatistic.sample)
                     .filter(ExonStatistic.metric == str_level,
-                            ExonStatistic.value < threshold)
-                    .order_by(Sample.sample_id))
+                            ExonStatistic.value < threshold))
 
     if genes:
         missed_tx = (missed_tx.join(Transcript.gene)
                               .filter(Gene.gene_id.in_(genes)))
-        all_tx = all_tx.join(Transcript.gene).filter(Gene.gene_id.in_(genes))
+        all_tx = all_tx.filter(Gene.gene_id.in_(genes))
 
     if samples:
         missed_tx = missed_tx.filter(Sample.sample_id.in_(samples))
     elif group:
         missed_tx = missed_tx.filter(Sample.group_id == group)
 
+    stmt = missed_tx.subquery()
+    # optimize and call distinct on the subquery
+    missed_tx = sorted(api.query(stmt).distinct(), key=lambda res: res[0])
+
     all_count = all_tx.count()
     sample_groups = itertools.groupby(missed_tx, key=lambda result: result[0])
-    for sample_id, tx_rows in sample_groups:
-        transcript_objs = set(tx_obj for _, tx_obj in tx_rows)
-        tx_count = len(transcript_objs)
+    for sample_id, tx_rows_iter in sample_groups:
+        tx_rows = list(tx_rows_iter)
+        tx_count = len(tx_rows)
         diagnostic_yield = 100 - (tx_count/all_count * 100)
         result = {
             "sample_id": sample_id,
             "diagnostic_yield": diagnostic_yield,
             "count": tx_count,
             "total_count": all_count,
-            "transcripts": transcript_objs
+            "transcripts": tx_rows
         }
         yield result
