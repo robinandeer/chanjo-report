@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
-from collections import OrderedDict
 import datetime
 import itertools
 import logging
 
-from chanjo.store.api import filter_samples
-from chanjo.store import Exon, ExonStatistic, Transcript, Gene, Sample
+from chanjo.store.txmodels import Transcript, TranscriptStat, Sample
+from chanjo.store.utils import predict_gender
 from flask import abort, Blueprint, render_template, request, url_for
 from flask_weasyprint import render_pdf
 from sqlalchemy import func
@@ -14,6 +13,9 @@ from sqlalchemy.exc import OperationalError
 
 from chanjo_report.server.extensions import api
 
+LEVELS = [(10, 'completeness_10'), (15, 'completeness_15'),
+          (20, 'completeness_20'), (50, 'completeness_50'),
+          (100, 'completeness_100')]
 logger = logging.getLogger(__name__)
 report_bp = Blueprint('report', __name__, template_folder='templates',
                       static_folder='static', static_url_path='/static/report')
@@ -21,66 +23,26 @@ report_bp = Blueprint('report', __name__, template_folder='templates',
 
 def transcript_coverage(api, gene_id, *sample_ids):
     """Return coverage metrics per transcript for a given gene."""
-    query = (api.query(Transcript.transcript_id, Sample.sample_id,
-                       ExonStatistic.metric, api.weighted_average)
-                .join(ExonStatistic.sample, ExonStatistic.exon,
-                      Exon.transcripts, Transcript.gene)
-                .filter(Gene.gene_id == gene_id)
-                .group_by(Sample.sample_id, ExonStatistic.metric,
-                          Transcript.transcript_id)
-                .order_by(Transcript.transcript_id, Sample.sample_id))
-
+    query = (api.query(TranscriptStat)
+                .join(TranscriptStat.transcript)
+                .filter(Transcript.gene_id == gene_id)
+                .order_by(TranscriptStat.transcript_id,
+                          TranscriptStat.sample_id))
     if sample_ids:
-        query = query.filter(Sample.sample_id.in_(sample_ids))
+        query = query.filter(TranscriptStat.sample_id.in_(sample_ids))
 
-    tx_groups = itertools.groupby(query, key=lambda group: group[0])
-    for tx_id, tx_group in tx_groups:
-        sample_groups = itertools.groupby(tx_group, key=lambda group: group[1])
-        results = []
-        for sample_id, sample_group in sample_groups:
-            group_data = {metric: average for _, _, metric, average
-                          in sample_group}
-            results.append((sample_id, group_data))
-        yield (tx_id, results)
-
-
-def exon_stats(api, gene_id, *sample_ids):
-    """Return exons stats for a gene per sample."""
-    query = (api.query(Sample.sample_id, ExonStatistic.metric,
-                       ExonStatistic.value)
-                .join(ExonStatistic.exon, ExonStatistic.sample,
-                      Exon.transcripts, Transcript.gene)
-                .filter(Gene.gene_id == gene_id)
-                .order_by(Sample.sample_id, Exon.start))
-    if sample_ids:
-        query = query.filter(Sample.sample_id.in_(sample_ids))
-
-    sample_groups = itertools.groupby(query, key=lambda group: group[0])
-    for sample_id, sample_group in sample_groups:
-        yield sample_id, exon_plot(sample_group)
-
-
-def exon_plot(stats):
-    """Parse exons stats and prepare Highcharts input data."""
-    lines = OrderedDict()
-    labels = []
-    complete_stats = (stat for stat in stats if stat[1] != 'mean_coverage')
-    sorted_stats = sorted(complete_stats,
-                          key=lambda stat: int(stat[1].split('_')[-1]))
-    for index, (_, metric, value) in enumerate(sorted_stats):
-        labels.append(index + 1)
-        if metric not in lines:
-            lines[metric] = []
-        lines[metric].append(value)
-
-    return labels, lines
+    tx_groups = itertools.groupby(query, key=lambda tx: tx.transcript_id)
+    return tx_groups
 
 
 def map_samples(api, group_id=None, sample_ids=None):
-    sample_objs = api.samples(group_id=None, sample_ids=sample_ids)
+    query = api.query(Sample)
+    if group_id:
+        query = query.filter(Sample.group_id == group_id)
+    elif sample_ids:
+        query = query.filter(Sample.id.in_(sample_ids))
     try:
-        samples = {sample_obj.sample_id: sample_obj for sample_obj
-                   in sample_objs}
+        samples = {sample_obj.id: sample_obj for sample_obj in query}
         return samples
     except OperationalError as error:
         logger.exception(error)
@@ -92,19 +54,14 @@ def map_samples(api, group_id=None, sample_ids=None):
 def gene(gene_id):
     """Display coverage information on a gene."""
     sample_ids = request.args.getlist('sample_id')
-    levels = list(api.completeness_levels())
-    tx_stats = transcript_coverage(api, gene_id, *sample_ids)
-    ex_plots = exon_stats(api, gene_id, *sample_ids)
-    gene_obj = api.query(Gene).filter_by(gene_id=gene_id).first()
-    if gene_obj is None:
-        return abort(404, "Gene ({}) not found".format(gene_id))
+    tx_groups = transcript_coverage(api, gene_id, *sample_ids)
     sample_dict = map_samples(api, sample_ids=sample_ids)
     # generate id map
     id_map = {key.lstrip('alt_'): value for key, value in request.args.items()
               if key.startswith('alt_')}
-    return render_template('report/gene.html', gene_id=gene_id, gene=gene_obj,
-                           tx_stats=tx_stats, ex_plots=ex_plots,
-                           levels=levels, samples=sample_dict, id_map=id_map)
+    return render_template('report/gene.html', gene_id=gene_id,
+                           tx_groups=tx_groups, levels=LEVELS,
+                           samples=sample_dict, id_map=id_map)
 
 
 @report_bp.route('/genes')
@@ -113,27 +70,19 @@ def genes():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 50))
     sample_ids = request.args.getlist('sample_id')
-    levels = list(api.completeness_levels())
-    level = request.args.get('level', levels[0][0])
+    level = request.args.get('level', LEVELS[0][0])
     raw_gene_ids = request.args.get('gene_id')
-    query = (api.query(Transcript, Sample.sample_id,
-                       func.avg(ExonStatistic.value))
-                .join(ExonStatistic.exon, ExonStatistic.sample,
-                      Exon.transcripts)
-                .filter(ExonStatistic.metric == "completeness_{}".format(level))
-                .group_by(Transcript.transcript_id)
-                .order_by(func.avg(ExonStatistic.value)))
+    completeness_col = getattr(TranscriptStat, "completeness_{}".format(level))
+    query = (api.query(TranscriptStat)
+                .join(TranscriptStat.transcript)
+                .filter(completeness_col < 100)
+                .order_by(completeness_col))
 
-    gene_ids = raw_gene_ids.split(',') if raw_gene_ids else None
+    gene_ids = raw_gene_ids.split(',') if raw_gene_ids else []
     if raw_gene_ids:
-        tx_ids = [tx_tuple[0] for tx_tuple in
-                  api.query(Transcript.id)
-                     .join(Transcript.gene)
-                     .filter(Gene.gene_id.in_(gene_ids))]
-        query = query.filter(Transcript.id.in_(tx_ids))
-
+        query = query.filter(Transcript.gene_id.in_(gene_ids))
     if sample_ids:
-        query = query.filter(Sample.sample_id.in_(sample_ids))
+        query = query.filter(Transcript.sample_id.in_(sample_ids))
 
     incomplete_left = query.offset(skip).limit(limit)
     total = query.count()
@@ -147,7 +96,7 @@ def genes():
                  if key.startswith('alt_')}
     link_args['sample_id'] = sample_ids
     return render_template('report/genes.html', incomplete=incomplete_left,
-                           levels=levels, level=level, sample_ids=sample_ids,
+                           levels=LEVELS, level=level, sample_ids=sample_ids,
                            skip=skip, limit=limit, has_next=has_next,
                            id_map=id_map, gene_ids=gene_ids,
                            link_args=link_args)
@@ -196,21 +145,10 @@ def group(group_id=None):
     if len(sample_dict) == 0:
         return abort(404, "no samples matching group: {}".format(group_id))
 
-    logger.debug('generate base queries for report')
-    group_query = filter_samples(api.query(), group_id=group_id,
-                                 sample_ids=sample_ids)
-    if customizations['gene_ids']:
-        exon_ids = [exon_obj.exon_id for exon_obj
-                    in api.gene_exons(*customizations['gene_ids'])]
-        panel_query = group_query.filter(Exon.exon_id.in_(exon_ids))
-    else:
-        panel_query = group_query
-        exon_ids = None
-
     logger.debug('generate general stats (gene panel)')
-    key_metrics = api.means(panel_query)
-    levels = api.completeness_levels()
-    if not customizations['level'] in [item[0] for item in levels]:
+    key_query = key_metrics(api, genes=customizations['gene_ids'],
+                            samples=sample_ids, group=group_id)
+    if not customizations['level'] in [item[0] for item in LEVELS]:
         return abort(400, ('completeness level not supported: {}'
                            .format(customizations['level'])))
 
@@ -221,11 +159,11 @@ def group(group_id=None):
     return render_template(
         'report/report.html',
         samples=sample_dict,
-        key_metrics=key_metrics,
+        key_metrics=key_query,
         customizations=customizations,
-        levels=levels,
+        levels=LEVELS,
         diagnostic_yield=tx_samples,
-        genders=api.sex_check(group_id=group_id, sample_ids=sample_ids),
+        genders=sex_check(api, group=group_id, samples=sample_ids),
         created_at=datetime.date.today(),
         group_id=group_id,
     )
@@ -250,13 +188,24 @@ def pdf(group_id):
 
 def key_metrics(api, genes=None, samples=None, group=None):
     """Calculate key means across potentially a gene panel."""
-    ready_query = (api.query(Sample.sample_id,
-                             ExonStatistic.metric,
-                             api.weighted_average)
-                      .join(ExonStatistic.sample, ExonStatistic.exon)
-                      .group_by(Sample.sample_id, ExonStatistic.metric)
-                      .order_by(Sample.sample_id))
-    return ready_query
+    query = api.query(
+        TranscriptStat,
+        func.avg(TranscriptStat.mean_coverage).label('mean_coverage'),
+        func.avg(TranscriptStat.completeness_10).label('completeness_10'),
+        func.avg(TranscriptStat.completeness_15).label('completeness_15'),
+        func.avg(TranscriptStat.completeness_20).label('completeness_20'),
+        func.avg(TranscriptStat.completeness_50).label('completeness_50'),
+        func.avg(TranscriptStat.completeness_100).label('completeness_100')
+    ).group_by(TranscriptStat.sample_id)
+    if genes:
+        query = (query.join(TranscriptStat.transcript)
+                      .filter(Transcript.gene_id.in_(genes)))
+    if samples:
+        query = query.filter(TranscriptStat.sample_id.in_(samples))
+    elif group:
+        query = (query.join(TranscriptStat.sample)
+                      .filter(Sample.group_id == group))
+    return query
 
 
 def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
@@ -271,40 +220,78 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
     """
     threshold = 100
     str_level = "completeness_{}".format(level)
+    completeness_col = getattr(TranscriptStat, str_level)
 
     all_tx = api.query(Transcript)
-    missed_tx = (api.query(Sample.sample_id, Transcript.transcript_id,
-                           Gene.gene_id)
-                    .join(Transcript.exons, Transcript.gene,
-                          Exon.stats, ExonStatistic.sample)
-                    .filter(ExonStatistic.metric == str_level,
-                            ExonStatistic.value < threshold))
+    missed_tx = (api.query(TranscriptStat)
+                    .filter(completeness_col < threshold)
+                    .order_by(TranscriptStat.sample_id))
 
     if genes:
-        missed_tx = (missed_tx.join(Transcript.gene)
-                              .filter(Gene.gene_id.in_(genes)))
-        all_tx = all_tx.filter(Gene.gene_id.in_(genes))
+        missed_tx = (missed_tx.join(TranscriptStat.transcript)
+                              .filter(Transcript.gene_id.in_(genes)))
+        all_tx = all_tx.filter(Transcript.gene_id.in_(genes))
 
     if samples:
-        missed_tx = missed_tx.filter(Sample.sample_id.in_(samples))
+        missed_tx = missed_tx.filter(TranscriptStat.sample_id.in_(samples))
     elif group:
-        missed_tx = missed_tx.filter(Sample.group_id == group)
-
-    stmt = missed_tx.subquery()
-    # optimize and call distinct on the subquery
-    missed_tx = sorted(api.query(stmt).distinct(), key=lambda res: res[0])
+        missed_tx = (missed_tx.join(TranscriptStat.sample)
+                              .filter(Sample.group_id == group))
 
     all_count = all_tx.count()
-    sample_groups = itertools.groupby(missed_tx, key=lambda result: result[0])
-    for sample_id, tx_rows_iter in sample_groups:
-        tx_rows = list(tx_rows_iter)
-        tx_count = len(tx_rows)
+    sample_groups = itertools.groupby(missed_tx, key=lambda tx: tx.sample_id)
+    for sample_id, tx_models in sample_groups:
+        tx_models = list(tx_models)
+        tx_count = len(tx_models)
         diagnostic_yield = 100 - (tx_count/all_count * 100)
         result = {
             "sample_id": sample_id,
             "diagnostic_yield": diagnostic_yield,
             "count": tx_count,
             "total_count": all_count,
-            "transcripts": tx_rows
+            "transcripts": tx_models
         }
         yield result
+
+
+def sex_coverage(api, sex_chromosomes=('X', 'Y')):
+    """Query for average on X/Y chromsomes.
+
+    Args:
+        sex_chromosomes (Optional[tuple]): chromosome ids
+
+    Returns:
+        List[tuple]: sample, chromosome, weighted average coverage
+    """
+    query = (api.query(TranscriptStat.sample_id,
+                       Transcript.chromosome,
+                       func.avg(TranscriptStat.mean_coverage))
+                .join(TranscriptStat.transcript)
+                .filter(Transcript.chromosome.in_(sex_chromosomes))
+                .group_by(TranscriptStat.sample_id, Transcript.chromosome))
+    return query
+
+
+def sex_check(api, group=None, samples=None):
+    """Predict gender based on coverage of sex chromosomes.
+
+    Args:
+        group (Optional[str]): sample group identifier
+        samples (Optional[List[str]]): sample ids
+
+    Returns:
+        tuple: sample, gender, coverage X, coverage, Y
+    """
+    query = sex_coverage(api)
+    if samples:
+        query = query.filter(TranscriptStat.sample_id.in_(samples))
+    elif group:
+        query = (query.join(TranscriptStat.sample)
+                      .filter(Sample.group_id == group))
+    logger.debug('group rows based on sample')
+    samples = itertools.groupby(query, lambda row: row[0])
+    for sample_id, chromosomes in samples:
+        coverage = [cov for _, _, cov in chromosomes]
+        logger.debug('predict gender')
+        gender = predict_gender(*coverage)
+        yield sample_id, gender, coverage[0], coverage[1]

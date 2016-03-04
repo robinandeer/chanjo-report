@@ -51,24 +51,24 @@
 						<th>Gene</th>
 						<th>Transcript</th>
 						<th>Sample</th>
-						<th>Approx. completeness</th>
+						<th>Completeness {{ level }}X [%]</th>
 					</tr>
 				</thead>
 				<tbody>
-					{% for transcript, sample_id, completeness in incomplete %}
+					{% for stat in incomplete %}
 						<tr>
 							<td>
-								<a href="{{ url_for('report.gene', gene_id=transcript.gene.gene_id, **link_args) }}">
-									{{ transcript.gene.gene_id }}
+								<a href="{{ url_for('report.gene', gene_id=stat.transcript.gene_id, **link_args) }}">
+									{{ stat.transcript.gene_id }}
 								</a>
 							</td>
-							<td>{{ transcript.transcript_id }}</td>
-							<td>{{ id_map[sample_id]|default(sample_id) }}</td>
-							<td class="text-right">{{ completeness|round(3) }}</td>
+							<td>{{ stat.transcript_id }}</td>
+							<td>{{ id_map[stat.sample_id]|default(stat.sample_id) }}</td>
+							<td class="text-right">{{ stat|attr("completeness_" + level)|round(2) }}</td>
 						</tr>
 					{% else %}
 						<tr>
-							<td colspan="4">No transcripts found</td>
+							<td colspan="4">No transcripts found or level not annotated.</td>
 						</tr>
 					{% endfor %}
 				</tbody>

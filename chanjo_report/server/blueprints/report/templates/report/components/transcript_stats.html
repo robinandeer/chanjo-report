@@ -18,8 +18,8 @@
 				<td class="text-center">{{ data.count }} / <small>{{ data.total_count }}</small></td>
 				{% if show_genes %}
 					<td><small>
-						{% for transcript in data.transcripts %}
-							{{ transcript.gene.gene_id }}
+						{% for stat in data.transcripts %}
+							{{ stat.transcript.gene_id }}
 						{% else %}
 							-
 						{% endfor %}

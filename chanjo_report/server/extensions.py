@@ -3,4 +3,5 @@
 located in app.py
 """
 from chanjo.store import ChanjoAPI
-api = ChanjoAPI()
+from chanjo.store.txmodels import BASE
+api = ChanjoAPI(base=BASE)

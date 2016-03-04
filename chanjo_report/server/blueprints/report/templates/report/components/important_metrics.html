@@ -11,8 +11,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for sample_id, data in key_metrics %}
-				{% set completeness = data["completeness_%s"|format(selected_level)] %}
+			{% for data in key_metrics %}
+				{% set completeness = data|attr("completeness_%s"|format(selected_level)) %}
 				{% if completeness < 90 %}
 					<tr class="danger">
 				{% elif completeness < 100 %}
@@ -20,10 +20,10 @@
 				{% else %}
 					<tr>
 				{% endif %}
-					<td>{{ id_map[sample_id] or sample_id }}</td>
-					<td class="text-right">{{ data.mean_coverage|round(3) }}</td>
+					<td>{{ id_map[data.TranscriptStat.sample_id] or data.TranscriptStat.sample_id }}</td>
+					<td class="text-right">{{ data.mean_coverage|round(2) }}</td>
 					{% for level_int, level_key in levels %}
-						<td class="text-right">{{ data[level_key]|round(3) }}</td>
+						<td class="text-right">{{ data|attr(level_key)|round(2) if data|attr(level_key) }}</td>
 					{% endfor %}
 				</tr>
 			{% endfor %}

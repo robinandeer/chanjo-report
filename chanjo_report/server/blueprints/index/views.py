@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from chanjo.store import Gene
+from chanjo.store.txmodels import Sample, Transcript
 from flask import Blueprint, render_template
 
 from chanjo_report.server.extensions import api
@@ -13,7 +13,7 @@ index_bp = Blueprint('index', __name__, template_folder='templates',
 
 @index_bp.route('/')
 def index():
-    sample_objs = api.samples()
-    gene_objs = api.query(Gene).limit(50)
+    sample_objs = api.query(Sample)
+    tx_models = api.query(Transcript).distinct(Transcript.gene_id).limit(50)
     return render_template('index/index.html', samples=sample_objs,
-                           genes=gene_objs)
+                           transcripts=tx_models)

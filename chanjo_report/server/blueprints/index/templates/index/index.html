@@ -13,11 +13,13 @@
 			<tbody>
 				{% for sample in samples %}
 					<tr>
-						<td><a href="{{ url_for('report.group', sample_id=[sample.sample_id]) }}">{{ sample.sample_id }}</a></td>
+						<td><a href="{{ url_for('report.group', sample_id=[sample.sample_id]) }}">{{ sample.id }}</a></td>
 						<td>
-							<a href="{{ url_for('report.group', group_id=sample.group_id) }}">
-								{{ sample.group_id }}
-							</a>
+							{% if sample.group_id %}
+								<a href="{{ url_for('report.group', group_id=sample.group_id) }}">
+									{{ sample.group_id }}
+								</a>
+							{% endif %}
 						</td>
 					</tr>
 				{% endfor %}
@@ -33,12 +35,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for gene in genes %}
+				{% for transcript in transcripts %}
 					<tr>
-						<td>{{ gene.chromosome or '-' }}</td>
+						<td>{{ transcript.chromosome }}</td>
 						<td>
-							<a href="{{ url_for('report.gene', gene_id=gene.gene_id) }}">
-								{{ gene.gene_id }}
+							<a href="{{ url_for('report.gene', gene_id=transcript.gene_id) }}">
+								{{ transcript.gene_id }}
 							</a>
 						</td>
 					</tr>

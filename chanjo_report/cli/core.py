@@ -5,6 +5,7 @@ import click
 
 from .utils import list_interfaces
 from chanjo.store import ChanjoAPI
+from chanjo.store.txmodels import BASE
 
 ROOT_PACKAGE = __package__.split('.')[0]
 
@@ -35,7 +36,7 @@ def report(context, render, language, samples, group, gene_id, panel_name):
         context.obj.set('report.panel_name', panel_name)
 
     # create instance of Chanjo API "Miner"
-    api = ChanjoAPI(uri)
+    api = ChanjoAPI(uri, base=BASE)
 
     # determine which render method to use and initialize it
     render_method = load_entry_point(ROOT_PACKAGE, 'chanjo_report.interfaces',
