@@ -56,10 +56,11 @@ def gene(gene_id):
     sample_ids = request.args.getlist('sample_id')
     tx_groups = transcript_coverage(api, gene_id, *sample_ids)
     sample_dict = map_samples(api, sample_ids=sample_ids)
+    link = request.args.get('link')
     # generate id map
     id_map = {key.lstrip('alt_'): value for key, value in request.args.items()
               if key.startswith('alt_')}
-    return render_template('report/gene.html', gene_id=gene_id,
+    return render_template('report/gene.html', gene_id=gene_id, link=link,
                            tx_groups=tx_groups, levels=LEVELS,
                            samples=sample_dict, id_map=id_map)
 

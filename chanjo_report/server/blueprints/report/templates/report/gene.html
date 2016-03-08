@@ -60,7 +60,13 @@
 										<tr>
 											{% for exon in exon_group %}
 												<td>
-													{{ exon.chrom }}:{{ exon.start }}-{{ exon.end }}
+													{% if link %}
+														<a href="{{ url_for(link, start=exon.start, end=exon.end, chrom=exon.chrom, sample=transcript.sample_id) }}" target="_blank">
+															{{ exon.chrom }}:{{ exon.start }}-{{ exon.end }}
+														</a>
+													{% else %}
+														{{ exon.chrom }}:{{ exon.start }}-{{ exon.end }}
+													{% endif %}
 													<span class="pull-right">
 														<strong>{{ exon.completeness|round(2) }}%</strong>
 													</span>
