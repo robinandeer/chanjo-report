@@ -7,36 +7,69 @@
 	</div>
 
 	{% for tx_id, tx_group in tx_groups %}
+		{% set txgroup_list = tx_group|list %}
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">Transcript: {{ tx_id }}</div>
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<th>Sample</th>
-								<th>Mean coverage</th>
-								{% for level, _ in levels %}
-									<th>Completeness {{ level }}X</th>
-								{% endfor %}
-							</tr>
-						</thead>
-						<tbody>
-							{% for transcript in tx_group %}
+					<div class="table-responsive">
+						<table class="table table-bordered">
+							<thead>
 								<tr>
-									<td>{{ id_map[transcript.sample_id]|default(transcript.sample_id) }}</td>
-									<td>{{ transcript.mean_coverage|round(2) }}</td>
-									{% for _, field_id in levels %}
-										<td>
-											{% if transcript|attr(field_id) is number %}
-												{{ transcript|attr(field_id)|round(2) }}
-											{% endif %}
-										</td>
+									<th>Sample</th>
+									<th>Mean coverage</th>
+									{% for level, _ in levels %}
+										<th>Completeness {{ level }}X</th>
 									{% endfor %}
 								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{% for transcript in txgroup_list %}
+									<tr>
+										<td>{{ id_map[transcript.sample_id]|default(transcript.sample_id) }}</td>
+										<td>{{ transcript.mean_coverage|round(2) }}</td>
+										{% for _, field_id in levels %}
+											<td>
+												{% if transcript|attr(field_id) is number %}
+													{{ transcript|attr(field_id)|round(2) }}
+												{% endif %}
+											</td>
+										{% endfor %}
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					{% for transcript in txgroup_list %}
+						<ul class="list-group">
+							<li class="list-group-item">
+								{% if transcript._incomplete_exons %}
+									Incomplete exons 
+								{% else %}
+									No incomplete exons
+								{% endif %}
+								for <strong>{{ id_map[transcript.sample_id]|default(transcript.sample_id) }}</strong> at <strong>{{ transcript.threshold }}X</strong>
+							</li>
+						</ul>
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<tbody>
+									{% for exon_group in transcript.incomplete_exons|batch(5) %}
+										<tr>
+											{% for exon in exon_group %}
+												<td>
+													{{ exon.chrom }}:{{ exon.start }}-{{ exon.end }}
+													<span class="pull-right">
+														<strong>{{ exon.completeness|round(2) }}</strong>
+													</span>
+												</td>
+											{% endfor %}
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endfor %}
 				</div>
 			</div>
 		</div>
