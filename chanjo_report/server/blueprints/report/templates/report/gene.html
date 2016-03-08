@@ -61,7 +61,7 @@
 											{% for exon in exon_group %}
 												<td>
 													{% if link %}
-														<a href="{{ url_for(link, start=exon.start, end=exon.end, chrom=exon.chrom, sample=transcript.sample_id) }}" target="_blank">
+														<a href="{{ url_for(link, start=exon.start, end=exon.end, chrom=exon.chrom, sample=transcript.sample_id, group=transcript.sample.group_id) }}" target="_blank">
 															{{ exon.chrom }}:{{ exon.start }}-{{ exon.end }}
 														</a>
 													{% else %}

@@ -60,7 +60,7 @@
 					{% for stat in incomplete %}
 						<tr>
 							<td>
-								<a href="{{ url_for('report.gene', gene_id=stat.transcript.gene_id, **link_args) }}">
+								<a href="{{ url_for('report.gene', gene_id=stat.transcript.gene_id, link=exonlink, **link_args) }}">
 									{{ stat.transcript.gene_id }}
 								</a>
 							</td>

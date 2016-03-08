@@ -70,6 +70,7 @@ def genes():
     """Display an overview of genes that are (un)completely covered."""
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 50))
+    exonlink = request.args.get('exonlink')
     sample_ids = request.args.getlist('sample_id')
     level = request.args.get('level', LEVELS[0][0])
     raw_gene_ids = request.args.get('gene_id')
@@ -99,7 +100,7 @@ def genes():
     return render_template('report/genes.html', incomplete=incomplete_left,
                            levels=LEVELS, level=level, sample_ids=sample_ids,
                            skip=skip, limit=limit, has_next=has_next,
-                           id_map=id_map, gene_ids=gene_ids,
+                           id_map=id_map, gene_ids=gene_ids, exonlink=exonlink,
                            link_args=link_args)
 
 
