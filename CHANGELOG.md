@@ -1,5 +1,9 @@
 # Change log
 
+## 3.0.1 (2016-03-08)
+### Fixed
+- minor issues in genes view
+
 ## 3.0.0 (2016-03-08)
 ### Adds
 - Support for new transcript schema in chanjo v3.4.0
