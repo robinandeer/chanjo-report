@@ -82,7 +82,7 @@ def genes():
     if raw_gene_ids:
         query = query.filter(Transcript.gene_id.in_(gene_ids))
     if sample_ids:
-        query = query.filter(Transcript.sample_id.in_(sample_ids))
+        query = query.filter(TranscriptStat.sample_id.in_(sample_ids))
 
     incomplete_left = query.offset(skip).limit(limit)
     total = query.count()

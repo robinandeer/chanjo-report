@@ -66,7 +66,7 @@
 							</td>
 							<td>{{ stat.transcript_id }}</td>
 							<td>{{ id_map[stat.sample_id]|default(stat.sample_id) }}</td>
-							<td class="text-right">{{ stat|attr("completeness_" + level)|round(2) }}</td>
+							<td class="text-right">{{ stat|attr("completeness_%s"|format(level))|round(2) }}</td>
 						</tr>
 					{% else %}
 						<tr>
