@@ -1,5 +1,12 @@
 # Change log
 
+## 3.0.0 (2016-03-08)
+### Adds
+- Support for new transcript schema in chanjo v3.4.0
+
+### Removed
+- Support for default exon focused schema in previous version of chanjo
+
 ## 2.6.1 (2016-03-01)
 ### Fixed
 - generate links with joined gene ids
