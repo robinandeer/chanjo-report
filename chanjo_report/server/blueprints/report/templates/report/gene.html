@@ -11,7 +11,9 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
-					<div class="panel-heading">Transcript: {{ tx_id }}</div>
+					<div class="panel-heading">
+						Transcript: <strong>{{ tx_id }}</strong>
+					</div>
 					<div class="table-responsive">
 						<table class="table table-bordered">
 							<thead>
@@ -19,7 +21,7 @@
 									<th>Sample</th>
 									<th>Mean coverage</th>
 									{% for level, _ in levels %}
-										<th>Completeness {{ level }}X</th>
+										<th>Completeness {{ level }}x [%]</th>
 									{% endfor %}
 								</tr>
 							</thead>
@@ -48,7 +50,7 @@
 								{% else %}
 									No incomplete exons
 								{% endif %}
-								for <strong>{{ id_map[transcript.sample_id]|default(transcript.sample_id) }}</strong> at <strong>{{ transcript.threshold }}X</strong>
+								for <strong>{{ id_map[transcript.sample_id]|default(transcript.sample_id) }}</strong> at <strong>{{ transcript.threshold }}x</strong>
 							</li>
 						</ul>
 						<div class="table-responsive">
@@ -60,7 +62,7 @@
 												<td>
 													{{ exon.chrom }}:{{ exon.start }}-{{ exon.end }}
 													<span class="pull-right">
-														<strong>{{ exon.completeness|round(2) }}</strong>
+														<strong>{{ exon.completeness|round(2) }}%</strong>
 													</span>
 												</td>
 											{% endfor %}

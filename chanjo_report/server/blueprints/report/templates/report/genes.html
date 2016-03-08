@@ -35,7 +35,7 @@
 				{% for level_id, _ in levels %}
 					<li {% if level_id == level|int %}class="active"{% endif %}>
 						<a href="{{ url_for('report.genes', level=level_id, gene_id=gene_ids|join(','), **link_args) }}">
-							Completeness {{ level_id }}
+							Completeness {{ level_id }}x
 						</a>
 					</li>
 				{% endfor %}
@@ -53,7 +53,7 @@
 						<th>Gene</th>
 						<th>Transcript</th>
 						<th>Sample</th>
-						<th>Completeness {{ level }}X [%]</th>
+						<th>Completeness {{ level }}x [%]</th>
 					</tr>
 				</thead>
 				<tbody>
