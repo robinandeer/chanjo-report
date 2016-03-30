@@ -5,6 +5,7 @@ Flask-WeasyPrint
 Flask-Assets
 Flask-Babel
 Flask-DebugToolbar
+Flask-Alchy
 path.py
 pyscss
 cairocffi
