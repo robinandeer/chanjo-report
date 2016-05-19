@@ -1,5 +1,4 @@
 # conda installables
-setuptools
 lxml>=3.0
 cffi
 Flask
