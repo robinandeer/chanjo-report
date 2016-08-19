@@ -26,6 +26,12 @@
 					</small></td>
 				{% endif %}
 			</tr>
+		{% else %}
+			<tr>
+				<td colspan="{{ 4 if show_genes else 3 }}">
+					Inga ofullständigt täckta transkript.
+				</td>
+			</tr>
 		{% endfor %}
 	</tbody>
 </table>
