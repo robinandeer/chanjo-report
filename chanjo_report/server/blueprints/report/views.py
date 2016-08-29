@@ -234,7 +234,7 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
                               .filter(Transcript.gene_id.in_(genes)))
         all_tx = all_tx.filter(Transcript.gene_id.in_(genes))
 
-    samples_query = api.Query(Sample.id)
+    samples_query = api.query(Sample.id)
     if samples:
         samples_query = samples_query.filter(Sample.id.in_(samples))
         missed_tx = missed_tx.filter(TranscriptStat.sample_id.in_(samples))
