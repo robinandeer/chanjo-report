@@ -244,7 +244,7 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
                               .filter(Sample.group_id == group))
 
     all_count = all_tx.count()
-    all_samples = samples_query.all()
+    all_samples = [row[0] for row in samples_query.all()]
     sample_groups = dict(itertools.groupby(missed_tx,
                                            key=lambda tx: tx.sample_id))
     for sample_id in all_samples:
