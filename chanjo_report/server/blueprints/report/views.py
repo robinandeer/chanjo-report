@@ -250,13 +250,16 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
     for sample_id in all_samples:
         result = {"sample_id": sample_id}
         if sample_id in sample_groups:
-            tx_models = list(sample_groups[sample_groups])
-            tx_count = len(tx_models)
+            gene_ids = set()
+            tx_count = 0
+            for tx_model in sample_groups[sample_groups]:
+                gene_ids.add(tx_model.transcript.gene_id)
+                tx_count += 1
             diagnostic_yield = 100 - (tx_count / all_count * 100)
             result['diagnostic_yield'] = diagnostic_yield
             result['count'] = tx_count
             result['total_count'] = all_count
-            result['transcripts'] = tx_models
+            result['genes'] = list(gene_ids)
         else:
             # all transcripts are covered!
             result['diagnostic_yield'] = 100

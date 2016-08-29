@@ -22,8 +22,8 @@
 				</td>
 				{% if show_genes %}
 					<td><small>
-						{% for stat in data.transcripts %}
-							{{ stat.transcript.gene_id }}
+						{% for gene_id in data.genes %}
+							{{ gene_id }}
 						{% else %}
 							-
 						{% endfor %}
