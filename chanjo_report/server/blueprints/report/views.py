@@ -234,24 +234,36 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
                               .filter(Transcript.gene_id.in_(genes)))
         all_tx = all_tx.filter(Transcript.gene_id.in_(genes))
 
+    samples_query = api.Query(Sample.id)
     if samples:
+        samples_query = samples_query.filter(Sample.id.in_(samples))
         missed_tx = missed_tx.filter(TranscriptStat.sample_id.in_(samples))
     elif group:
+        samples_query = samples_query.filter_by(group_id=group)
         missed_tx = (missed_tx.join(TranscriptStat.sample)
                               .filter(Sample.group_id == group))
 
     all_count = all_tx.count()
+    all_samples = samples_query.all()
     sample_groups = itertools.groupby(missed_tx, key=lambda tx: tx.sample_id)
     for sample_id, tx_models in sample_groups:
+        all_samples.remove(sample_id)
         tx_models = list(tx_models)
         tx_count = len(tx_models)
-        diagnostic_yield = 100 - (tx_count/all_count * 100)
+        diagnostic_yield = 100 - (tx_count / all_count * 100)
         result = {
             "sample_id": sample_id,
             "diagnostic_yield": diagnostic_yield,
             "count": tx_count,
             "total_count": all_count,
             "transcripts": tx_models
+        }
+        yield result
+
+    for complete_sample_id in all_samples:
+        result = {
+            "sample_id": complete_sample_id,
+            "diagnostic_yield": 100,
         }
         yield result
 
