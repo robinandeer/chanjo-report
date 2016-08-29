@@ -245,26 +245,21 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
 
     all_count = all_tx.count()
     all_samples = samples_query.all()
-    sample_groups = itertools.groupby(missed_tx, key=lambda tx: tx.sample_id)
-    for sample_id, tx_models in sample_groups:
-        all_samples.remove(sample_id)
-        tx_models = list(tx_models)
-        tx_count = len(tx_models)
-        diagnostic_yield = 100 - (tx_count / all_count * 100)
-        result = {
-            "sample_id": sample_id,
-            "diagnostic_yield": diagnostic_yield,
-            "count": tx_count,
-            "total_count": all_count,
-            "transcripts": tx_models
-        }
-        yield result
-
-    for complete_sample_id in all_samples:
-        result = {
-            "sample_id": complete_sample_id,
-            "diagnostic_yield": 100,
-        }
+    sample_groups = dict(itertools.groupby(missed_tx,
+                                           key=lambda tx: tx.sample_id))
+    for sample_id in all_samples:
+        result = {"sample_id": sample_id}
+        if sample_id in sample_groups:
+            tx_models = list(sample_groups[sample_groups])
+            tx_count = len(tx_models)
+            diagnostic_yield = 100 - (tx_count / all_count * 100)
+            result['diagnostic_yield'] = diagnostic_yield
+            result['count'] = tx_count
+            result['total_count'] = all_count
+            result['transcripts'] = tx_models
+        else:
+            # all transcripts are covered!
+            result['diagnostic_yield'] = 100
         yield result
 
 
