@@ -245,25 +245,30 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
 
     all_count = all_tx.count()
     all_samples = [row[0] for row in samples_query.all()]
-    sample_groups = dict(itertools.groupby(missed_tx,
-                                           key=lambda tx: tx.sample_id))
+
+    sample_groups = itertools.groupby(missed_tx, key=lambda tx: tx.sample_id)
+    missed_samples = {}
+    for sample_id, tx_models in sample_groups:
+        gene_ids = set()
+        tx_count = 0
+        for tx_model in tx_models:
+            gene_ids.add(tx_model.transcript.gene_id)
+            tx_count += 1
+        diagnostic_yield = 100 - (tx_count / all_count * 100)
+        result = {'sample_id': sample_id}
+        result['diagnostic_yield'] = diagnostic_yield
+        result['count'] = tx_count
+        result['total_count'] = all_count
+        result['genes'] = list(gene_ids)
+        missed_samples[sample_id] = result
+
     for sample_id in all_samples:
-        result = {"sample_id": sample_id}
-        if sample_id in sample_groups:
-            gene_ids = set()
-            tx_count = 0
-            for tx_model in sample_groups[sample_id]:
-                gene_ids.add(tx_model.transcript.gene_id)
-                tx_count += 1
-            diagnostic_yield = 100 - (tx_count / all_count * 100)
-            result['diagnostic_yield'] = diagnostic_yield
-            result['count'] = tx_count
-            result['total_count'] = all_count
-            result['genes'] = list(gene_ids)
+        if sample_id in missed_samples:
+            yield missed_samples[sample_id]
         else:
             # all transcripts are covered!
-            result['diagnostic_yield'] = 100
-        yield result
+            result = {'sample_id': sample_id, 'diagnostic_yield': 100}
+            yield result
 
 
 def sex_coverage(api, sex_chromosomes=('X', 'Y')):
