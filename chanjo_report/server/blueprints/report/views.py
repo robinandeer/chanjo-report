@@ -57,8 +57,7 @@ def gene(gene_id):
     link = request.args.get('link')
     return render_template('report/gene.html', gene_id=gene_id,
                            gene_name=gene_name, link=link,
-                           tx_groups=tx_groups, levels=LEVELS,
-                           samples=sample_dict)
+                           tx_groups=tx_groups, samples=sample_dict)
 
 
 @report_bp.route('/genes')
@@ -70,7 +69,7 @@ def genes():
     sample_names = request.args.getlist('sample_id')
     samples_q = Sample.filter(Sample.name.in_(sample_names))
     sample_ids = [sample.id for sample in samples_q]
-    level = request.args.get('level', LEVELS[0][0])
+    level = request.args.get('level', 10)
     raw_gene_ids = request.args.get('gene_id')
     completeness_col = getattr(TranscriptStat, "completeness_{}".format(level))
     query = (api.query(TranscriptStat)
@@ -88,8 +87,7 @@ def genes():
     total = query.count()
     has_next = total > skip + limit
     return render_template('report/genes.html', incomplete=incomplete_left,
-                           levels=LEVELS, level=level,
-                           sample_names=sample_names,
+                           level=level, sample_names=sample_names,
                            skip=skip, limit=limit, has_next=has_next,
                            gene_ids=gene_ids, exonlink=exonlink,
                            samples=samples_q)
@@ -114,8 +112,8 @@ def report(group_id):
     samples = Sample.query.filter_by(group_id=group_id)
     sample_ids = [sample.id for sample in samples]
     sex_rows = samplesex_rows(sample_ids)
-    metrics_rows = keymetrics_rows(sample_ids)
-    tx_rows = transcripts_rows(sample_ids)
+    metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids)
+    tx_rows = transcripts_rows(sample_ids, genes=gene_ids)
     return render_template('report/report.html', extras=extras,
                            samples=samples, sex_rows=sex_rows,
                            metrics_rows=metrics_rows, tx_rows=tx_rows)
@@ -148,7 +146,7 @@ def samplesex_rows(sample_ids):
         yield sample_row
 
 
-def keymetrics_rows(samples_ids, gene_ids=None):
+def keymetrics_rows(samples_ids, genes=None):
     """Generate key metrics rows."""
     fields = (
         TranscriptStat,
@@ -162,17 +160,20 @@ def keymetrics_rows(samples_ids, gene_ids=None):
     query = (api.query(*fields)
                 .filter(TranscriptStat.sample_id.in_(samples_ids))
                 .group_by(TranscriptStat.sample_id))
-    if gene_ids:
+    if genes:
         query = (query.join(TranscriptStat.transcript)
-                      .filter(Transcript.gene_id.in_(gene_ids)))
+                      .filter(Transcript.gene_id.in_(genes)))
     return query
 
 
-def transcripts_rows(sample_ids):
+def transcripts_rows(sample_ids, genes=None):
     """Generate metrics rows for transcripts."""
     for sample_id in sample_ids:
         sample_obj = Sample.query.get(sample_id)
         all_tx = TranscriptStat.query.filter_by(sample_id=sample_id)
+        if genes:
+            all_tx = (all_tx.join(TranscriptStat.transcript)
+                            .filter(Transcript.gene_id.in_(genes)))
         tx_count = all_tx.count()
         missed_tx = all_tx.filter(TranscriptStat.completeness_10 < 100)
         missed_count = missed_tx.count()
