@@ -118,6 +118,7 @@ def report(group_id):
     tx_rows = transcripts_rows(sample_ids, genes=gene_ids)
     return render_template('report/report.html', extras=extras,
                            samples=samples, sex_rows=sex_rows,
+                           group_id=group_id,
                            metrics_rows=metrics_rows, tx_rows=tx_rows)
 
 
@@ -193,12 +194,12 @@ def transcripts_rows(sample_ids, genes=None):
         }
 
 
-@report_bp.route('/group/<group_id>.pdf', methods=['GET', 'POST'])
+@report_bp.route('/report/<group_id>.pdf', methods=['GET', 'POST'])
 def pdf(group_id):
     data_dict = request.form if request.method == 'POST' else request.args
 
     # make a PDF from another view
-    response = render_pdf(url_for('report.group', group_id=group_id,
+    response = render_pdf(url_for('report.report', group_id=group_id,
                                   **data_dict))
 
     # check if the request is to download the file right away

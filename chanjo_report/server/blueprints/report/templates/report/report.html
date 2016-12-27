@@ -1,12 +1,29 @@
 {% extends 'report/layouts/base.html' %}
-{% import 'report/components/overview.html' as overview %}
-{% import 'report/components/important_metrics.html' as important_metrics %}
-{% import 'report/components/transcript_stats.html' as transcript_stats %}
-{% import 'report/components/explanations.html' as explanations %}
-{% import 'report/components/form.html' as form %}
+
+{% block nav %}
+	<li>
+		{{ filters_form(group_id, extras, pdf=True, hidden=True) }}
+	</li>
+{% endblock %}
 
 {% block main %}
 	<div class="container">
+		<div class="panel-group hidden-print" id="filter-accordion">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a role="button" data-toggle="collapse" data-parent="#accordion" href="#view-filters">Customize</a>
+					</h4>
+				</div>
+
+				<div id="view-filters" class="panel-collapse collapse">
+					<div class="panel-body">
+						{{ filters_form(group_id, extras) }}
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
 		{% if extras.panel_name %}
 			<p>{{ _('Based on gene panel') }}: <strong>{{ extras.panel_name }}</strong></p>
@@ -21,6 +38,9 @@
 
 		<h3>{{ _('Explanations') }}</h3>
 		{{ explanations(extras.level) }}
+
+		<hr>
+		<div class="text-center">{{ _('End of report') }}</div>
 	</div>
 {% endblock %}
 
@@ -95,8 +115,8 @@
 				<th>{{ _('Sample') }}</th>
 				<th>{{ _('Fully covered transcripts') }} [%]</th>
 				<th>{{ _('Incompletely covered') }} {{ _('transcripts') }}</th>
-				{% if show_genes %}
-					<th>{{ _('Incompletely covered') }} {{ _('genes') }}</th>
+				{% if extras.show_genes %}
+					<th>{{ _('Incompletely covered') }} {{ _('genes') }} (max 50)</th>
 				{% endif %}
 			</tr>
 		</thead>
@@ -108,10 +128,10 @@
 					<td class="text-center">
 						{{ data.missed_count }} / <small>{{ data.total }}</small>
 					</td>
-					{% if show_genes %}
+					{% if extras.show_genes %}
 						<td><small>
-							{% for gene_id in data.genes %}
-								{{ gene_id }}
+							{% for tx_stat in data.missed.limit(50) %}
+								{{ tx_stat.transcript.gene_name or tx_stat.transcript.gene_id }}
 							{% else %}
 								-
 							{% endfor %}
@@ -120,7 +140,7 @@
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="{{ 4 if show_genes else 3 }}">
+					<td colspan="{{ 4 if extras.show_genes else 3 }}">
 						Inga ofullständigt täckta transkript.
 					</td>
 				</tr>
@@ -181,44 +201,58 @@
 	</p>
 {% endmacro %}
 
-{# {% block nav %}
-	{% if '/group' in request.path %}
-		<li>
-			{{ form.report_form(customizations, group_id, pdf=True, hidden=True) }}
-		</li>
-	{% endif %}
-{% endblock %}
+{% macro filters_form(group_id, extras, pdf=False, hidden=False) %}
+	<form method="{{ 'POST' if extras.gene_ids|count > 100 else 'GET' }}" action="{{ url_for('report.pdf' if pdf else 'report.report', group_id=group_id) }}">
+		<div class="{% if hidden %}navbar-form{% endif %}">
+			<div class="form-group">
+				<div class="row" {% if hidden %}hidden{% endif %}>
+					<div class="col-xs-6">
+						<label class="control-label">Completeness cutoff</label>
+						<select class="form-control" name="level">
+							{% for level, name in levels %}
+								<option value="{{ level }}" {% if level == extras.level %} selected {% endif %}>{{ name }}x</option>
+							{% endfor %}
+						</select>
+					</div>
 
-{% block main %}
-
-	<div class="container">
-		<div class="panel-group hidden-print" id="filter-accordion">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a role="button" data-toggle="collapse" data-parent="#accordion" href="#view-filters">Customize</a>
-					</h4>
-				</div>
-
-				<div id="view-filters" class="panel-collapse collapse">
-					<div class="panel-body">
-						{{ form.report_form(customizations, group_id, levels=levels|map('first')) }}
+					<div class="col-xs-6">
+						<label class="control-label">Gene panel name to <i>display</i></label>
+						<input class="form-control" name="panel_name" type="text" placeholder="Skeletal dysplasia 3.2" value="{{ extras.panel_name or '' }}">
 					</div>
 				</div>
 			</div>
+
+			<div class="form-group">
+				<div class="row" {% if hidden %}hidden{% endif %}>
+					<div class="col-xs-9">
+						<label class="control-label">Included genes</label>
+						<div><input class="form-control" type="text" name="gene_ids" value="{{ extras.gene_ids|join(', ') }}" placeholder="ADK,GIT"></div>
+					</div>
+
+					<div class="col-xs-3">
+						<label class="control-label">Show genes</label>
+						<div><input type="checkbox" name="show_genes" {% if extras.show_genes %}checked{% endif %}></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row" {% if hidden %}hidden{% endif %}>
+					<div class="col-xs-9">
+						<label class="control-label">Samples</label>
+						<div><input class="form-control" type="text" name="sample_ids" value="{{ extras.sample_ids|join(', ') }}" placeholder="sample1,sample2"></div>
+					</div>
+
+					<div class="col-xs-3">
+						<label class="control-label">&nbsp;</label>
+						<button class="btn btn-default form-control" type="submit">Update</button>
+					</div>
+				</div>
+			</div>
+
+			{% if hidden %}
+				<button class="btn btn-link navbar-btn" type="submit">PDF</button>
+			{% endif %}
 		</div>
-
-		<h3>
-			{{ _('Transcript coverage') }} {{ _('at') }}: {{ customizations.level }}x
-		</h3>
-		{{ transcript_stats.table(diagnostic_yield, show_genes=customizations.show_genes) }}
-
-		<h3>{{ _('Explanations') }}</h3>
-		{{ explanations.text(customizations.level) }}
-
-		<hr>
-		<div class="text-center">{{ _('End of report') }}</div>
-	</div>
-
-{% endblock %}
- #}
+	</form>
+{% endmacro %}

@@ -13,10 +13,10 @@
 			<tbody>
 				{% for sample in samples %}
 					<tr>
-						<td><a href="{{ url_for('report.group', sample_id=[sample.name]) }}">{{ sample.name or sample.id }}</a></td>
+						<td>{{ sample.name or sample.id }}</td>
 						<td>
 							{% if sample.group_id %}
-								<a href="{{ url_for('report.group', group_id=sample.group_id) }}">
+								<a href="{{ url_for('report.report', group_id=sample.group_id) }}">
 									{{ sample.group_id }}
 								</a>
 							{% endif %}
