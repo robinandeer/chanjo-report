@@ -5,7 +5,7 @@ import logging
 
 from chanjo.store.models import Transcript, TranscriptStat, Sample
 from chanjo.sex.core import predict_sex
-from flask import abort, Blueprint, render_template, request, url_for
+from flask import abort, Blueprint, render_template, request, url_for, flash
 from flask_weasyprint import render_pdf
 from sqlalchemy import func
 from sqlalchemy.exc import OperationalError
@@ -177,7 +177,11 @@ def transcripts_rows(sample_ids, genes=None):
         tx_count = all_tx.count()
         missed_tx = all_tx.filter(TranscriptStat.completeness_10 < 100)
         missed_count = missed_tx.count()
-        tx_yield = 100 - (missed_count / tx_count * 100)
+        if tx_count == 0:
+            tx_yield = 0
+            flash("no matching transcripts found!")
+        else:
+            tx_yield = 100 - (missed_count / tx_count * 100)
         yield {
             'sample': sample_obj,
             'yield': tx_yield,
