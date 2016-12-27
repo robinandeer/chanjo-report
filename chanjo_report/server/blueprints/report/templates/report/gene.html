@@ -3,7 +3,7 @@
 {% block main %}
 <div class="container">
 	<div class="page-header">
-		<h1>Gene: {{ gene_id }}</h1>
+		<h1>Gene: {{ gene_name or gene_id }}</h1>
 	</div>
 
 	{% for tx_id, tx_group in tx_groups %}
@@ -28,7 +28,9 @@
 							<tbody>
 								{% for transcript in txgroup_list %}
 									<tr>
-										<td>{{ id_map[transcript.sample_id]|default(transcript.sample_id) }}</td>
+										<td>
+											{{ transcript.sample.name or transcript.sample_id }}
+										</td>
 										<td>{{ transcript.mean_coverage|round(2) }}</td>
 										{% for _, field_id in levels %}
 											<td>
@@ -44,14 +46,11 @@
 					</div>
 					{% for transcript in txgroup_list %}
 						<ul class="list-group">
-							<li class="list-group-item">
-								{% if transcript._incomplete_exons %}
-									Incomplete exons 
-								{% else %}
-									No incomplete exons
-								{% endif %}
-								for <strong>{{ id_map[transcript.sample_id]|default(transcript.sample_id) }}</strong> at <strong>{{ transcript.threshold }}x</strong>
-							</li>
+							{% if transcript._incomplete_exons %}
+								<li class="list-group-item">
+									Incomplete exons for <strong>{{ transcript.sample.name or transcript.sample_id }}</strong> at <strong>{{ transcript.threshold }}x</strong>
+								</li>
+							{% endif %}
 						</ul>
 						<div class="table-responsive">
 							<table class="table table-bordered">

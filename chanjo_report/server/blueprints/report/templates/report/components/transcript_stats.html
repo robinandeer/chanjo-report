@@ -1,4 +1,4 @@
-{% macro table(diagnostic_yield, id_map, show_genes=False) %}
+{% macro table(diagnostic_yield, show_genes=False) %}
 <table class="table table-bordered table-hover">
 	<thead>
 		<tr>
@@ -13,7 +13,7 @@
 	<tbody>
 		{% for data in diagnostic_yield %}
 			<tr>
-				<td>{{ id_map[data.sample_id] or data.sample_id }}</td>
+				<td>{{ data.sample_id }}</td>
 				<td class="text-right">{{ data.diagnostic_yield|round(3) }}</td>
 				<td class="text-center">
 					{% if data.count %}

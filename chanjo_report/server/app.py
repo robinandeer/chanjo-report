@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 from flask import current_app, Flask, request
-from flask.ext.babel import Babel
+from flask_babel import Babel
 
 from .config import DefaultConfig
 from .extensions import api
 from .utils import pretty_date
 
+LEVELS = [(10, 'completeness_10'), (15, 'completeness_15'),
+          (20, 'completeness_20'), (50, 'completeness_50'),
+          (100, 'completeness_100')]
 
-def create_app(app_name=None, config=None):
+
+def create_app(config=None):
     """Create a Flask app (Flask Application Factory)."""
-    if app_name is None:
-        app_name = DefaultConfig.PROJECT
-
-    # relative instance path (not root)
     app = Flask(__name__, instance_relative_config=True)
     configure_app(app, config=config)
     configure_extensions(app)
@@ -25,12 +25,13 @@ def create_app(app_name=None, config=None):
 def configure_app(app, config=None, config_file=None):
     """Configure app in different ways."""
     # http://flask.pocoo.org/docs/api/#configuration
-    app.config.from_object(config or DefaultConfig)
+    app.config.from_object(DefaultConfig)
+    if config:
+        app.config.from_object(config)
 
 
 def configure_extensions(app):
     """Initialize Flask extensions."""
-    # Miner Chanjo API
     api.init_app(app)
 
     # Flask-babel
@@ -65,6 +66,10 @@ def configure_blueprints(app):
 
 def configure_template_filters(app):
     """Configure custom Jinja2 template filters."""
+
+    @app.context_processor
+    def inject_levels():
+        return dict(levels=LEVELS)
 
     @app.template_filter()
     def human_date(value):

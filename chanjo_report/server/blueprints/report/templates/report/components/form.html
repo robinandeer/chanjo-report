@@ -49,12 +49,6 @@
 		{% if hidden %}
 			<button class="btn btn-link" type="submit">PDF</button>
 		{% endif %}
-
-		<div class="row" hidden>
-			{% for key, value in customizations.id_map.items() %}
-				<input type="text" name="alt_{{ key }}" value="{{ value }}">
-			{% endfor %}
-		</div>
 	</div>
 </form>
 {% endmacro %}

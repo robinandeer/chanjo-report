@@ -5,7 +5,183 @@
 {% import 'report/components/explanations.html' as explanations %}
 {% import 'report/components/form.html' as form %}
 
-{% block nav %}
+{% block main %}
+	<div class="container">
+		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
+		{% if extras.panel_name %}
+			<p>{{ _('Based on gene panel') }}: <strong>{{ extras.panel_name }}</strong></p>
+		{% endif %}
+		{{ overview_table(sex_rows) }}
+
+		<h3>{{ _('Generally important metrics') }}</h3>
+		{{ metrics_table(metrics_rows) }}
+
+		<h3>{{ _('Transcript coverage') }} {{ _('at') }}: {{ extras.level }}x</h3>
+		{{ transcripts_table(tx_rows) }}
+
+		<h3>{{ _('Explanations') }}</h3>
+		{{ explanations(extras.level) }}
+	</div>
+{% endblock %}
+
+{% macro overview_table(sex_rows) %}
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th rowspan="2">{{ _('Sample') }}</th>
+					<th rowspan="2">{{ _('Group') }}</th>
+					<th rowspan="2">{{ _('Analyzed at') }}</th>
+					<th rowspan="2">
+						{{ _('Sex') }}
+						{{ _('according to sequence data') }}
+					</th>
+					<th colspan="2" class="center-align">
+						{{ _('Average coverage') }} [x]
+					</th>
+				</tr>
+				<tr>
+					<th class="th-secondary">{{ _('Chromosome') }} X</th>
+					<th class="th-secondary">{{ _('Chromosome') }} Y</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for sample in sex_rows %}
+					<tr>
+						<td>{{ sample.sample }}</td>
+						<td>{{ sample.group }}</td>
+						<td>{{ sample.analysis_date.date() }}</td>
+						<td>{{ _(sample.sex) }}</td>
+						<td class="text-right">{{ sample.x_coverage|round(3) }}</td>
+						<td class="text-right">{{ sample.y_coverage|round(3) }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endmacro %}
+
+{% macro metrics_table(metrics_rows) %}
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>{{ _('Sample') }}</th>
+					<th>{{ _('Average coverage') }} [x]</th>
+					{% for level_int, level_key in levels %}
+						<th>{{ _('Completeness') }} {{ level_int }}x [%]</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for data in metrics_rows %}
+					<tr>
+						<td>{{ data.TranscriptStat.sample.name }}</td>
+						<td class="text-right">{{ data.mean_coverage|round(2) }}</td>
+						{% for level_int, level_key in levels %}
+							<td class="text-right">{{ data|attr(level_key)|round(2) if data|attr(level_key) }}</td>
+						{% endfor %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endmacro %}
+
+{% macro transcripts_table(transcript_rows) %}
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>{{ _('Sample') }}</th>
+				<th>{{ _('Fully covered transcripts') }} [%]</th>
+				<th>{{ _('Incompletely covered') }} {{ _('transcripts') }}</th>
+				{% if show_genes %}
+					<th>{{ _('Incompletely covered') }} {{ _('genes') }}</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for data in transcript_rows %}
+				<tr>
+					<td>{{ data.sample.name }}</td>
+					<td class="text-right">{{ data.yield|round(3) }}</td>
+					<td class="text-center">
+						{{ data.missed_count }} / <small>{{ data.total }}</small>
+					</td>
+					{% if show_genes %}
+						<td><small>
+							{% for gene_id in data.genes %}
+								{{ gene_id }}
+							{% else %}
+								-
+							{% endfor %}
+						</small></td>
+					{% endif %}
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="{{ 4 if show_genes else 3 }}">
+						Inga ofullständigt täckta transkript.
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endmacro %}
+
+{% macro explanations(cutoff) %}
+	<h4>{{ _('General') }}</h4>
+	<p>
+		<a href="http://lomereiter.github.io/sambamba/" title="Sambamba">Sambamba</a>
+		{{ _('is used for coverage analysis based on read alignment.') }}
+		{{ _('Duplicates, reads with mapping quality less than 10 as well as bases with a base quality less than 10 are not included in the analysis.') }}
+		{{ _('Bases that overlap between read pairs are only counted once.') }}
+
+		{{ _('The parts of the genome that has been analyzed') }}
+		{{ _('is composed of all protein coding, exonic intervals') }}
+		{{ _('referenced in the') }}
+		<a href="http://www.genenames.org/">HGNC</a>.
+
+		{% if includes_splice_sites %}
+			{{ _('Additionally, the data also includes spicing sites') }}
+			({{ _('donator and acceptor positions') }},
+			{{ splice_site_interval }}
+			{{ _('bases on either of each exon') }}).
+		{% endif %}
+	</p>
+
+	{% if config.CHANJO_PANEL %}
+		<p>
+			{{ _('Final coverage metrics were calculated for genes from the clinical panels') }}:
+			<code>{{ config.CHANJO_PANEL_NAME }}</code>.
+			{{ _('Note that estimations were made regarding coverage and completeness') }}
+			{{ _('on the level of transcripts') }}.
+		</p>
+	{% endif %}
+
+	<p>
+		<strong>{{ _('Completeness') }}</strong>:
+		{{ _('defined as the ratio of bases') }}
+		{{ _('sequenced deeper than a specified cutoff') }},
+		{{ _('e.g. 10x') }}.
+	</p>
+
+	<p>
+		<strong>{{ _('Transcript coverage') }}</strong>:
+		{{ _('defined as the ratio of transcripts that are fully covered') }},
+		{{ _('i.e. with a completeness of') }} 100% {{ _('at') }} {{ cutoff }}x.
+	</p>
+
+	<p>
+		<strong>{{ _('Gender prediction from data') }}</strong>:
+		{{ _('calculated by comparing relative chromosome coverage') }}
+		(X/Y).
+		{{ _('Some reads randomly map to the Y chromosome') }}.
+		{{ _('Therefore, a less than 10 fold difference is used to infer a "male" sample') }}.
+	</p>
+{% endmacro %}
+
+{# {% block nav %}
 	{% if '/group' in request.path %}
 		<li>
 			{{ form.report_form(customizations, group_id, pdf=True, hidden=True) }}
@@ -32,22 +208,10 @@
 			</div>
 		</div>
 
-		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
-		{% if customizations.panel_name %}
-			<p>{{ _('Based on gene panel') }}: <strong>{{ customizations.panel_name }}</strong></p>
-		{% endif %}
-		{{ overview.table(samples, genders, customizations.id_map) }}
-
-		<h3>
-			{{ _('Generally important metrics') }}
-    	</h3>
-    	{{ important_metrics.table(key_metrics, customizations.id_map, levels, customizations.level) }}
-		
-
 		<h3>
 			{{ _('Transcript coverage') }} {{ _('at') }}: {{ customizations.level }}x
 		</h3>
-		{{ transcript_stats.table(diagnostic_yield, customizations.id_map, show_genes=customizations.show_genes) }}
+		{{ transcript_stats.table(diagnostic_yield, show_genes=customizations.show_genes) }}
 
 		<h3>{{ _('Explanations') }}</h3>
 		{{ explanations.text(customizations.level) }}
@@ -57,3 +221,4 @@
 	</div>
 
 {% endblock %}
+ #}

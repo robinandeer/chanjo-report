@@ -45,6 +45,7 @@ coverage.xml
 *.sublime-workspace
 dev/
 instance/
+.env
 
 # Rope
 .ropeproject
