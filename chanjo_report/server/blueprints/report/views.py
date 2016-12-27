@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
-import datetime
 import itertools
 import logging
 
@@ -96,83 +95,23 @@ def genes():
                            samples=samples_q)
 
 
-@report_bp.route('/group/<group_id>', methods=['GET', 'POST'])
-@report_bp.route('/samples')
-def group(group_id=None):
-    """Generate a coverage report for a group of samples.
-
-    It's possible to map existing group and sample ids to display ids
-    by passing them as key/value pair request args.
-    """
-    if request.method == 'POST':
-        data_dict = request.form
-    else:
-        data_dict = request.args
-
-    gene_ids = data_dict.get('gene_ids', [])
+@report_bp.route('/report/<group_id>', methods=['GET', 'POST'])
+def report(group_id):
+    """Generate a coverage report for a group of samples."""
+    gene_ids = (request.args.get('gene_ids') or
+                request.form.get('gene_ids') or [])
     if gene_ids:
         gene_ids = [gene_id.strip() for gene_id in gene_ids.split(',')]
-
-    sample_names = data_dict.getlist('sample_id')
-    samples_q = Sample.filter(Sample.name.in_(sample_names))
-    sample_ids = [sample.id for sample in samples_q]
-    try:
-        level = int(data_dict.get('level'))
-    except (ValueError, TypeError):
-        level = 10
-
-    customizations = {
-        'level': level,
-        'gene_ids': gene_ids,
-        'panel_name': data_dict.get('panel_name'),
-        'sample_id': sample_ids,
-        'show_genes': 'show_genes' in data_dict,
-    }
-
-    logger.debug('fetch samples for group %s', group_id)
-    sample_dict = map_samples(group_id=group_id, sample_ids=sample_ids)
-
-    if len(sample_dict) == 0:
-        return abort(404, "no samples matching group: {}".format(group_id))
-
-    logger.debug('generate general stats (gene panel)')
-    key_query = key_metrics(api, genes=customizations['gene_ids'],
-                            samples=sample_ids, group=group_id)
-    if not customizations['level'] in [item[0] for item in LEVELS]:
-        return abort(400, ('completeness level not supported: {}'
-                           .format(customizations['level'])))
-
-    logger.debug('calculate diagnostic yield for each sample')
-    tx_samples = diagnostic_yield(api, genes=gene_ids, samples=sample_ids,
-                                  group=group_id, level=customizations['level'])
-
-    return render_template(
-        'report/report.html',
-        samples=sample_dict,
-        key_metrics=key_query,
-        customizations=customizations,
-        levels=LEVELS,
-        diagnostic_yield=tx_samples,
-        genders=sex_check(api, group=group_id, samples=sample_ids),
-        created_at=datetime.date.today(),
-        group_id=group_id,
-    )
-
-
-@report_bp.route('/report')
-@report_bp.route('/report/<group_id>')
-def report(group_id=None):
-    """Generate a coverage report for a group of samples."""
+    level_raw = request.args.get('level') or request.form.get('level') or 10
     extras = {
-        'panel_name': request.args.get('panel_name'),
-        'level': request.args.get('level', 10),
+        'panel_name': (request.args.get('panel_name') or
+                       request.form.get('panel_name')),
+        'level': int(level_raw),
+        'gene_ids': gene_ids,
+        'show_genes': any([request.args.get('show_genes'),
+                           request.form.get('show_genes')]),
     }
-    if group_id:
-        samples = Sample.query.filter_by(group_id=group_id)
-    else:
-        sample_names = request.args.getlist('sample_id')
-        samples = Sample.query.filter(Sample.name.in_(sample_names))
-
+    samples = Sample.query.filter_by(group_id=group_id)
     sample_ids = [sample.id for sample in samples]
     sex_rows = samplesex_rows(sample_ids)
     metrics_rows = keymetrics_rows(sample_ids)
