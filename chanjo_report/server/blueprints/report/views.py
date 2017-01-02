@@ -11,6 +11,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import OperationalError
 
 from chanjo_report.server.extensions import api
+from chanjo_report.server.app import LEVELS
 
 logger = logging.getLogger(__name__)
 report_bp = Blueprint('report', __name__, template_folder='templates',
@@ -99,11 +100,11 @@ def report(group_id):
         gene_ids = [int(gene_id.strip()) for gene_id in raw_gene_ids.split(',')]
     else:
         gene_ids = []
-    level_raw = request.args.get('level') or request.form.get('level') or 10
+    level = int(request.args.get('level') or request.form.get('level') or 10)
     extras = {
         'panel_name': (request.args.get('panel_name') or
                        request.form.get('panel_name')),
-        'level': int(level_raw),
+        'level': level,
         'gene_ids': gene_ids,
         'show_genes': any([request.args.get('show_genes'),
                            request.form.get('show_genes')]),
@@ -112,7 +113,7 @@ def report(group_id):
     sample_ids = [sample.id for sample in samples]
     sex_rows = samplesex_rows(sample_ids)
     metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids)
-    tx_rows = transcripts_rows(sample_ids, genes=gene_ids)
+    tx_rows = transcripts_rows(sample_ids, genes=gene_ids, level=level)
     return render_template('report/report.html', extras=extras,
                            samples=samples, sex_rows=sex_rows,
                            group_id=group_id,
@@ -166,7 +167,7 @@ def keymetrics_rows(samples_ids, genes=None):
     return query
 
 
-def transcripts_rows(sample_ids, genes=None):
+def transcripts_rows(sample_ids, genes=None, level=10):
     """Generate metrics rows for transcripts."""
     for sample_id in sample_ids:
         sample_obj = Sample.query.get(sample_id)
@@ -175,7 +176,8 @@ def transcripts_rows(sample_ids, genes=None):
             all_tx = (all_tx.join(TranscriptStat.transcript)
                             .filter(Transcript.gene_id.in_(genes)))
         tx_count = all_tx.count()
-        missed_tx = all_tx.filter(TranscriptStat.completeness_10 < 100)
+        stat_field = getattr(TranscriptStat, LEVELS[level])
+        missed_tx = all_tx.filter(stat_field < 100)
         missed_count = missed_tx.count()
         if tx_count == 0:
             tx_yield = 0

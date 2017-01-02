@@ -209,8 +209,8 @@
 					<div class="col-xs-6">
 						<label class="control-label">Completeness cutoff</label>
 						<select class="form-control" name="level">
-							{% for level, name in levels %}
-								<option value="{{ level }}" {% if level == extras.level %} selected {% endif %}>{{ name }}x</option>
+							{% for level, _ in levels %}
+								<option value="{{ level }}" {% if level == extras.level %} selected {% endif %}>{{ level }}x</option>
 							{% endfor %}
 						</select>
 					</div>
@@ -224,7 +224,7 @@
 
 			<div class="form-group">
 				<div class="row" {% if hidden %}hidden{% endif %}>
-					<div class="col-xs-9">
+					<div class="col-xs-7">
 						<label class="control-label">Included genes</label>
 						<div><input class="form-control" type="text" name="gene_ids" value="{{ extras.gene_ids|join(', ') }}" placeholder="ADK,GIT"></div>
 					</div>
@@ -233,17 +233,8 @@
 						<label class="control-label">Show genes</label>
 						<div><input type="checkbox" name="show_genes" {% if extras.show_genes %}checked{% endif %}></div>
 					</div>
-				</div>
-			</div>
 
-			<div class="form-group">
-				<div class="row" {% if hidden %}hidden{% endif %}>
-					<div class="col-xs-9">
-						<label class="control-label">Samples</label>
-						<div><input class="form-control" type="text" name="sample_ids" value="{{ extras.sample_ids|join(', ') }}" placeholder="sample1,sample2"></div>
-					</div>
-
-					<div class="col-xs-3">
+					<div class="col-xs-2">
 						<label class="control-label">&nbsp;</label>
 						<button class="btn btn-default form-control" type="submit">Update</button>
 					</div>
