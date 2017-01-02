@@ -64,9 +64,8 @@ def genes():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 30))
     exonlink = request.args.get('exonlink')
-    sample_names = request.args.getlist('sample_id')
-    samples_q = Sample.filter(Sample.name.in_(sample_names))
-    sample_ids = [sample.id for sample in samples_q]
+    sample_ids = request.args.getlist('sample_id')
+    samples_q = Sample.filter(Sample.id.in_(sample_ids))
     level = request.args.get('level', 10)
     raw_gene_ids = request.args.get('gene_id')
     completeness_col = getattr(TranscriptStat, "completeness_{}".format(level))
@@ -85,10 +84,10 @@ def genes():
     total = query.count()
     has_next = total > skip + limit
     return render_template('report/genes.html', incomplete=incomplete_left,
-                           level=level, sample_names=sample_names,
-                           skip=skip, limit=limit, has_next=has_next,
-                           gene_ids=gene_ids, exonlink=exonlink,
-                           samples=samples_q)
+                           level=level, skip=skip, limit=limit,
+                           has_next=has_next, gene_ids=gene_ids,
+                           exonlink=exonlink, samples=samples_q,
+                           sample_ids=sample_ids)
 
 
 @report_bp.route('/report/<group_id>', methods=['GET', 'POST'])
