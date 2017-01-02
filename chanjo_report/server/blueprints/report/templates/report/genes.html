@@ -62,7 +62,7 @@
 						<tr>
 							<td>
 								<a href="{{ url_for('report.gene', gene_id=stat.transcript.gene_id, link=exonlink, sample_id=sample_names) }}">
-									{{ stat.transcript.gene_id }}
+									{{ stat.transcript.gene_name or stat.transcript.gene_id }}
 								</a>
 							</td>
 							<td>{{ stat.transcript_id }}</td>
