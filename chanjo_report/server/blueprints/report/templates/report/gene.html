@@ -20,7 +20,7 @@
 								<tr>
 									<th>Sample</th>
 									<th>Mean coverage</th>
-									{% for level, _ in levels %}
+									{% for level, _ in levels.items() %}
 										<th>Completeness {{ level }}x [%]</th>
 									{% endfor %}
 								</tr>
@@ -32,7 +32,7 @@
 											{{ transcript.sample.name or transcript.sample_id }}
 										</td>
 										<td>{{ transcript.mean_coverage|round(2) }}</td>
-										{% for _, field_id in levels %}
+										{% for _, field_id in levels.items() %}
 											<td>
 												{% if transcript|attr(field_id) is number %}
 													{{ transcript|attr(field_id)|round(2) }}

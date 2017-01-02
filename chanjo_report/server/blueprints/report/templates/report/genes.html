@@ -29,7 +29,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="nav nav-pills">
-				{% for level_id, _ in levels %}
+				{% for level_id, _ in levels.items() %}
 					<li {% if level_id == level|int %}class="active"{% endif %}>
 						<a href="{{ url_for('report.genes', level=level_id, gene_id=gene_ids|join(','), sample_id=sample_ids) }}">
 							Completeness {{ level_id }}x
