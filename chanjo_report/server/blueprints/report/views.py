@@ -48,12 +48,10 @@ def map_samples(group_id=None, sample_ids=None):
 @report_bp.route('/genes/<gene_id>')
 def gene(gene_id):
     """Display coverage information on a gene."""
-    sample_names = request.args.getlist('sample_id')
-    samples_q = Sample.filter(Sample.name.in_(sample_names))
-    sample_ids = [sample.id for sample in samples_q]
+    sample_ids = request.args.getlist('sample_id')
+    sample_dict = map_samples(sample_ids=sample_ids)
     gene_name = Transcript.filter_by(gene_id=gene_id).first().gene_name
     tx_groups = transcript_coverage(api, gene_id, *sample_ids)
-    sample_dict = map_samples(sample_ids=sample_ids)
     link = request.args.get('link')
     return render_template('report/gene.html', gene_id=gene_id,
                            gene_name=gene_name, link=link,
