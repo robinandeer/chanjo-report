@@ -11,7 +11,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import OperationalError
 
 from chanjo_report.server.extensions import api
-from chanjo_report.server.app import LEVELS
+from chanjo_report.server.constants import LEVELS
 
 logger = logging.getLogger(__name__)
 report_bp = Blueprint('report', __name__, template_folder='templates',

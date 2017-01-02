@@ -5,10 +5,7 @@ from flask_babel import Babel
 from .config import DefaultConfig
 from .extensions import api
 from .utils import pretty_date
-
-LEVELS = [(10, 'completeness_10'), (15, 'completeness_15'),
-          (20, 'completeness_20'), (50, 'completeness_50'),
-          (100, 'completeness_100')]
+from .constants import LEVELS
 
 
 def create_app(config=None):
