@@ -158,9 +158,10 @@
 		{{ _('Bases that overlap between read pairs are only counted once.') }}
 
 		{{ _('The parts of the genome that has been analyzed') }}
-		{{ _('is composed of all protein coding, exonic intervals') }}
-		{{ _('referenced in the') }}
-		<a href="http://www.genenames.org/">HGNC</a>.
+		{{ _('is composed of all exonic (non-UTR) regions defined in') }}
+		<a href="http://grch37.ensembl.org/biomart/martview/66f6abaa130505b2fc2752b1793d605a?VIRTUALSCHEMANAME=default&ATTRIBUTES=hsapiens_gene_ensembl.default.feature_page.ensembl_gene_id|hsapiens_gene_ensembl.default.feature_page.ensembl_transcript_id&FILTERS=&VISIBLEPANEL=mainpanel">Ensembl (GRCh37)</a>
+		{{ _('that match transcripts in') }}
+		<a href="https://www.ncbi.nlm.nih.gov/refseq/">RefSeq</a>.
 
 		{% if includes_splice_sites %}
 			{{ _('Additionally, the data also includes spicing sites') }}
