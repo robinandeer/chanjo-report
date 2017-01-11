@@ -51,7 +51,10 @@ def gene(gene_id):
     """Display coverage information on a gene."""
     sample_ids = request.args.getlist('sample_id')
     sample_dict = map_samples(sample_ids=sample_ids)
-    gene_name = Transcript.filter_by(gene_id=gene_id).first().gene_name
+    matching_tx = Transcript.filter_by(gene_id=gene_id).first()
+    if matching_tx is None:
+        return abort(404, "gene not found: {}".format(gene_id))
+    gene_name = matching_tx.gene_name
     tx_groups = transcript_coverage(api, gene_id, *sample_ids)
     link = request.args.get('link')
     return render_template('report/gene.html', gene_id=gene_id,
