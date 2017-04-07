@@ -119,7 +119,7 @@ def report(group_id):
     tx_rows = transcripts_rows(sample_ids, genes=gene_ids, level=level)
     return render_template('report/report.html', extras=extras,
                            samples=samples, sex_rows=sex_rows,
-                           group_id=group_id,
+                           group_id=group_id, levels=LEVELS,
                            metrics_rows=metrics_rows, tx_rows=tx_rows)
 
 
