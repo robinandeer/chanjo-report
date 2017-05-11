@@ -25,5 +25,10 @@ class DefaultConfig(BaseConfig):
     ACCEPT_LANGUAGES = {'en': 'English', 'sv': 'Svenska'}
 
 
+class ProdConfig(DefaultConfig):
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG = False
+
+
 class TestConfig(BaseConfig):
     TESTING = True

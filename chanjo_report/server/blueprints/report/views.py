@@ -37,6 +37,8 @@ def map_samples(group_id=None, sample_ids=None):
         query = Sample.query.filter(Sample.group_id == group_id)
     elif sample_ids:
         query = Sample.query.filter(Sample.id.in_(sample_ids))
+    else:
+        query = Sample.query
     try:
         samples = {sample_obj.id: sample_obj for sample_obj in query}
         return samples
@@ -62,7 +64,7 @@ def gene(gene_id):
                            tx_groups=tx_groups, samples=sample_dict)
 
 
-@report_bp.route('/genes')
+@report_bp.route('/genes', methods=['GET', 'POST'])
 def genes():
     """Display an overview of genes that are (un)completely covered."""
     skip = int(request.args.get('skip', 0))
@@ -97,20 +99,17 @@ def genes():
 @report_bp.route('/report/<group_id>', methods=['GET', 'POST'])
 def report(group_id):
     """Generate a coverage report for a group of samples."""
-    raw_gene_ids = (request.args.get('gene_ids') or
-                    request.form.get('gene_ids'))
+    raw_gene_ids = (request.args.get('gene_ids') or request.form.get('gene_ids'))
     if raw_gene_ids:
         gene_ids = [int(gene_id.strip()) for gene_id in raw_gene_ids.split(',')]
     else:
         gene_ids = []
     level = int(request.args.get('level') or request.form.get('level') or 10)
     extras = {
-        'panel_name': (request.args.get('panel_name') or
-                       request.form.get('panel_name')),
+        'panel_name': (request.args.get('panel_name') or request.form.get('panel_name')),
         'level': level,
         'gene_ids': gene_ids,
-        'show_genes': any([request.args.get('show_genes'),
-                           request.form.get('show_genes')]),
+        'show_genes': any([request.args.get('show_genes'), request.form.get('show_genes')]),
     }
     samples = Sample.query.filter_by(group_id=group_id)
     sample_ids = [sample.id for sample in samples]
@@ -140,7 +139,7 @@ def samplesex_rows(sample_ids):
         predicted_sex = predict_sex(*chr_coverage)
         sample_obj = Sample.query.get(sample_id)
         sample_row = {
-            'sample': sample_obj.name,
+            'sample': sample_obj.name or sample_obj.id,
             'group': sample_obj.group_name,
             'analysis_date': sample_obj.created_at,
             'sex': predicted_sex,

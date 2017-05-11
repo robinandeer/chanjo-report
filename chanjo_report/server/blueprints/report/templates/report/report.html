@@ -96,7 +96,7 @@
 			<tbody>
 				{% for data in metrics_rows %}
 					<tr>
-						<td>{{ data.TranscriptStat.sample.name }}</td>
+						<td>{{ data.TranscriptStat.sample.name or data.TranscriptStat.sample.id }}</td>
 						<td class="text-right">{{ data.mean_coverage|round(2) }}</td>
 						{% for level_int, level_key in levels.items() %}
 							<td class="text-right">{{ data|attr(level_key)|round(2) if data|attr(level_key) }}</td>
@@ -123,7 +123,7 @@
 		<tbody>
 			{% for data in transcript_rows %}
 				<tr>
-					<td>{{ data.sample.name }}</td>
+					<td>{{ data.sample.name or data.sample.id }}</td>
 					<td class="text-right">{{ data.yield|round(3) }}</td>
 					<td class="text-center">
 						{{ data.missed_count }} / <small>{{ data.total }}</small>
