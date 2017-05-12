@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from pkg_resources import load_entry_point
+import webbrowser
 
 import click
 
@@ -10,17 +11,16 @@ ROOT_PACKAGE = __package__.split('.')[0]
 
 
 @click.command()
-@click.option('-r', '--render', type=click.Choice(list_interfaces()),
-              default='html')
+@click.option('-r', '--render', type=click.Choice(list_interfaces()), default='html')
 @click.option('-s', '--samples', type=str, multiple=True)
 @click.option('-g', '--group', type=str)
 @click.option('-l', '--language', type=click.Choice(['en', 'sv']))
-@click.option('-p', '--gene-id', multiple=True,
-              help='list of gene ids to filter on')
+@click.option('-p', '--gene-id', multiple=True, help='list of gene ids to filter on')
 @click.option('-n', '--panel-name', type=str, help='name of gene panel')
 @click.option('-d', '--debug', is_flag=True)
+@click.option('--no-browser', is_flag=True, help='prevent opening of web browser')
 @click.pass_context
-def report(context, render, language, samples, group, gene_id, panel_name, debug):
+def report(context, render, language, samples, group, gene_id, panel_name, debug, no_browser):
     """Generate a coverage report from Chanjo SQL output."""
     # get uri + dialect of Chanjo database
     uri = context.obj['database']
@@ -43,6 +43,9 @@ def report(context, render, language, samples, group, gene_id, panel_name, debug
 
     # determine which render method to use and initialize it
     render_method = load_entry_point(ROOT_PACKAGE, 'chanjo_report.interfaces', render)
+
+    if render == 'html' and not no_browser:
+        webbrowser.open_new_tab("http://localhost:5000/")
 
     # run the render_method and print the result to STDOUT
     click.echo(render_method(api, options=context.obj))
