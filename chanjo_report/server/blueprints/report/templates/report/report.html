@@ -2,7 +2,7 @@
 
 {% block nav %}
 	<li>
-		{{ filters_form(group_id, extras, pdf=True, hidden=True) }}
+		{{ filters_form(sample_ids, extras, pdf=True, hidden=True) }}
 	</li>
 {% endblock %}
 
@@ -18,7 +18,7 @@
 
 				<div id="view-filters" class="panel-collapse collapse">
 					<div class="panel-body">
-						{{ filters_form(group_id, extras) }}
+						{{ filters_form(sample_ids, extras) }}
 					</div>
 				</div>
 			</div>
@@ -200,8 +200,8 @@
 	</p>
 {% endmacro %}
 
-{% macro filters_form(group_id, extras, pdf=False, hidden=False) %}
-	<form method="{{ 'POST' if extras.gene_ids|count > 100 else 'GET' }}" action="{{ url_for('report.pdf' if pdf else 'report.report', group_id=group_id) }}">
+{% macro filters_form(sample_ids, extras, pdf=False, hidden=False) %}
+	<form method="{{ 'POST' if extras.gene_ids|count > 100 else 'GET' }}" action="{{ url_for('report.pdf' if pdf else 'report.report', sample_id=sample_ids) }}">
 		<div class="{% if hidden %}navbar-form{% endif %}">
 			<div class="form-group">
 				<div class="row" {% if hidden %}hidden{% endif %}>
