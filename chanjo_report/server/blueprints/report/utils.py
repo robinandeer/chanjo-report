@@ -2,12 +2,13 @@ from __future__ import division
 import itertools
 import logging
 
-from flask import abort
+from flask import abort, flash
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import func
 from chanjo.store.models import Transcript, TranscriptStat, Sample
 from chanjo.sex import predict_sex
 
+from chanjo_report.server.constants import LEVELS
 from chanjo_report.server.extensions import api
 
 LOG = logging.getLogger(__name__)
@@ -154,8 +155,7 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
         missed_tx = missed_tx.filter(TranscriptStat.sample_id.in_(samples))
     elif group:
         samples_query = samples_query.filter_by(group_id=group)
-        missed_tx = (missed_tx.join(TranscriptStat.sample)
-                              .filter(Sample.group_id == group))
+        missed_tx = (missed_tx.join(TranscriptStat.sample).filter(Sample.group_id == group))
 
     all_count = all_tx.count()
     all_samples = [row[0] for row in samples_query.all()]

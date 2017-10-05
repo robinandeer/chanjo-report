@@ -66,7 +66,7 @@ def genes():
 @report_bp.route('/report', methods=['GET', 'POST'])
 def report():
     """Generate a coverage report for a group of samples."""
-    sample_ids = request.args.get('sample_id') or request.form.get('sample_id')
+    sample_ids = request.args.getlist('sample_id') or request.form.getlist('sample_id')
     raw_gene_ids = (request.args.get('gene_ids') or request.form.get('gene_ids'))
     if raw_gene_ids:
         gene_ids = [int(gene_id.strip()) for gene_id in raw_gene_ids.split(',')]

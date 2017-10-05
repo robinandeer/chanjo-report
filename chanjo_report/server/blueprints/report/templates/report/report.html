@@ -201,7 +201,8 @@
 {% endmacro %}
 
 {% macro filters_form(sample_ids, extras, pdf=False, hidden=False) %}
-	<form method="{{ 'POST' if extras.gene_ids|count > 100 else 'GET' }}" action="{{ url_for('report.pdf' if pdf else 'report.report', sample_id=sample_ids) }}">
+	<form method="{{ 'POST' if extras.gene_ids|count > 100 else 'GET' }}"
+		  action="{{ url_for('report.pdf' if pdf else 'report.report') }}">
 		<div class="{% if hidden %}navbar-form{% endif %}">
 			<div class="form-group">
 				<div class="row" {% if hidden %}hidden{% endif %}>
@@ -239,6 +240,10 @@
 					</div>
 				</div>
 			</div>
+
+			{% for sample_id in sample_ids %}
+				<input type="text" name="sample_id" value="{{ sample_id }}" hidden>
+			{% endfor %}
 
 			{% if hidden %}
 				<button class="btn btn-link navbar-btn" type="submit">PDF</button>

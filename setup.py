@@ -88,10 +88,6 @@ setup(name='chanjo-report',
       # to provide executable scripts, use entry points
       entry_points={
           'chanjo.subcommands.4': ['report = chanjo_report.cli:report'],
-          'chanjo_report.interfaces': [
-              'html = chanjo_report.interfaces:render_html',
-              'pdf = chanjo_report.interfaces:render_pdf'
-          ]
       },
       # see: http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[

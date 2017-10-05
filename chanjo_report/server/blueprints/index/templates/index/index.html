@@ -3,28 +3,17 @@
 {% block main %}
 	<div class="container">
 		<h3>Samples</h3>
-		<table class="table table-bordered table-hover">
-			<thead>
-				<tr>
-					<th>{{ _('Sample') }}</th>
-					<th>{{ _('Group') }}</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for sample in samples %}
-					<tr>
-						<td>{{ sample.name or sample.id }}</td>
-						<td>
-							{% if sample.group_id %}
-								<a href="{{ url_for('report.report', group_id=sample.group_id) }}">
-									{{ sample.group_id }}
-								</a>
-							{% endif %}
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+
+		<ul class="list-group">
+			{% for sample in samples %}
+				<li class="list-group-item">
+					<a href="{{ url_for('report.report', sample_id=sample.id) }}">
+						{{ sample.name }}
+					</a>
+					({{ sample.id }})
+				</li>
+			{% endfor %}
+		</ul>
 
 		<h3>Genes</h3>
 		<table class="table table-bordered table-hover">

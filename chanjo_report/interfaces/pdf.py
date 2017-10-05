@@ -6,7 +6,7 @@ from chanjo_report.server.app import create_app
 from chanjo_report.server.config import DefaultConfig
 
 
-def render_pdf(api, options=None):
+def render_pdf(options):
     """Generate a PDF report for a given group of samples."""
     group_id = options['report']['group']
     url = "/groups/{}".format(group_id)
