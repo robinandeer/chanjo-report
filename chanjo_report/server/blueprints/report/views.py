@@ -2,7 +2,7 @@
 import logging
 
 from chanjo.store.models import Transcript, TranscriptStat, Sample
-from flask import abort, Blueprint, render_template, request, url_for
+from flask import abort, Blueprint, render_template, request, url_for, session
 from flask_weasyprint import render_pdf
 
 from chanjo_report.server.extensions import api
@@ -69,9 +69,13 @@ def report():
     sample_ids = request.args.getlist('sample_id') or request.form.getlist('sample_id')
     raw_gene_ids = (request.args.get('gene_ids') or request.form.get('gene_ids'))
     if raw_gene_ids:
+        session['all_genes'] = raw_gene_ids
         gene_ids = [int(gene_id.strip()) for gene_id in raw_gene_ids.split(',')]
     else:
-        gene_ids = []
+        if request.method=='GET' and session.get('all_genes'):
+            gene_ids = [int(gene_id.strip()) for gene_id in session.get('all_genes').split(',')]
+        else:
+            gene_ids = []
     level = int(request.args.get('level') or request.form.get('level') or 10)
     extras = {
         'panel_name': (request.args.get('panel_name') or request.form.get('panel_name')),
