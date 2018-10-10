@@ -12,3 +12,4 @@ cairocffi
 tabulate
 toml
 toolz
+pymysql
