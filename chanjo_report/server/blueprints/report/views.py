@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import datetime
 
 from chanjo.store.models import Transcript, TranscriptStat, Sample
 from flask import abort, Blueprint, render_template, request, url_for, session
@@ -84,11 +85,12 @@ def report():
         'show_genes': any([request.args.get('show_genes'), request.form.get('show_genes')]),
     }
     samples = Sample.query.filter(Sample.id.in_(sample_ids))
+    case_name = request.args.get('case_name') or request.form.get('case_name')
     sex_rows = samplesex_rows(sample_ids)
     metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids)
     tx_rows = transcripts_rows(sample_ids, genes=gene_ids, level=level)
     return render_template('report/report.html', extras=extras,
-                           samples=samples, sex_rows=sex_rows,
+                           samples=samples, case_name=case_name, sex_rows=sex_rows,
                            sample_ids=sample_ids, levels=LEVELS,
                            metrics_rows=metrics_rows, tx_rows=tx_rows)
 
@@ -101,7 +103,11 @@ def pdf():
 
     # check if the request is to download the file right away
     if 'dl' in request.args:
-        fname = 'coverage-report.pdf'
+        fname = ('_').join('coverage-report', strftime("%Y-%m-%d")+'.pdf')
+
+        if 'case_name' in data_dict: # if downloaded pdf should be names after a case sisplay name
+            fname += ('_').join(data_dict['case_name'],fname)
+
         header = "attachment; filename={}".format(fname)
         response.headers['Content-Disposition'] = header
 
