@@ -42,8 +42,6 @@ $ cd chanjo-report
 $ pip install --editable .
 ```
 
-> Note that I will eventually provide a fully provisioned Vagrant environment to ease development setup :smiley:
-
 
 ## License
 MIT. See the [LICENSE](LICENSE) file for more details.
