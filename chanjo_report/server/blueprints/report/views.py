@@ -103,10 +103,11 @@ def pdf():
 
     # check if the request is to download the file right away
     if 'dl' in request.args:
-        fname = ('_').join('coverage-report', strftime("%Y-%m-%d")+'.pdf')
+        date_str = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+        fname = '_'.join(['coverage-report', date_str+'.pdf'])
 
-        if 'case_name' in data_dict: # if downloaded pdf should be names after a case sisplay name
-            fname += ('_').join(data_dict['case_name'],fname)
+        if 'case_name' in data_dict: # if downloaded pdf should be named after a case sisplay name
+            fname = '_'.join([str(data_dict['case_name']),fname])
 
         header = "attachment; filename={}".format(fname)
         response.headers['Content-Disposition'] = header

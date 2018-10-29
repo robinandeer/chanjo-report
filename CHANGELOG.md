@@ -1,5 +1,9 @@
 # Change log
 
+## 4.3.0 (2018-10-29)
+### Added
+- pdf method with download option saves report with case display name now
+
 ## 3.0.2 (2016-03-08)
 ### Added
 - option to pass link to gene view
