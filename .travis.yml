@@ -7,7 +7,7 @@ python:
 
 install:
   # update periodically - saves downloading if version is the same
-  - if [[ "${TRAVIS_PYTHON_VERSION}" == "3.5" ]]; then
+  - if [[ "${TRAVIS_PYTHON_VERSION}" == "3.6" ]]; then
       wget http://repo.continuum.io/miniconda/Miniconda-3.8.3-Linux-x86_64.sh -O miniconda.sh;
     else
       wget http://repo.continuum.io/miniconda/Miniconda3-3.8.3-Linux-x86_64.sh -O miniconda.sh;
@@ -30,7 +30,7 @@ install:
   # install your own package + executables
   - python setup.py install
 
-  - conda install setuptools=18.3
+  - conda install setuptools
 
 script:
   # command to run tests and collect test coverage
