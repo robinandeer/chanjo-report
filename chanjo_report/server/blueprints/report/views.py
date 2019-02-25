@@ -40,7 +40,7 @@ def genes():
     sample_ids = request.args.getlist('sample_id')
     samples_q = Sample.filter(Sample.id.in_(sample_ids))
     level = request.args.get('level', 10)
-    raw_gene_ids = request.args.get('gene_id') or request.form.get('gene_ids'))
+    raw_gene_ids = request.args.get('gene_id') or request.form.get('gene_ids')
     completeness_col = getattr(TranscriptStat, "completeness_{}".format(level))
     query = (api.query(TranscriptStat)
                 .join(TranscriptStat.transcript)
