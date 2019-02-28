@@ -1,5 +1,9 @@
 # Change log
 
+## 3.2.0 (2019-02-25)
+### Added
+POST gene_ids in genes view
+
 ## 3.0.2 (2016-03-08)
 ### Added
 - option to pass link to gene view
