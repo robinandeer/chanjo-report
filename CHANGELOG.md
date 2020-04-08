@@ -1,5 +1,9 @@
 # Change log
 
+## x.x.x
+###
+- POST gene_ids in genes list navigation
+
 ## 3.2.0 (2019-02-25)
 ### Added
 POST gene_ids in genes view
