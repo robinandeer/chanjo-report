@@ -1,8 +1,13 @@
 # Change log
 
-## 4.3.0 (2018-10-29)
+
+## 3.3.0 (2020-04-23)
 ### Added
 - pdf method with download option saves report with case display name now
+
+## 3.2.0 (2019-02-25)
+### Added
+POST gene_ids in genes view
 
 ## 3.0.2 (2016-03-08)
 ### Added
