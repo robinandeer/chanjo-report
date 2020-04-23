@@ -102,7 +102,7 @@ def pdf():
     response = render_pdf(url_for('report.report', **data_dict))
 
     # check if the request is to download the file right away
-    if 'dl' in request.args:
+    if 'dl' in data_dict:
         date_str = str(datetime.datetime.now().strftime("%Y-%m-%d"))
         fname = '_'.join(['coverage-report', date_str+'.pdf'])
 

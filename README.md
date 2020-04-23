@@ -1,6 +1,6 @@
 ![Example report (eng)](artwork/screenshot.png)
 
-# Chanjo Report [travis-url]
+# Chanjo Report
 Automatically generate basic coverage reports from Chanjo SQL databases. This plugin installs as a subcommand ("report") to the Chanjo command line interface.
 
 ## Usage
@@ -49,10 +49,3 @@ MIT. See the [LICENSE](LICENSE) file for more details.
 
 ## Contributing
 Anyone can help make this project better - read [CONTRIBUTING](CONTRIBUTING.md) to get started!
-
-
-[fury-url]: http://badge.fury.io/py/chanjo-report
-[fury-image]: https://badge.fury.io/py/chanjo-report.png
-
-[travis-url]: https://travis-ci.org/robinandeer/chanjo-report
-[travis-image]: https://img.shields.io/travis/robinandeer/chanjo-report.svg?style=flat

@@ -1,7 +1,6 @@
 # Change log
 
-
-## 3.3.0 (2020-04-23)
+## 4.3.0 (2020-04-23)
 ### Added
 - pdf method with download option saves report with case display name now
 
