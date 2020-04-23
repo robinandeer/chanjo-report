@@ -1,8 +1,14 @@
 # Change log
 
-## x.x.x
-###
+
+## 4.4.0 (2020-04-23)
+### Added
 - POST gene_ids in genes list navigation
+
+## 4.3.0 (2020-04-23)
+### Added
+- pdf method with download option saves report with case display name now
+
 
 ## 3.2.0 (2019-02-25)
 ### Added

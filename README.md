@@ -1,6 +1,6 @@
 ![Example report (eng)](artwork/screenshot.png)
 
-# Chanjo Report [![PyPI version][fury-image]][fury-url] [![Build Status][travis-image]][travis-url]
+# Chanjo Report
 Automatically generate basic coverage reports from Chanjo SQL databases. This plugin installs as a subcommand ("report") to the Chanjo command line interface.
 
 ## Usage
@@ -33,21 +33,14 @@ As a side effect of finding it easiest to convert HTML to PDF, Chanjo Report has
 
 
 ### Installation
-Chanjo Report is distributed through pip. Install the latest release by running:
+
+The latest version of Chanjo-report can be installed by cloning and installing the repository from Clinical Genomics github:
 
 ```bash
-$ pip install chanjo-report
-```
-
-... or locally for development:
-
-```bash
-$ git clone https://github.com/robinandeer/chanjo-report.git
+$ git clone https://github.com/Clinical-Genomics/chanjo-report.git
 $ cd chanjo-report
 $ pip install --editable .
 ```
-
-> Note that I will eventually provide a fully provisioned Vagrant environment to ease development setup :smiley:
 
 
 ## License
@@ -56,10 +49,3 @@ MIT. See the [LICENSE](LICENSE) file for more details.
 
 ## Contributing
 Anyone can help make this project better - read [CONTRIBUTING](CONTRIBUTING.md) to get started!
-
-
-[fury-url]: http://badge.fury.io/py/chanjo-report
-[fury-image]: https://badge.fury.io/py/chanjo-report.png
-
-[travis-url]: https://travis-ci.org/robinandeer/chanjo-report
-[travis-image]: https://img.shields.io/travis/robinandeer/chanjo-report.svg?style=flat
