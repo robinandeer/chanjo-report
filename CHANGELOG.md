@@ -1,5 +1,8 @@
 # Change log
 
+## 4.4.1 (2020-04-27)
+### Fixed
+- return error message when users provide a non-numerical list of gene IDs
 
 ## 4.4.0 (2020-04-23)
 ### Added
