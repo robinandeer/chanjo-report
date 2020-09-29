@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import datetime
-import json
 from chanjo.store.models import Transcript, TranscriptStat, Sample
 from flask import abort, Blueprint, render_template, request, url_for, session
 from flask_weasyprint import render_pdf
@@ -74,10 +73,14 @@ def json_genes():
     sample_ids = data.get('sample_ids').split(",")
     # Collect gene list from user form
     gene_ids = data.get('gene_ids').split(",")
+    metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids).all()
 
-    metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids)
+    results = {}
+    for row in metrics_rows:
+        ts = TranscriptStat(row[0])
+        results[ts.sample_id] = ts.mean_coverage
 
-    return str(metrics_rows.all())
+    return jsonify(results)
 
 
 @report_bp.route('/report', methods=['GET', 'POST'])

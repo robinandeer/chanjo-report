@@ -13,4 +13,3 @@ tabulate
 toml
 toolz
 pymysql
-json
