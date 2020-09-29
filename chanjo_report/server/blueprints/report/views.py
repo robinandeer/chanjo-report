@@ -63,8 +63,8 @@ def genes():
                            sample_ids=sample_ids)
 
 
-@report_bp.route('/json_genes', methods=['POST'])
-def json_genes():
+@report_bp.route('/json_gene_coverage', methods=['POST'])
+def json_gene_coverage():
     """Calculate mean coverage over a list of genes for one or more samples and return results as json"""
     data = request.json
     if data.get('gene_ids') is None or data.get('sample_ids') is None:
