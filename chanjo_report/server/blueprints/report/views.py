@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 import datetime
-
+import json
 from chanjo.store.models import Transcript, TranscriptStat, Sample
-from flask import abort, Blueprint, render_template, request, url_for, session, jsonify
+from flask import abort, Blueprint, render_template, request, url_for, session
 from flask_weasyprint import render_pdf
 
 from chanjo_report.server.extensions import api
@@ -76,8 +76,7 @@ def json_genes():
     gene_ids = data.get('gene_ids').split(",")
 
     metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids)
-    return jsonify(result_list = metrics_rows.all())
-
+    return json.dumps(metrics_rows.all().__dict__)
 
 @report_bp.route('/report', methods=['GET', 'POST'])
 def report():
