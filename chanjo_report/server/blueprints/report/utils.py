@@ -26,9 +26,9 @@ def chromosome_coverage(api, chrom, *sample_ids):
         .group_by(TranscriptStat.sample_id)
     )
     return query
-    
 
-def transcript_coverage(api, gene_id, *sample_ids):
+
+def transcript_coverage(gene_id, *sample_ids):
     """Return coverage metrics per transcript for a given gene."""
     query = (api.query(TranscriptStat)
                 .join(TranscriptStat.transcript)
