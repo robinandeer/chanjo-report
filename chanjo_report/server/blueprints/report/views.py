@@ -68,13 +68,14 @@ def genes():
 def json_genes():
     """Calculate mean coverage over all genes of a chromosome and return"""
     #curl -d 'sample_ids=ADM1059A4,ADM1059A5,ADM1059A6' https://scout-stage.scilifelab.se/reports/json_genes
+    if request.form.get('gene_ids') is None or request.form.get('sample_ids') is None:
+        return {}
+
     # Collect sample IDs from user form
-    sample_ids = request.form.get('sample_ids').split(",") if request.form.get('sample_ids') else []
+    sample_ids = request.form.get('sample_ids').split(",")
 
     # Collect gene list from user form
-    gene_ids = request.form.get('gene_ids').split(",") if request.form.get('gene_ids') else []
-
-    return f"sample_ids:{str(sample_ids)} -- gene_ids:{str(gene_ids)}"
+    gene_ids = request.form.get('gene_ids').split(",")
 
     query = api.query(TranscriptStat).join(TranscriptStat.transcript)
     # Filter coverage data by gene ID
