@@ -70,6 +70,9 @@ def json_gene_coverage():
     if data.get('gene_ids') is None or data.get('sample_ids') is None:
         return
 
+    gene_ids = data.get('gene_ids').split(",")
+    sample_ids = data.get('sample_ids').split(",")
+
     metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids).all()
     results = {}
     for row in metrics_rows:
