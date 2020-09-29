@@ -69,17 +69,12 @@ def json_genes():
     data = request.json
     if data.get('gene_ids') is None or data.get('sample_ids') is None:
         return
-    # Collect sample IDs from user form
-    sample_ids = data.get('sample_ids').split(",")
-    # Collect gene list from user form
-    gene_ids = data.get('gene_ids').split(",")
-    metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids).all()
 
+    metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids).all()
     results = {}
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
-        results[ts.sample_id] = ts.mean_coverage
-
+        results[ts.sample_id] = ts.mean_coverage # Collect mean coverage over the genes
     return jsonify(results)
 
 
