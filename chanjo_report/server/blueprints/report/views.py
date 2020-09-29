@@ -65,7 +65,7 @@ def genes():
 
 @report_bp.route('/json_genes', methods=['POST'])
 def json_genes():
-    """Calculate mean coverage over all genes of a chromosome and return"""
+    """Calculate mean coverage over a list of genes for one or more samples and return results as json"""
     data = request.json
     if data.get('gene_ids') is None or data.get('sample_ids') is None:
         return
