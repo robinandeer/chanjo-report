@@ -3,7 +3,7 @@ import logging
 import datetime
 
 from chanjo.store.models import Transcript, TranscriptStat, Sample
-from flask import abort, Blueprint, render_template, request, url_for, session
+from flask import abort, Blueprint, render_template, request, url_for, session, jsonify
 from flask_weasyprint import render_pdf
 
 from chanjo_report.server.extensions import api
@@ -64,6 +64,23 @@ def genes():
                            sample_ids=sample_ids)
 
 
+@report_bp.route('/json_genes', methods=['POST'])
+def json_genes():
+    """Calculate mean coverage over all genes of a chromosome and return"""
+    #curl -d 'sample_ids=ADM1059A4,ADM1059A5,ADM1059A6' https://scout-stage.scilifelab.se/reports/json_genes
+    # Collect sample IDs from user form
+    sample_ids = request.form.get('sample_ids').split(",") if request.form.get('sample_ids') else []
+    # Collect gene list from user form
+    gene_ids = request.form.get('gene_ids').split(",") if request.form.get('gene_ids') else []
+
+    query = api.query(TranscriptStat).join(TranscriptStat.transcript)
+    # Filter coverage data by gene ID
+    query = query.filter(Transcript.gene_id.in_(gene_ids))
+    # And sample ID
+    query = query.filter(TranscriptStat.sample_id.in_(sample_ids))
+    return jsonify({'query':})
+
+
 @report_bp.route('/report', methods=['GET', 'POST'])
 def report():
     """Generate a coverage report for a group of samples."""
@@ -80,7 +97,7 @@ def report():
         # gene ids should be numerical, if they are strings print error String instead
         gene_ids = [int(gene_id) for gene_id in gene_ids]
     except ValueError:
-        return "Gene format not supported. Gene list should contain comma-separated HGNC numerical identifiers, not strings."
+        return "Gene format not supported. Gene list should contain HGNC identifiers ()"
 
     level = int(request.args.get('level') or request.form.get('level') or 10)
     extras = {
