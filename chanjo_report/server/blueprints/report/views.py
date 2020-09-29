@@ -66,15 +66,17 @@ def genes():
 @report_bp.route('/json_gene_coverage', methods=['POST'])
 def json_gene_coverage():
     """Calculate mean coverage over a list of genes for one or more samples and return results as json"""
+    results = {}
     data = request.json
+
     if data.get('gene_ids') is None or data.get('sample_ids') is None:
-        return
+        return jsonify(results)
 
     gene_ids = data.get('gene_ids').split(",")
     sample_ids = data.get('sample_ids').split(",")
 
     metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids).all()
-    results = {}
+
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
         results[ts.sample_id] = ts.mean_coverage # Collect mean coverage over the genes
