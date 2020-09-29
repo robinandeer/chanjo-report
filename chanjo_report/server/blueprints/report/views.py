@@ -3,7 +3,6 @@ import logging
 import datetime
 
 from chanjo.store.models import Transcript, TranscriptStat, Sample
-from chanhio.calculate import sample_coverage
 from flask import abort, Blueprint, render_template, request, url_for, session, jsonify
 from flask_weasyprint import render_pdf
 
@@ -76,10 +75,8 @@ def json_genes():
     # Collect gene list from user form
     gene_ids = data.get('gene_ids').split(",")
 
-    query = api.sample_coverage(sample_ids=sample_ids, genes=gene_ids)
-    return str(query)
-
-
+    metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids)
+    return str(metrics_rows)
 
 
 @report_bp.route('/report', methods=['GET', 'POST'])
