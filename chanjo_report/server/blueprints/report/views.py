@@ -3,6 +3,7 @@ import logging
 import datetime
 
 from chanjo.store.models import Transcript, TranscriptStat, Sample
+from chanhio.calculate import sample_coverage
 from flask import abort, Blueprint, render_template, request, url_for, session, jsonify
 from flask_weasyprint import render_pdf
 
@@ -75,14 +76,8 @@ def json_genes():
     # Collect gene list from user form
     gene_ids = data.get('gene_ids').split(",")
 
-    query = api.query(TranscriptStat).join(TranscriptStat.transcript)
-    # Filter coverage data by gene IDs
-    query = query.filter(Transcript.gene_id.in_(gene_ids))
-    # And sample IDs
-    query = query.filter(TranscriptStat.sample_id.in_(sample_ids))
-
-    return str(query.all)
-
+    query = api.sample_coverage(sample_ids=sample_ids, genes=gene_ids)
+    return str(query)
 
 
 
