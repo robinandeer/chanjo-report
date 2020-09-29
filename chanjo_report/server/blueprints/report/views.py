@@ -9,7 +9,7 @@ from flask_weasyprint import render_pdf
 from chanjo_report.server.extensions import api
 from chanjo_report.server.constants import LEVELS
 from .utils import (samplesex_rows, keymetrics_rows, transcripts_rows, map_samples,
-                    transcript_coverage)
+                    transcript_coverage, chromosome_coverage)
 
 logger = logging.getLogger(__name__)
 report_bp = Blueprint('report', __name__, template_folder='templates',
@@ -62,6 +62,26 @@ def genes():
                            has_next=has_next, gene_ids=gene_ids,
                            exonlink=exonlink, samples=samples_q,
                            sample_ids=sample_ids)
+
+
+@report_bp.route('/json_chrom_coverage', methods=['POST'])
+def json_chrom_coverage():
+    """Calculate mean coverage over all gene transcripts of a chromosome for one or more samples and return results as json"""
+    results = {}
+    data = request.json
+
+    if data.get('chrom') is None or data.get('sample_ids') is None:
+        return jsonify(results)
+
+    chrom = str(data.get('chrom'))
+    sample_ids = data.get('sample_ids').split(",")
+
+    metrics_rows = chromosome_coverage(chrom, sample_ids)
+    for row in metrics_rows:
+        ts = row[0] # An object of class TranscriptStat
+        results[ts.sample_id] = ts.mean_coverage
+
+    return jsonify(results)
 
 
 @report_bp.route('/report', methods=['GET', 'POST'])
