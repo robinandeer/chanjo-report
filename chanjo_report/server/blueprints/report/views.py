@@ -2,7 +2,7 @@
 import logging
 import datetime
 from chanjo.store.models import Transcript, TranscriptStat, Sample
-from flask import abort, Blueprint, render_template, request, url_for, session
+from flask import abort, Blueprint, render_template, request, url_for, session, jsonify
 from flask_weasyprint import render_pdf
 
 from chanjo_report.server.extensions import api
