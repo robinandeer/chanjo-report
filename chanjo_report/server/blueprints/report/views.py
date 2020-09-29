@@ -78,7 +78,7 @@ def json_genes():
     query = query.filter(Transcript.gene_id.in_(gene_ids))
     # And sample ID
     query = query.filter(TranscriptStat.sample_id.in_(sample_ids))
-    return jsonify({'query':query.__dict__})
+    return str(query)
 
 
 @report_bp.route('/report', methods=['GET', 'POST'])
