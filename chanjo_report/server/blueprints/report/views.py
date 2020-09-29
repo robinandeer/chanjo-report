@@ -69,7 +69,7 @@ def json_gene_coverage():
     results = {}
     data = request.json
 
-    if data.get('gene_ids') is None or data.get('sample_ids') is None:
+    if not (data.get('gene_ids') and data.get('sample_ids')):
         return jsonify(results)
 
     gene_ids = data.get('gene_ids').split(",")
