@@ -76,7 +76,8 @@ def json_genes():
     gene_ids = data.get('gene_ids').split(",")
 
     metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids)
-    return json.dumps(metrics_rows.all())
+    return json.dumps([dict(stats) for stats in metrics_rows])
+
 
 @report_bp.route('/report', methods=['GET', 'POST'])
 def report():
