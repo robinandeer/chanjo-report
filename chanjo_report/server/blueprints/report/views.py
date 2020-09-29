@@ -70,8 +70,11 @@ def json_genes():
     #curl -d 'sample_ids=ADM1059A4,ADM1059A5,ADM1059A6' https://scout-stage.scilifelab.se/reports/json_genes
     # Collect sample IDs from user form
     sample_ids = request.form.get('sample_ids').split(",") if request.form.get('sample_ids') else []
+
     # Collect gene list from user form
     gene_ids = request.form.get('gene_ids').split(",") if request.form.get('gene_ids') else []
+
+    return f"sample_ids:{','.split(sample_ids)} -- gene_ids:{','.split(gene_ids)}"
 
     query = api.query(TranscriptStat).join(TranscriptStat.transcript)
     # Filter coverage data by gene ID
