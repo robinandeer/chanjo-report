@@ -81,7 +81,7 @@ def json_genes():
     # And sample IDs
     query = query.filter(TranscriptStat.sample_id.in_(sample_ids))
 
-    return jsonify({"stats":query.stats})
+    return str(query.all)
 
 
 
