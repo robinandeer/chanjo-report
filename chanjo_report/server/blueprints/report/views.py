@@ -76,7 +76,7 @@ def json_chrom_coverage():
     chrom = str(data.get('chrom'))
     sample_ids = data.get('sample_ids').split(",")
 
-    metrics_rows = chromosome_coverage(chrom, sample_ids)
+    metrics_rows = chromosome_coverage(chrom, sample_ids).all()
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
         results[ts.sample_id] = ts.mean_coverage
