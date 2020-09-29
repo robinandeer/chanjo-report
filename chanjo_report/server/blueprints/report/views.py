@@ -67,22 +67,24 @@ def genes():
 @report_bp.route('/json_genes', methods=['POST'])
 def json_genes():
     """Calculate mean coverage over all genes of a chromosome and return"""
-
     data = request.json
     if data.get('gene_ids') is None or data.get('sample_ids') is None:
         return
     # Collect sample IDs from user form
     sample_ids = data.get('sample_ids').split(",")
-
     # Collect gene list from user form
     gene_ids = data.get('gene_ids').split(",")
 
     query = api.query(TranscriptStat).join(TranscriptStat.transcript)
-    # Filter coverage data by gene ID
+    # Filter coverage data by gene IDs
     query = query.filter(Transcript.gene_id.in_(gene_ids))
-    # And sample ID
+    # And sample IDs
     query = query.filter(TranscriptStat.sample_id.in_(sample_ids))
-    return str(query)
+
+    return jsonify({"stats":query.stats})
+
+
+
 
 
 @report_bp.route('/report', methods=['GET', 'POST'])
