@@ -77,7 +77,7 @@ def json_genes():
 
     results = {}
     for row in metrics_rows:
-        ts = TranscriptStat(row[0])
+        ts = row[0] # An object of class TranscriptStat
         results[ts.sample_id] = ts.mean_coverage
 
     return jsonify(results)
