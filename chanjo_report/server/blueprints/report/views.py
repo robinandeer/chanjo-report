@@ -97,7 +97,7 @@ def report():
         # gene ids should be numerical, if they are strings print error String instead
         gene_ids = [int(gene_id) for gene_id in gene_ids]
     except ValueError:
-        return "Gene format not supported. Gene list should contain HGNC identifiers ()"
+        return "Gene format not supported. Gene list should contain comma-separated HGNC numerical identifiers, not strings."
 
     level = int(request.args.get('level') or request.form.get('level') or 10)
     extras = {
