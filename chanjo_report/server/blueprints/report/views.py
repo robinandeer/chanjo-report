@@ -75,7 +75,7 @@ def json_genes():
     sample_ids = data.get('sample_ids').split(",")
 
     # Collect gene list from user form
-    gene_ids = data.split(",")
+    gene_ids = data.get('gene_ids').split(",")
 
     query = api.query(TranscriptStat).join(TranscriptStat.transcript)
     # Filter coverage data by gene ID
