@@ -13,7 +13,7 @@ from chanjo_report.server.extensions import api
 
 LOG = logging.getLogger(__name__)
 
-def chromosome_coverage(chrom, *sample_ids):
+def chromosome_coverage(chrom, *samples_ids):
     """Return mean coverage over all transcripts of a chromosome for one or more samples"""
 
     query = (
