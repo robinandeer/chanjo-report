@@ -68,16 +68,6 @@ def genes():
 def json_chrom_coverage():
     """Calculate mean coverage over all gene transcripts of a chromosome for one or more samples and return results as json"""
 
-    """
-    mysql> select avg(mean_coverage) from transcript_stat where sample_id in ("ADM1059A4","ADM1059A5","ADM1059A6") and transcript_id in (select id from transcript where chromosome = "21") group by sample_id;
-    +--------------------+
-    | avg(mean_coverage) |
-    +--------------------+
-    | 36.267719639154116 |
-    |  32.74595301675494 |
-    |  34.07254707284004 |
-    +--------------------+
-    """
     results = {}
     data = request.json
 
@@ -90,7 +80,7 @@ def json_chrom_coverage():
     metrics_rows = chromosome_coverage(sample_ids, chrom).all()
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
-        results[ts.sample_id] = row[1]
+        results[ts.sample_id] = row[1] # Collect mean coverage over the chromosome transcripts
 
     return jsonify(results)
 
