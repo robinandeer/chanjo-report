@@ -20,11 +20,19 @@ def chromosome_coverage(chrom, *samples_ids):
         api.query(
             TranscriptStat,
             func.avg(TranscriptStat.mean_coverage).label('mean_coverage'),
+            func.avg(TranscriptStat.completeness_10).label('completeness_10'),
+            func.avg(TranscriptStat.completeness_15).label('completeness_15'),
+            func.avg(TranscriptStat.completeness_20).label('completeness_20'),
+            func.avg(TranscriptStat.completeness_50).label('completeness_50'),
+            func.avg(TranscriptStat.completeness_100).label('completeness_100'),
         )
         .filter(TranscriptStat.sample_id.in_(samples_ids))
-        .filter(Transcript.chromosome == chrom)
         .group_by(TranscriptStat.sample_id)
     )
+
+    # limit the search to the given chromosome
+    query = (query.join(TranscriptStat.transcript)
+                     .filter(Transcript.chromsoome == chrom))
     return query
 
 

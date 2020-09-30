@@ -88,10 +88,12 @@ def json_chrom_coverage():
     sample_ids = data.get('sample_ids').split(",")
 
     metrics_rows = chromosome_coverage(chrom, sample_ids).all()
+    """
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
         results[ts.sample_id] = ts.mean_coverage
-    return jsonify(results)
+    """
+    return str(metrics_rows)
 
 
 @report_bp.route('/json_gene_coverage', methods=['POST'])
