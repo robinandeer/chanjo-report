@@ -16,9 +16,9 @@ LOG = logging.getLogger(__name__)
 def chromosome_coverage(samples_ids, chrom=None):
     """Return mean coverage over all transcripts of a chromosome for one or more samples"""
 
-
     query = (
         api.query(
+            TranscriptStat,
             func.avg(TranscriptStat.mean_coverage).label('mean_coverage'),
         )
         .filter(TranscriptStat.sample_id.in_(samples_ids))
