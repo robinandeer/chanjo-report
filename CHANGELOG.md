@@ -1,5 +1,10 @@
 # Change log
 
+## 4.6 (2020-09-30)
+### Added
+- Endpoint that returns mean coverage over all transcripts of a cromsosome for a list of samples, in json
+### Fixed
+- Value returned by the endpoint collecting mean coverage over genes, returning json objects
 
 ## 4.5 (2020-09-29)
 ### Added
