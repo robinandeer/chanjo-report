@@ -71,7 +71,7 @@ def json_chrom_coverage():
     results = {}
     data = request.json
 
-    if data.get('chrom') is None or data.get('sample_ids') is None:
+    if not (data.get('chrom') and data.get('sample_ids')):
         return jsonify(results)
 
     chrom = str(data.get('chrom'))
