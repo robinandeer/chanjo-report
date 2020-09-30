@@ -86,14 +86,18 @@ def json_chrom_coverage():
 
     chrom = str(data.get('chrom'))
     sample_ids = data.get('sample_ids').split(",")
-
-    metrics_rows = chromosome_coverage(chrom, sample_ids).all()
+    appo = ""
+    try:
+        metrics_rows = chromosome_coverage(chrom, sample_ids).all()
+        appo = str(metrics_rows)
+    except Exception as ex:
+        appo = str(ex)
     """
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
         results[ts.sample_id] = ts.mean_coverage
     """
-    return str(metrics_rows)
+    return appo
 
 
 @report_bp.route('/json_gene_coverage', methods=['POST'])

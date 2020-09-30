@@ -32,7 +32,7 @@ def chromosome_coverage(chrom, *samples_ids):
 
     # limit the search to the given chromosome
     query = (query.join(TranscriptStat.transcript)
-                     .filter(Transcript.chromsoome == chrom))
+                     .filter(Transcript.chromosome == chrom))
     return query
 
 
