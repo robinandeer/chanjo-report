@@ -1,5 +1,10 @@
 # Change log
 
+
+## 4.5 (2020-09-29)
+### Added
+- Endpoint that returns mean coverage over one or more genes for a list of samples, in json
+
 ## 4.4.1 (2020-04-27)
 ### Fixed
 - return error message when users provide a non-numerical list of gene IDs

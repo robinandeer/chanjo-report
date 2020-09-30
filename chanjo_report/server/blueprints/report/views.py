@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import datetime
-
 from chanjo.store.models import Transcript, TranscriptStat, Sample
-from flask import abort, Blueprint, render_template, request, url_for, session
+from flask import abort, Blueprint, render_template, request, url_for, session, jsonify
 from flask_weasyprint import render_pdf
 
 from chanjo_report.server.extensions import api
@@ -64,9 +63,21 @@ def genes():
                            sample_ids=sample_ids)
 
 
+
 @report_bp.route('/json_chrom_coverage', methods=['POST'])
 def json_chrom_coverage():
     """Calculate mean coverage over all gene transcripts of a chromosome for one or more samples and return results as json"""
+
+    """
+    mysql> select avg(mean_coverage) from transcript_stat where sample_id in ("ADM1059A4","ADM1059A5","ADM1059A6") and transcript_id in (select id from transcript where chromosome = "21") group by sample_id;
+    +--------------------+
+    | avg(mean_coverage) |
+    +--------------------+
+    | 36.267719639154116 |
+    |  32.74595301675494 |
+    |  34.07254707284004 |
+    +--------------------+
+    """
     results = {}
     data = request.json
 
@@ -80,7 +91,26 @@ def json_chrom_coverage():
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
         results[ts.sample_id] = ts.mean_coverage
+    return jsonify(results)
 
+
+@report_bp.route('/json_gene_coverage', methods=['POST'])
+def json_gene_coverage():
+    """Calculate mean coverage over a list of genes for one or more samples and return results as json"""
+    results = {}
+    data = request.json
+
+    if not (data.get('gene_ids') and data.get('sample_ids')):
+        return jsonify(results)
+
+    gene_ids = data.get('gene_ids').split(",")
+    sample_ids = data.get('sample_ids').split(",")
+
+    metrics_rows = keymetrics_rows(sample_ids, genes=gene_ids).all()
+
+    for row in metrics_rows:
+        ts = row[0] # An object of class TranscriptStat
+        results[ts.sample_id] = ts.mean_coverage # Collect mean coverage over the genes
     return jsonify(results)
 
 
