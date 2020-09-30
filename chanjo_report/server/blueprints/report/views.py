@@ -88,7 +88,7 @@ def json_chrom_coverage():
     sample_ids = data.get('sample_ids').split(",")
     appo = ""
     try:
-        metrics_rows = chromosome_coverage(chrom, sample_ids).all()
+        metrics_rows = chromosome_coverage(sample_ids, chrom).all()
         appo = str(metrics_rows)
     except Exception as ex:
         appo = str(ex)
