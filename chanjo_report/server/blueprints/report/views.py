@@ -86,18 +86,13 @@ def json_chrom_coverage():
 
     chrom = str(data.get('chrom'))
     sample_ids = data.get('sample_ids').split(",")
-    appo = ""
-    try:
-        metrics_rows = chromosome_coverage(sample_ids, chrom).all()
-        appo = str(metrics_rows)
-    except Exception as ex:
-        appo = str(ex)
-    """
+
+    metrics_rows = chromosome_coverage(sample_ids, chrom).all()
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
-        results[ts.sample_id] = ts.mean_coverage
-    """
-    return appo
+        results[ts.sample_id] = row[1]
+
+    return jsonify(results)
 
 
 @report_bp.route('/json_gene_coverage', methods=['POST'])
@@ -116,7 +111,7 @@ def json_gene_coverage():
 
     for row in metrics_rows:
         ts = row[0] # An object of class TranscriptStat
-        results[ts.sample_id] = ts.mean_coverage # Collect mean coverage over the genes
+        results[ts.sample_id] = row[1] # Collect mean coverage over the genes
     return jsonify(results)
 
 
