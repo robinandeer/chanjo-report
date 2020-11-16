@@ -1,6 +1,6 @@
 # Change log
 
-## 4.7 (2020-11-16)
+## 4.7 
 ### Added
 - Dockerfile
 
