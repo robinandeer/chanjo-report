@@ -1,5 +1,9 @@
 # Change log
 
+## 4.7 (2020-11-16)
+### Added
+- Dockerfile
+
 ## 4.6 (2020-09-30)
 ### Added
 - Endpoint that returns mean coverage over all transcripts of a cromsosome for a list of samples, in json
