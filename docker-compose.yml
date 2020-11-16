@@ -1,0 +1,33 @@
+version: '3'
+# usage:
+# (sudo) docker-compose up -d
+# (sudo) docker-compose down
+services:
+    mysql_db:
+      container_name: mysql_db
+      image: mysql:5.7
+      restart: 'always'
+      expose:
+        - '3307'
+      ports:
+        - '3307:3306'
+      environment:
+         MYSQL_ROOT_PASSWORD: 'password'
+         MYSQL_DATABASE: 'chanjo_test'
+         MYSQL_USER: 'testUser'
+         MYSQL_PASSWORD: 'testPass'
+      networks:
+        - chanjo-net
+
+    chanjo_cli:
+      container_name: chanjo_cli
+      image: northwestwitch/chanjo
+      command: chanjo --database "mysql+pymysql://testUser:testPass@127.0.0.1:3307/chanjo4" init --auto
+      networks:
+        - chanjo-net
+      depends_on:
+        - mysql_db
+
+networks:
+  chanjo-net:
+    driver: bridge
