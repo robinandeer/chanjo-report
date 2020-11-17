@@ -1,5 +1,11 @@
 # Change log
 
+## 4.7 ()
+### Added
+- docker-compose and Makefile
+### Changed
+- Removed ENTRYPOINT from Dockerfile
+
 ## 4.7 (2020-11-16)
 ### Added
 - Dockerfile
