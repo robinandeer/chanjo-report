@@ -3,31 +3,45 @@ version: '3'
 # (sudo) docker-compose up -d
 # (sudo) docker-compose down
 services:
-    mysql_db:
-      container_name: mysql_db
-      image: mysql:5.7
+    mariadb:
+      container_name: mariadb
+      image: mariadb:latest
       restart: 'always'
-      expose:
-        - '3307'
-      ports:
-        - '3307:3306'
       environment:
-         MYSQL_ROOT_PASSWORD: 'password'
-         MYSQL_DATABASE: 'chanjo_test'
-         MYSQL_USER: 'testUser'
-         MYSQL_PASSWORD: 'testPass'
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=chanjo4_test
+        - MYSQL_USER=chanjoUser
+        - MYSQL_PASSWORD=chanjoPassword
+      healthcheck: # Wait for the service to be ready before accepting incoming connections
+        test: "mysql --user=chanjoUser --password=chanjoPassword --execute \"SHOW DATABASES;\""
+        timeout: 10s
+        retries: 20
       networks:
         - chanjo-net
 
-    chanjo_cli:
-      container_name: chanjo_cli
+    chanjo-cli:
+      container_name: chanjo-cli
       image: northwestwitch/chanjo
-      command: chanjo --database "mysql+pymysql://testUser:testPass@127.0.0.1:3307/chanjo4" init --auto
+      depends_on:
+        mariadb:
+          condition: service_healthy # DB_URI=mysql+pymysql://chanjoUser:chanjoPassword@mariadb/chanjo4_test
       networks:
         - chanjo-net
+
+    chanjo-report:
+      container_name: chanjo-report
+      build:
+        context: .
+        dockerfile: Dockerfile
       depends_on:
-        - mysql_db
+        - mariadb
+      networks:
+        - chanjo-net
 
 networks:
   chanjo-net:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/24
