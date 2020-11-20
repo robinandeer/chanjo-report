@@ -1,6 +1,6 @@
 # Change log
 
-## 4.7 ()
+## 4.7 (2020-11-20)
 ### Added
 - docker-compose and Makefile
 ### Changed

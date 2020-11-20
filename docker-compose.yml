@@ -21,7 +21,7 @@ services:
 
     chanjo-cli:
       container_name: chanjo-cli
-      image: northwestwitch/chanjo
+      image: clinicalgenomics/chanjo
       depends_on:
         mariadb:
           condition: service_healthy # DB_URI=mysql+pymysql://chanjoUser:chanjoPassword@mariadb/chanjo4_test
