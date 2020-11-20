@@ -19,6 +19,3 @@ RUN pip install --editable .
 RUN useradd worker
 RUN chown worker:worker -R /home/worker
 USER worker
-
-ENTRYPOINT ["chanjo", "report"]
-CMD ["--help"]
