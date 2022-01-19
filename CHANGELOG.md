@@ -1,5 +1,8 @@
 # Change log
 
+## 4.9 (2020-11-20)
+- GitHub action to push repo to PyPI on new release event
+
 ## 4.8 (2020-11-20)
 ### Added
 - docker-compose and Makefile
