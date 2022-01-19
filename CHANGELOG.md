@@ -1,6 +1,6 @@
 # Change log
 
-## 4.9 (2020-11-20)
+## 4.9 (2022-01-19)
 - GitHub action to push repo to PyPI on new release event
 
 ## 4.8 (2020-11-20)
