@@ -1,5 +1,10 @@
 # Change log
 
+##
+### Fixed
+- Typo in Makefile preventing loading of demodata
+
+
 ## 4.9 (2022-01-19)
 - GitHub action to push repo to PyPI on new release event
 
