@@ -1,6 +1,6 @@
 # Change log
 
-## 
+## 4.9 (2022-01-20)
 ### Fixed
 - Typo in Makefile preventing loading of demodata
 - Multisample PDF reports
