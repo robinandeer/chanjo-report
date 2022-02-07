@@ -17,6 +17,7 @@ def report_contents(request):
 
     sample_ids = request.args.getlist("sample_id") or request.form.getlist("sample_id")
     raw_gene_ids = request.args.get("gene_ids") or request.form.get("gene_ids")
+    gene_ids = []
     if raw_gene_ids:
         session["all_genes"] = raw_gene_ids
         gene_ids = [gene_id.strip() for gene_id in raw_gene_ids.split(",")]
