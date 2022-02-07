@@ -1,5 +1,9 @@
 # Change log
 
+##
+### Fixed
+- App crashing when unsupported gene IDs are provided in the report endpoint
+
 ## 4.9 (2022-01-20)
 ### Fixed
 - Typo in Makefile preventing loading of demodata

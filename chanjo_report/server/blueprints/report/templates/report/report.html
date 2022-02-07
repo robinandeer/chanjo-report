@@ -24,6 +24,10 @@
 			</div>
 		</div>
 
+		{% if gene_id_errors %}
+			<span style="background-color:#d9534f;color:white;">Gene list should contain comma-separated HGNC numerical identifiers, not strings. Unsopported gene identifiers: {{gene_id_errors}} were not taken into account.</span>
+		{% endif %}
+
 		<h2>{{ _('Quality report') }}: {{ _('clinical sequencing') }}</h2>
 		{% if extras.panel_name %}
 			<p>{{ _('Based on gene panel') }}: <strong>{{ extras.panel_name }}</strong></p>
