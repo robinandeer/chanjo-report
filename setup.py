@@ -3,9 +3,10 @@
 """Based on https://github.com/pypa/sampleproject/blob/master/setup.py."""
 import codecs
 import os
-from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
 import sys
+
+from setuptools import find_packages, setup
+from setuptools.command.test import test as TestCommand
 
 # shortcut for building/publishing to Pypi
 if sys.argv[-1] == "publish":
@@ -47,7 +48,7 @@ with codecs.open(os.path.join(HERE, "README.md"), encoding="utf-8") as f:
 setup(
     name="chanjo-report",
     # versions should comply with PEP440
-    version="4.9.1",
+    version="4.9.2",
     description="Automatically render coverage reports from Chanjo ouput",
     long_description=LONG_DESCRIPTION,
     # what does your project relate to?
