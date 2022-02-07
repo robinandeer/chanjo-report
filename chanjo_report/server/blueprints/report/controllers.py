@@ -33,11 +33,13 @@ def report_contents(request):
         except ValueError:
             gene_id_errors.add(gene_id)
 
+    int_gene_ids = list(int_gene_ids)
+
     level = int(request.args.get("level") or request.form.get("level") or 10)
     extras = {
         "panel_name": (request.args.get("panel_name") or request.form.get("panel_name")),
         "level": level,
-        "gene_ids": list(int_gene_ids),
+        "gene_ids": int_gene_ids,
         "show_genes": any([request.args.get("show_genes"), request.form.get("show_genes")]),
     }
     samples = Sample.query.filter(Sample.id.in_(sample_ids))
