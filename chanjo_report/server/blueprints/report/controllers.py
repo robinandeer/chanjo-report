@@ -7,7 +7,7 @@ from .utils import keymetrics_rows, samplesex_rows, transcripts_rows
 
 
 def report_contents(request):
-    """Check args or form provided by user request and prepare contents for report or pdf enrpoints
+    """Check args or form provided by user request and prepare contents for report or pdf endpoints
     Args:
         request(flask.Request)
 
@@ -19,11 +19,7 @@ def report_contents(request):
     raw_gene_ids = request.args.get("gene_ids") or request.form.get("gene_ids")
     gene_ids = []
     if raw_gene_ids:
-        session["all_genes"] = raw_gene_ids
         gene_ids = [gene_id.strip() for gene_id in raw_gene_ids.split(",")]
-    else:
-        if request.method == "GET" and session.get("all_genes"):
-            gene_ids = [gene_id.strip() for gene_id in session.get("all_genes").split(",")]
 
     int_gene_ids = set()
     gene_id_errors = set()
