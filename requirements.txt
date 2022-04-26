@@ -7,7 +7,6 @@ Flask-Assets
 Flask-Babel
 Flask-DebugToolbar
 Flask-WeasyPrint
-greenlet
 lxml>=3.0
 path.py
 pymysql
