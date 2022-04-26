@@ -1,7 +1,7 @@
 from alchy import make_declarative_base, QueryModel, ManagerMixin
 from chanjo.store.models import BASE
 from flask_sqlalchemy import SQLAlchemy
-from greenlet import getcurrent as _get_ident
+from threading import get_ident
 
 
 class Alchy(SQLAlchemy, ManagerMixin):
@@ -14,7 +14,7 @@ class Alchy(SQLAlchemy, ManagerMixin):
             session_options = {}
 
         session_options.setdefault("query_cls", QueryModel)
-        session_options.setdefault("scopefunc", _get_ident)
+        session_options.setdefault("scopefunc", get_ident)
 
         self.Model = Model
         self.make_declarative_base(Model)
