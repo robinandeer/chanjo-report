@@ -1,5 +1,3 @@
--r ../requirements.txt
-
 bumpversion
 coverage
 coveralls
@@ -8,5 +6,5 @@ invoke
 pytest
 sphinx
 sphinxcontrib-napoleon
-wheel>=0.23.0
+wheel
 Flask-Script
