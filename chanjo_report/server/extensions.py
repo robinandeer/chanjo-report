@@ -5,7 +5,10 @@ from threading import get_ident
 
 
 class Alchy(SQLAlchemy, ManagerMixin):
-    """Flask extension that integrates alchy with Flask-SQLAlchemy."""
+    """Flask extension that integrates alchy with Flask-SQLAlchemy.
+    Originally developed in Flask-Alchy (https://github.com/dgilland/flask-alchy).
+    It has some changes here due to the deprecation in required libs (flask and flask_sqlalchemy)
+    """
 
     def __init__(
         self, app=None, use_native_unicode=True, session_options=None, Model=None, metadata=None
