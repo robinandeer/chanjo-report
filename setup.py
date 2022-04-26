@@ -2,11 +2,32 @@
 # -*- coding: utf-8 -*-
 """Based on https://github.com/pypa/sampleproject/blob/master/setup.py."""
 import codecs
+import io
 import os
 import sys
 
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+
+
+def parse_reqs(req_path="./requirements.txt"):
+    """Parse lib requirements from requirement.txt file"""
+    install_requires = []
+    with io.open(os.path.join(HERE, "requirements.txt"), encoding="utf-8") as handle:
+        # remove comments and empty lines
+        lines = (line.strip() for line in handle if line.strip() and not line.startswith("#"))
+
+        for line in lines:
+            # add the line as a new requirement
+            install_requires.append(line)
+
+    return install_requires
+
+
+REQUIRED = parse_reqs()
+
 
 # shortcut for building/publishing to Pypi
 if sys.argv[-1] == "publish":
@@ -40,7 +61,6 @@ class PyTest(TestCommand):
 
 
 # get the long description from the relevant file
-HERE = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(HERE, "README.md"), encoding="utf-8") as f:
     LONG_DESCRIPTION = f.read()
 
@@ -72,21 +92,7 @@ setup(
         ]
     },
     zip_safe=False,
-    install_requires=[
-        "setuptools",
-        "chanjo>=4.1.0",
-        "Flask-WeasyPrint",
-        "cairocffi",
-        "lxml>=3.0",
-        "cffi",
-        "Flask",
-        "SQLAlchemy",
-        "Flask-Babel",
-        "tabulate",
-        "Flask-Alchy",
-        "Flask-SQLAlchemy==2.1",
-        "pymysql",
-    ],
+    install_requires=REQUIRED,
     tests_require=["pytest"],
     cmdclass={"test": PyTest},
     # to provide executable scripts, use entry points
