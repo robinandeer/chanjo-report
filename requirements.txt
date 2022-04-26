@@ -1,15 +1,20 @@
--r requirements/conda.txt
-
+alchy
+cairocffi
 chanjo>=4.1.0
-Flask-WeasyPrint
+cffi
+Flask
 Flask-Assets
 Flask-Babel
 Flask-DebugToolbar
-Flask-Alchy
+Flask-WeasyPrint
+greenlet
+lxml>=3.0
 path.py
+pymysql
 pyscss
-cairocffi
+six
+sqlservice
+Flask-SQLAlchemy
 tabulate
 toml
 toolz
-pymysql

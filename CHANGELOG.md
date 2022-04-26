@@ -1,5 +1,11 @@
 # Change log
 
+## 4.9.3 (2022-04-26)
+### Changed
+- Install requirements from requirements file parsed in setup.py
+### Fixed
+- Error launching the app due to `LocalStack.__ident_func__` missing in werkzeug >= 2.1.x
+
 ## 4.9.2 (2022-02-07)
 ### Fixed
 - App crashing when unsupported gene IDs are provided in the report endpoint
