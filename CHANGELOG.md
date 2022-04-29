@@ -1,5 +1,9 @@
 # Change log
 
+##
+### Fixed
+- Use virtual environment and multi-stage build in Dockerfile
+
 ## 4.9.3 (2022-04-26)
 ### Changed
 - Install requirements from requirements file parsed in setup.py
