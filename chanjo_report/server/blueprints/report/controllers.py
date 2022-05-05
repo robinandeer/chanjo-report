@@ -16,7 +16,7 @@ def report_contents(request):
     """
 
     sample_ids = request.args.getlist("sample_id") or request.form.getlist("sample_id")
-    raw_gene_ids = request.args.get("gene_ids") or request.form.get("gene_ids")
+    raw_gene_ids = request.form.get("gene_ids")
     gene_ids = []
     if raw_gene_ids:
         gene_ids = [gene_id.strip() for gene_id in raw_gene_ids.split(",")]
@@ -39,7 +39,7 @@ def report_contents(request):
         "show_genes": any([request.args.get("show_genes"), request.form.get("show_genes")]),
     }
     samples = Sample.query.filter(Sample.id.in_(sample_ids))
-    case_name = request.args.get("case_name") or request.form.get("case_name")
+    case_name = request.form.get("case_name")
     sex_rows = samplesex_rows(sample_ids)
     metrics_rows = keymetrics_rows(sample_ids, genes=int_gene_ids)
     tx_rows = transcripts_rows(sample_ids, genes=int_gene_ids, level=level)

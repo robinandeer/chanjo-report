@@ -205,7 +205,7 @@
 {% endmacro %}
 
 {% macro filters_form(sample_ids, extras, pdf=False, hidden=False) %}
-	<form method="{{ 'POST' if extras.gene_ids|count > 100 else 'GET' }}"
+	<form method="POST"
 		  action="{{ url_for('report.pdf' if pdf else 'report.report') }}">
 		<div class="{% if hidden %}navbar-form{% endif %}">
 			<div class="form-group">

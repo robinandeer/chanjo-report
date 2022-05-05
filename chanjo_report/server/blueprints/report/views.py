@@ -124,14 +124,14 @@ def json_gene_coverage():
     return jsonify(results)
 
 
-@report_bp.route("/report", methods=["GET", "POST"])
+@report_bp.route("/report", methods=["POST"])
 def report():
     """Generate a coverage report for a group of samples."""
     data = controllers.report_contents(request)
     return render_template("report/report.html", **data)
 
 
-@report_bp.route("/report/pdf", methods=["GET", "POST"])
+@report_bp.route("/report/pdf", methods=["POST"])
 def pdf():
     """Generate a PDF coverage report for a group of samples."""
     data = controllers.report_contents(request)
@@ -140,7 +140,7 @@ def pdf():
     response = render_pdf(HTML(string=html_report))
 
     # check if the request is to download the file right away
-    data_dict = request.form if request.method == "POST" else request.args
+    data_dict = request.form
     if "dl" in data_dict:
         date_str = str(datetime.datetime.now().strftime("%Y-%m-%d"))
         fname = "_".join(["coverage-report", date_str + ".pdf"])
