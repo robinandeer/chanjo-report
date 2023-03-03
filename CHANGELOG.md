@@ -1,8 +1,9 @@
 # Change log
 
-##
+## [Unreleased]
 ### Fixed
 - Use virtual environment and multi-stage build in Dockerfile
+- `Babel` object has no attribute `localeselector` error at startup
 
 ## 4.9.3 (2022-04-26)
 ### Changed
