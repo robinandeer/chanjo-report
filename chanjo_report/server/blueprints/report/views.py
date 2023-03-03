@@ -140,7 +140,7 @@ def pdf():
     response = render_pdf(HTML(string=html_report))
 
     # check if the request is to download the file right away
-    data_dict = request.form
+    data_dict = request.form if request.method == "POST" else request.args
     if "dl" in data_dict:
         date_str = str(datetime.datetime.now().strftime("%Y-%m-%d"))
         fname = "_".join(["coverage-report", date_str + ".pdf"])
