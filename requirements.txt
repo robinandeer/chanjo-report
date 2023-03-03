@@ -4,7 +4,7 @@ chanjo>=4.1.0
 cffi
 Flask
 Flask-Assets
-Flask-Babel
+Flask-Babel>=3
 Flask-DebugToolbar
 Flask-WeasyPrint
 lxml>=3.0

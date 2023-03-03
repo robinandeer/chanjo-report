@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask import current_app, Flask, request
+from flask import Flask, current_app, request
 from flask_babel import Babel
 
 from .config import DefaultConfig
+from .constants import LEVELS
 from .extensions import api
 from .utils import pretty_date
-from .constants import LEVELS
 
 
 def create_app(config=None):
@@ -34,18 +34,17 @@ def configure_extensions(app):
     # Flask-babel
     babel = Babel(app)
 
-    @babel.localeselector
     def get_locale():
         """Determine locale to use for translations."""
-        accept_languages = current_app.config.get('ACCEPT_LANGUAGES')
+        accept_languages = current_app.config.get("ACCEPT_LANGUAGES")
 
         # first check request args
-        session_language = request.args.get('lang')
+        session_language = request.args.get("lang")
         if session_language in accept_languages:
             return session_language
 
         # language can be forced in config
-        user_language = current_app.config.get('CHANJO_LANGUAGE')
+        user_language = current_app.config.get("CHANJO_LANGUAGE")
         if user_language:
             return user_language
 
@@ -54,10 +53,12 @@ def configure_extensions(app):
         # The best match wins.
         return request.accept_languages.best_match(accept_languages)
 
+    babel.init_app(app, locale_selector=get_locale)
+
 
 def configure_blueprints(app):
     """Configure blueprints in views."""
-    for blueprint in app.config.get('BLUEPRINTS', []):
+    for blueprint in app.config.get("BLUEPRINTS", []):
         app.register_blueprint(blueprint)
 
 
