@@ -124,14 +124,14 @@ def json_gene_coverage():
     return jsonify(results)
 
 
-@report_bp.route("/report", methods=["GET", "POST"])
+@report_bp.route("/report", methods=["POST", "GET"])
 def report():
     """Generate a coverage report for a group of samples."""
     data = controllers.report_contents(request)
     return render_template("report/report.html", **data)
 
 
-@report_bp.route("/report/pdf", methods=["GET", "POST"])
+@report_bp.route("/report/pdf", methods=["POST", "GET"])
 def pdf():
     """Generate a PDF coverage report for a group of samples."""
     data = controllers.report_contents(request)
