@@ -1,6 +1,8 @@
 # Change log
 
-## [Unreleased]
+## 4.9.4 (2023-03-06)
+### Changed
+- Remove one more use of GET and flask session storage to avoid overloading the session cookie
 ### Fixed
 - Use virtual environment and multi-stage build in Dockerfile
 - `Babel` object has no attribute `localeselector` error at startup
