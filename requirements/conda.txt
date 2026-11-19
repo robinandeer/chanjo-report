@@ -1,6 +1,0 @@
-# conda installables
-lxml>=3.0
-cffi
-Flask
-six
-SQLAlchemy

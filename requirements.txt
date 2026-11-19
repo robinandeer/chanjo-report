@@ -1,14 +1,9 @@
--r requirements/conda.txt
-
-chanjo>=4.1.0
-Flask-WeasyPrint
-Flask-Assets
-Flask-Babel
-Flask-DebugToolbar
-Flask-Alchy
-path.py
-pyscss
-cairocffi
-tabulate
-toml
+chanjo>=4.9.2
+cryptography
+Flask
+Flask-Babel>=3
+importlib_resources
+pdfkit
+pymysql
+Flask-SQLAlchemy
 toolz

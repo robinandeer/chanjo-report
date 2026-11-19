@@ -46,6 +46,7 @@ coverage.xml
 dev/
 instance/
 .env
+.idea/
 
 # Rope
 .ropeproject

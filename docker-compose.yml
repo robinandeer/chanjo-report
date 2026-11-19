@@ -1,0 +1,52 @@
+version: '3'
+# usage:
+# (sudo) docker-compose up -d
+# (sudo) docker-compose down
+services:
+    mariadb:
+      container_name: mariadb
+      image: mariadb:latest
+      platform: linux/amd64
+      restart: 'always'
+      environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=chanjo4_test
+        - MYSQL_USER=chanjoUser
+        - MYSQL_PASSWORD=chanjoPassword
+      healthcheck:
+          test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+          start_period: 1m
+          interval: 10s
+          timeout: 5s
+          retries: 3
+      networks:
+        - chanjo-net
+
+    chanjo-cli:
+      platform: linux/amd64
+      container_name: chanjo-cli
+      image: clinicalgenomics/chanjo
+      depends_on:
+        mariadb:
+          condition: service_healthy # DB_URI=mysql+pymysql://chanjoUser:chanjoPassword@mariadb/chanjo4_test
+      networks:
+        - chanjo-net
+
+    chanjo-report:
+      platform: linux/amd64
+      container_name: chanjo-report
+      build:
+        context: .
+        dockerfile: Dockerfile
+      depends_on:
+        - mariadb
+      networks:
+        - chanjo-net
+
+networks:
+  chanjo-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/24

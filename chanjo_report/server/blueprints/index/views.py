@@ -13,7 +13,7 @@ index_bp = Blueprint('index', __name__, template_folder='templates',
 
 @index_bp.route('/')
 def index():
-    sample_objs = api.query(Sample).limit(20)
-    tx_models = api.query(Transcript).distinct(Transcript.gene_id).limit(20)
+    sample_objs = api.session.query(Sample).limit(20)
+    tx_models = api.session.query(Transcript).distinct(Transcript.gene_id).limit(20)
     return render_template('index/index.html', samples=sample_objs,
                            transcripts=tx_models)

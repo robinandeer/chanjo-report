@@ -1,5 +1,145 @@
 # Change log
 
+## [unreleased]
+### Added
+- Tests that load demo data into a SQLite chanjo database and request the report, gene, JSON and PDF routes, run in CI on every pull request
+### Removed
+- Unused `pyscss` dependency. SCSS compilation was removed in 2014 and the package ships plain CSS, but the requirement was never dropped. It is a source-only package that cannot be installed without a build step.
+- Other unused dependencies: `Flask-DebugToolbar`, `lxml`, `path.py`, `six`, `tabulate` and `toml`
+
+## 4.12.3 (2026-10-02)
+### Fixed
+- Build with latest chanjo 4.9.2 including the sqlalchemy async io fix
+
+## 4.12.2 (2026-05-08)
+### Fixed
+- Order of data returned in the `samplesex_rows` function (#89)
+
+## 4.12.1 (2026-05-08)
+### Fixed 
+- Update automation, bump chanjo version to 4.9.1
+
+## 4.12.0 (2025-10-29) 
+### Added
+- Enable PEP 660–compatible editable installs (`pip install -e`) (#81)
+### Changed
+- Replaced Flask-weasyprint (cairo and pango-based) with pdfkit (#79)
+- Removed `https://bootswatch.com/simplex/bootstrap.min.css` lib import from two base layouts since it's no longer available (#83)
+### Fixed
+- Healthcheck in Docker demo setup (#77)
+- `chanjo report --render pdf` command now accepting a list of samples and output file (#80)
+
+## 4.11.5 (2025-08-13)
+### Fixed
+- Update automation with slightly older python, and explicit setuptools
+
+## 4.11.5 (2025-08-13)
+### Fixed
+- Update automation with slightly older python (3.10), and explicit setuptools
+- Bump version and fix changelog
+- Once more, test with 3.12 and explicit setuptools install in automation
+
+## 4.11.4 (2025-08-13)
+### Fixed
+- Update automation with newer images to allow e.g. pypi deployment
+
+## 4.11.3 (2025-03-13)
+### Fixed
+- Removed `webassets` via removal of unused Flask-Assets dependency
+
+## 4.11.2 (2024-11-10)
+### Changed
+- Updated Dockerfile to use Python 3.12
+### Fixed
+- Deprecate pkg_resources
+- Healthcheck of MariaDB container in docker-compose.yml
+
+## 4.11.1 (2024-06-05)
+### Fixed
+- Added cryptography module among the dependencies
+
+## 4.11 (2024-05-23)
+### Changed
+- Removed alchy dependency
+### Fixed
+- Timeout when creating genes overview due to slow transcript_stat query
+
+## 4.10.2 (2023-08-16)
+### Fixed
+- Timeout when creating report due to slow transcript_stat query
+
+## 4.10.1 (2023-03-10)
+### Fixed
+- Fix GitHub Actions PyPi automation 
+
+## 4.10 (2023-03-07)
+### Added
+- Documentation for Docker demo build
+### Fixed
+- Update from deprecated Ubuntu base image for the PyPi build publish flow
+
+## 4.9.4 (2023-03-06)
+### Changed
+- Remove one more use of GET and flask session storage to avoid overloading the session cookie
+### Fixed
+- Use virtual environment and multi-stage build in Dockerfile
+- `Babel` object has no attribute `localeselector` error at startup
+
+## 4.9.3 (2022-04-26)
+### Changed
+- Install requirements from requirements file parsed in setup.py
+### Fixed
+- Error launching the app due to `LocalStack.__ident_func__` missing in werkzeug >= 2.1.x
+
+## 4.9.2 (2022-02-07)
+### Fixed
+- App crashing when unsupported gene IDs are provided in the report endpoint
+
+## 4.9.1 (2022-01-20)
+### Fixed
+- Typo in Makefile preventing loading of demodata
+- Multisample PDF reports
+
+## 4.9 (2022-01-19)
+- GitHub action to push repo to PyPI on new release event
+
+## 4.8 (2020-11-20)
+### Added
+- docker-compose and Makefile
+### Changed
+- Removed ENTRYPOINT from Dockerfile
+
+## 4.7 (2020-11-16)
+### Added
+- Dockerfile
+
+## 4.6 (2020-09-30)
+### Added
+- Endpoint that returns mean coverage over all transcripts of a cromsosome for a list of samples, in json
+### Fixed
+- Value returned by the endpoint collecting mean coverage over genes, returning json objects
+
+## 4.5 (2020-09-29)
+### Added
+- Endpoint that returns mean coverage over one or more genes for a list of samples, in json
+
+## 4.4.1 (2020-04-27)
+### Fixed
+- return error message when users provide a non-numerical list of gene IDs
+
+## 4.4.0 (2020-04-23)
+### Added
+- POST gene_ids in genes list navigation
+
+## 4.3.0 (2020-04-23)
+### Added
+- pdf method with download option saves report with case display name now
+
+
+## 3.2.0 (2019-02-25)
+### Added
+POST gene_ids in genes view
+
 ## 3.0.2 (2016-03-08)
 ### Added
 - option to pass link to gene view

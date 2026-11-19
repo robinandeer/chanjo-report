@@ -1,6 +1,6 @@
 ![Example report (eng)](artwork/screenshot.png)
 
-# Chanjo Report [![PyPI version][fury-image]][fury-url] [![Build Status][travis-image]][travis-url]
+# Chanjo Report
 Automatically generate basic coverage reports from Chanjo SQL databases. This plugin installs as a subcommand ("report") to the Chanjo command line interface.
 
 ## Usage
@@ -33,22 +33,72 @@ As a side effect of finding it easiest to convert HTML to PDF, Chanjo Report has
 
 
 ### Installation
-Chanjo Report is distributed through pip. Install the latest release by running:
+
+The latest version of Chanjo-report can be installed by cloning and installing the repository from Clinical Genomics github:
 
 ```bash
-$ pip install chanjo-report
-```
-
-... or locally for development:
-
-```bash
-$ git clone https://github.com/robinandeer/chanjo-report.git
+$ git clone https://github.com/Clinical-Genomics/chanjo-report.git
 $ cd chanjo-report
 $ pip install --editable .
 ```
 
-> Note that I will eventually provide a fully provisioned Vagrant environment to ease development setup :smiley:
+### Demo instance with Docker
 
+To run a local demo with Docker, ensure you have a Docker engine running.
+If you do not have Docker set up, we can recommend Docker Desktop (https://www.docker.com/products/docker-desktop/).
+
+Then use `make` with the repository `Makefile` to build and run:
+
+```bash
+make build
+make setup
+make report
+```
+
+Point your browser to `http://127.0.0.1:5000` and find the demo samples.
+
+#### Comprehensive instructions
+
+We provide a Dockerfile to run the server in a container. To run a demo instance of the server with a pre-populated database consisting of a case with 3 samples, clone the repository using the following commands:
+
+ ```bash
+ $ git clone https://github.com/Clinical-Genomics/chanjo-report.git
+ $ cd chanjo-report
+ ```
+
+Then you could make use of the services present in the Docker-compose file following these 3 steps:
+
+1. Build the images
+
+    ```bash
+    make build
+    ```
+
+2. Launch chanjo to create a populate the database with demo data
+
+    ```bash
+    make setup
+    ```
+
+3. Launch the chanjo-report server
+
+     ```bash
+     make report
+     ```
+
+A running instance of the server should now be available at the following url: http://localhost:5000/.
+
+In order to generate a report containing all 3 demo samples, use the respective request args: http://localhost:5000/report?sample_id=sample1&sample_id=sample2&sample_id=sample3
+
+Please be aware that if you are building and running the Dockerized version of chanjo-report, there might be **issues on `macOS` if your processor is Apple silicon** (or another `ARM64` based architecture).
+In order to build the `chanjo-report` image in the `ARM64` architecture, you can set the environment variable `DOCKER_DEFAULT_PLATFORM`:
+
+ ```bash
+ export DOCKER_DEFAULT_PLATFORM=linux/amd64
+make build
+make setup
+make report
+```
 
 ## License
 MIT. See the [LICENSE](LICENSE) file for more details.
@@ -56,10 +106,3 @@ MIT. See the [LICENSE](LICENSE) file for more details.
 
 ## Contributing
 Anyone can help make this project better - read [CONTRIBUTING](CONTRIBUTING.md) to get started!
-
-
-[fury-url]: http://badge.fury.io/py/chanjo-report
-[fury-image]: https://badge.fury.io/py/chanjo-report.png
-
-[travis-url]: https://travis-ci.org/robinandeer/chanjo-report
-[travis-image]: https://img.shields.io/travis/robinandeer/chanjo-report.svg?style=flat

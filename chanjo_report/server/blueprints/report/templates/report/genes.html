@@ -81,13 +81,19 @@
 		<div class="col-md-6">
 			{% if skip > 0 %}
 				{% set next_skip = 0 if (skip - limit) < 0 else (skip - limit) %}
-				<a href="{{ url_for('report.genes', level=level, skip=next_skip, limit=limit, gene_id=gene_ids|join(','), sample_id=sample_ids) }}" class="btn btn-default">Previous</a>
+				<form id="report-genes-previous" method="POST" action="{{ url_for('report.genes', level=level, skip=next_skip, limit=limit, sample_id=sample_ids) }}">
+					<input type="hidden" name="gene_id" value="{{ gene_ids|join(',') }}">
+					<button type="submit" class="btn btn-default">Previous</button>
+				</form>
 			{% endif %}
 		</div>
 		<div class="col-md-6">
 			{% if has_next %}
-				<div class="pull-right">
-					<a href="{{ url_for('report.genes', level=level, skip=(skip + limit), limit=limit, gene_id=gene_ids|join(','), sample_id=sample_ids) }}" class="btn btn-default">Next</a>
+				<div class="float-right">
+					<form id="report-genes-next" method="POST" action="{{ url_for('report.genes', level=level, skip=(skip + limit), limit=limit, sample_id=sample_ids) }}">
+						<input type="hidden" name="gene_id" value="{{ gene_ids|join(',') }}">
+						<button type="submit" class="btn btn-default">Next</button>
+					</form>
 				</div>
 			{% endif %}
 		</div>

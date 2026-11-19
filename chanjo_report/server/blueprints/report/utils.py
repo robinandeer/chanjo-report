@@ -13,10 +13,26 @@ from chanjo_report.server.extensions import api
 
 LOG = logging.getLogger(__name__)
 
+def chromosome_coverage(samples_ids, chrom=None):
+    """Return mean coverage over all transcripts of a chromosome for one or more samples"""
+
+    query = (
+        api.session.query(
+            TranscriptStat,
+            func.avg(TranscriptStat.mean_coverage).label('mean_coverage'),
+        )
+        .filter(TranscriptStat.sample_id.in_(samples_ids))
+        .group_by(TranscriptStat.sample_id)
+    )
+
+    query = (query.join(TranscriptStat.transcript)
+        .filter(Transcript.chromosome == chrom))
+
+    return query
 
 def transcript_coverage(api, gene_id, *sample_ids):
     """Return coverage metrics per transcript for a given gene."""
-    query = (api.query(TranscriptStat)
+    query = (api.session.query(TranscriptStat)
                 .join(TranscriptStat.transcript)
                 .filter(Transcript.gene_id == gene_id)
                 .order_by(TranscriptStat.transcript_id,
@@ -46,19 +62,27 @@ def map_samples(group_id=None, sample_ids=None):
 
 def samplesex_rows(sample_ids):
     """Generate sex prediction info rows."""
-    sex_query = (api.query(
-        TranscriptStat.sample_id,
-        Transcript.chromosome,
-        func.avg(TranscriptStat.mean_coverage)
-    ).join(
-        TranscriptStat.transcript
-    ).filter(
-        Transcript.chromosome.in_(['X', 'Y']),
-        TranscriptStat.sample_id.in_(sample_ids)
-    ).group_by(
-        TranscriptStat.sample_id,
-        Transcript.chromosome
-    ))
+
+    sex_query = (
+        api.session.query(
+            TranscriptStat.sample_id,
+            Transcript.chromosome,
+            func.avg(TranscriptStat.mean_coverage)
+        )
+        .join(TranscriptStat.transcript)
+        .filter(
+            Transcript.chromosome.in_(['X', 'Y']),
+            TranscriptStat.sample_id.in_(sample_ids)
+        )
+        .group_by(
+            TranscriptStat.sample_id,
+            Transcript.chromosome
+        )
+        .order_by(
+            TranscriptStat.sample_id,
+            Transcript.chromosome
+        )
+    )
 
     samples = itertools.groupby(sex_query, lambda row: row[0])
     for sample_id, chromosomes in samples:
@@ -80,7 +104,7 @@ def samplesex_rows(sample_ids):
 def keymetrics_rows(samples_ids, genes=None):
     """Generate key metrics rows."""
     query = (
-        api.query(
+        api.session.query(
             TranscriptStat,
             func.avg(TranscriptStat.mean_coverage).label('mean_coverage'),
             func.avg(TranscriptStat.completeness_10).label('completeness_10'),
@@ -89,6 +113,7 @@ def keymetrics_rows(samples_ids, genes=None):
             func.avg(TranscriptStat.completeness_50).label('completeness_50'),
             func.avg(TranscriptStat.completeness_100).label('completeness_100'),
         )
+        .with_hint(TranscriptStat, "USE INDEX (_sample_transcript_uc)")
         .filter(TranscriptStat.sample_id.in_(samples_ids))
         .group_by(TranscriptStat.sample_id)
     )
@@ -139,8 +164,8 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
     str_level = "completeness_{}".format(level)
     completeness_col = getattr(TranscriptStat, str_level)
 
-    all_tx = api.query(Transcript)
-    missed_tx = (api.query(TranscriptStat)
+    all_tx = api.session.query(Transcript)
+    missed_tx = (api.session.query(TranscriptStat)
                     .filter(completeness_col < threshold)
                     .order_by(TranscriptStat.sample_id))
 
@@ -149,7 +174,7 @@ def diagnostic_yield(api, genes=None, samples=None, group=None, level=10):
                               .filter(Transcript.gene_id.in_(genes)))
         all_tx = all_tx.filter(Transcript.gene_id.in_(genes))
 
-    samples_query = api.query(Sample.id)
+    samples_query = api.session.query(Sample.id)
     if samples:
         samples_query = samples_query.filter(Sample.id.in_(samples))
         missed_tx = missed_tx.filter(TranscriptStat.sample_id.in_(samples))

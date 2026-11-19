@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Utilities related to entry point interfaces loaded by the CLI."""
-from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points
 
 
 def iter_interfaces(ep_key='chanjo_report.interfaces'):
@@ -12,8 +12,16 @@ def iter_interfaces(ep_key='chanjo_report.interfaces'):
     Yields:
         object: Entry point object
     """
-    for entry_point in iter_entry_points(ep_key):
-        yield entry_point
+    eps = entry_points()
+    # Adjust based on Python's version of importlib.metadata
+    if hasattr(eps, 'select'):
+        # Python >= 3.10
+        for entry_point in eps.select(group=ep_key):
+            yield entry_point
+    else:
+        # For Python < 3.10
+        for entry_point in eps.get(ep_key, []):
+            yield entry_point
 
 
 def list_interfaces():

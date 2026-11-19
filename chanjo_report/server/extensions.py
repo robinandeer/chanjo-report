@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-"""Extensions module. Each extension is initialized in the app factory
-located in app.py
-"""
 from chanjo.store.models import BASE
-from flask_alchy import Alchy
+from flask_sqlalchemy import SQLAlchemy
 
-api = Alchy(Model=BASE)
+api = SQLAlchemy(model_class=BASE)
