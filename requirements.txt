@@ -2,15 +2,8 @@ chanjo>=4.9.2
 cryptography
 Flask
 Flask-Babel>=3
-Flask-DebugToolbar
 importlib_resources
-lxml>=3.0
-path.py
 pdfkit
 pymysql
-pyscss
-six
 Flask-SQLAlchemy
-tabulate
-toml
 toolz

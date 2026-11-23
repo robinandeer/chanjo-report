@@ -1,5 +1,12 @@
 # Change log
 
+## [unreleased]
+### Added
+- Tests that load demo data into a SQLite chanjo database and request the report, gene, JSON and PDF routes, run in CI on every pull request
+### Removed
+- Unused `pyscss` dependency. SCSS compilation was removed in 2014 and the package ships plain CSS, but the requirement was never dropped. It is a source-only package that cannot be installed without a build step.
+- Other unused dependencies: `Flask-DebugToolbar`, `lxml`, `path.py`, `six`, `tabulate` and `toml`
+
 ## 4.12.3 (2026-10-02)
 ### Fixed
 - Build with latest chanjo 4.9.2 including the sqlalchemy async io fix
