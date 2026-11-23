@@ -1,0 +1,15 @@
+# Keep the test build context small. Only the files listed in Dockerfile.test are needed.
+.git
+.github
+.venv
+.pytest_cache
+.ruff_cache
+.coverage
+dist
+docs
+htmlcov
+__pycache__
+**/__pycache__
+**/*.pyc
+Dockerfile*
+docker-compose*.yml

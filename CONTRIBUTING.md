@@ -62,13 +62,14 @@ Ready to contribute? Here's how to set up `Chanjo Report` for local development.
 
   I would personally recommend [SourceTree][sourcetree] as an excellent GUI for git.
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development:
+3. Install [uv][uv] if you don't have it, then sync the project into a virtual environment. `uv` reads `pyproject.toml` and the committed `uv.lock`, so everyone gets the same dependency versions:
 
   ```bash
-  $ mkvirtualenv chanjo-report
   $ cd chanjo-report/
-  $ pip install --editable .
+  $ uv sync
   ```
+
+  Run commands inside that environment with `uv run`, for example `uv run pytest`.
 
 4. Create a branch for local development:
 
@@ -78,15 +79,15 @@ Ready to contribute? Here's how to set up `Chanjo Report` for local development.
 
 5. Make you changes locally
 
-6. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox:
+6. When you're done making changes, check that your changes pass the linter, the formatter and the tests:
 
   ```bash
-  $ flake8 chanjo-report tests
-  $ invoke test
-  $ tox
+  $ uv run ruff check .
+  $ uv run ruff format --check .
+  $ make test
   ```
 
-  To get flake8 and tox, just pip install them into your virtualenv.
+  `make test` runs the test suite in Docker containers, against a MariaDB database, the same as CI. It needs only Docker. To run a subset, pass `TESTS=tests/test_server.py`. Use `uv run pytest tests` for a faster run against a temporary SQLite database on your machine.
 
 7. Commit your changes and push your branch to GitHub:
 
@@ -98,9 +99,10 @@ Ready to contribute? Here's how to set up `Chanjo Report` for local development.
 
 8. Check that the test coverage hasn't dropped:
 
-	```bash
-	$ invoke coverage
-	```
+  ```bash
+  $ uv run coverage run -m pytest tests
+  $ uv run coverage report -m
+  ```
 
 9. Submit a pull request through the GitHub website. I would encourage you to submit your pull request early in the process. This makes it easier to maintain an overview of current development and opens up for continous discussion.
 
@@ -112,7 +114,7 @@ Before you submit a pull request, check that it meets these guidelines:
 
 2. If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring, and add the feature to the list in README.md.
 
-3. The pull request should work for Python 2.7, 3.4, and PyPy. Check the [Travis page][travis] and make sure that the tests pass for all supported Python versions.
+3. The pull request should pass the GitHub Actions workflow in `.github/workflows/tests.yml`, which runs the linter and tests on Python 3.14.
 
 
 ## Coding conventions
@@ -127,19 +129,19 @@ Generally I recommend two ways to stay up-to-date on chanjo-report coding standa
 To run a particular test:
 
 ```bash
-$ python -m pytest tests.test_find.TestFind.test_find_template
+$ uv run pytest tests/test_server.py::test_gene
 ```
 
 To run a subset of tests:
 
 ```bash
-$ python -m pytest tests.test_find
+$ uv run pytest tests -k report
 ```
 
 
+[uv]: https://docs.astral.sh/uv/
 [cookie-contrib]: https://github.com/audreyr/cookiecutter/blob/master/CONTRIBUTING.rst
 [editorconfig]: http://editorconfig.org/
 [issues]: https://github.com/robinandeer/chanjo-report/issues
 [repo]: https://github.com/robinandeer/chanjo-report
 [sourcetree]: http://www.sourcetreeapp.com/
-[travis]: https://travis-ci.org/robinandeer/chanjo-report/pull_requests

@@ -4,4 +4,3 @@ docs
 tests
 .editorconfig
 .gitignore
-.travis.yml

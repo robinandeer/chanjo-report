@@ -1,8 +1,8 @@
 from chanjo.store.models import Sample
-from flask import session
 from chanjo_report.server.constants import LEVELS
 
 from .utils import keymetrics_rows, samplesex_rows, transcripts_rows
+
 
 def report_contents(request):
     """Check args or form provided by user request and prepare contents for report or pdf endpoints
@@ -54,5 +54,3 @@ def report_contents(request):
         gene_id_errors=gene_id_errors,
     )
     return data
-
-

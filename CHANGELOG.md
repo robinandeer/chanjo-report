@@ -3,9 +3,23 @@
 ## [unreleased]
 ### Added
 - Tests that load demo data into a SQLite chanjo database and request the report, gene, JSON and PDF routes, run in CI on every pull request
+### Changed
+- Python moved from 3.12 to 3.14, in `.python-version`, the Dockerfiles and the test image
+- Packaging moved from `setup.py`, `setup.cfg`, `MANIFEST.in` and `requirements*.txt` to a single `pyproject.toml` (hatchling); dependencies are locked in `uv.lock`, installed with `uv sync` and built with `uv build`
+- Lint and formatting use ruff; CI runs `ruff check` and `ruff format --check`
+- The Babel `.mo` translation catalogue is compiled during the build and included in the wheel
+- Dockerfile installs dependencies from `uv.lock`
+- Tests run in Docker containers with `make test`, against MariaDB 11 as in production. CI runs the same target
+- Removed the obsolete Travis config and `invoke` tasks
+
 ### Removed
 - Unused `pyscss` dependency. SCSS compilation was removed in 2014 and the package ships plain CSS, but the requirement was never dropped. It is a source-only package that cannot be installed without a build step.
-- Other unused dependencies: `Flask-DebugToolbar`, `lxml`, `path.py`, `six`, `tabulate` and `toml`
+- Other unused dependencies: `Flask-DebugToolbar`, `lxml`, `path.py`, `six`, `tabulate`, `toml`, `toolz` and `importlib_resources`
+
+### Fixed
+- `pretty_date` showed "0 years ago" for any date less than a year old
+- Typo `msgif` for `msgid` in the Swedish catalogue (no template uses that string yet)
+- `docs/conf.py` had a syntax error that broke the Sphinx build
 
 ## 4.12.3 (2026-10-02)
 ### Fixed

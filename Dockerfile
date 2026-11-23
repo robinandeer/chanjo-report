@@ -1,20 +1,20 @@
 ###########
 # BUILDER #
 ###########
-FROM clinicalgenomics/python3.12-venv AS python-builder
-
-ENV PATH="/venv/bin:$PATH"
+FROM python:3.14-slim-bookworm AS python-builder
 
 WORKDIR /app
 
-# Install chanjo-report dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Create the virtualenv and install the exact locked chanjo-report dependencies from uv.lock
+RUN pip install --no-cache-dir uv==0.13.4 && python -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+COPY pyproject.toml uv.lock ./
+RUN UV_PROJECT_ENVIRONMENT=/venv uv sync --locked --no-dev --no-install-project
 
 #########
 # FINAL #
 #########
-FROM python:3.12-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 LABEL about.license="MIT License (MIT)"
 LABEL about.tags="chanjo-report,chanjo,bam,NGS,coverage,python,flask"
@@ -39,8 +39,8 @@ COPY --chown=worker:worker --from=python-builder /venv /venv
 WORKDIR /home/worker/app
 COPY --chown=worker:worker . /home/worker/app
 
-# Install the app
-RUN pip install --editable .
+# Install the app itself, its dependencies are already in /venv
+RUN pip install --no-cache-dir --no-deps --editable .
 
 # Run the app as non-root user
 USER worker

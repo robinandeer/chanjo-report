@@ -1,9 +1,0 @@
-chanjo>=4.9.2
-cryptography
-Flask
-Flask-Babel>=3
-importlib_resources
-pdfkit
-pymysql
-Flask-SQLAlchemy
-toolz

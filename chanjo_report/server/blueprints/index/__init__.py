@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from .views import index_bp
+from .views import index_bp  # noqa: F401

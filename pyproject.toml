@@ -1,3 +1,78 @@
 [build-system]
-requires = ["setuptools >= 64"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "babel>=2.12"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chanjo-report"
+version = "4.12.3"
+description = "Automatically render coverage reports from Chanjo output"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Robin Andeer", email = "robin.andeer@scilifelab.se" }]
+keywords = ["chanjo-report", "development"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Environment :: Console",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "chanjo>=4.9.2",
+    "click",
+    "cryptography",
+    "Flask",
+    "Flask-Babel>=3",
+    "Flask-SQLAlchemy",
+    "pdfkit",
+    "pymysql",
+    "sqlalchemy",
+    "werkzeug",
+]
+
+[project.entry-points."chanjo.subcommands.4"]
+report = "chanjo_report.cli:report"
+
+[dependency-groups]
+dev = [
+    "coverage",
+    "pytest",
+    "ruff",
+    "sphinx",
+    "sphinxcontrib-napoleon",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["chanjo_report"]
+# Compiled .mo files are gitignored but must ship in the wheel
+artifacts = ["chanjo_report/**/*.mo"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/chanjo_report",
+    "/tests",
+    "/docs",
+    "/CHANGELOG.md",
+    "/CONTRIBUTING.md",
+    "/README.md",
+    "/LICENSE",
+    "/AUTHORS",
+    "/pyproject.toml",
+    "/uv.lock",
+]
+
+[tool.hatch.build.hooks.custom]
+# hatch_build.py compiles the Babel .po catalogues into .mo files
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

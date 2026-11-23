@@ -5,23 +5,30 @@ from chanjo_report.interfaces import html, pdf
 
 
 @click.command()
-@click.option('-r', '--render', type=click.Choice(['html', 'pdf']), default='html')
-@click.option('-s', '--sample', 'samples', type=str, multiple=True, help='One or more sample names or IDs - Only for PDF reports')
-@click.option('-o', '--outfile', 'outfile', type=str, help='Outfile path - Only for PDF reports')
-@click.option('-l', '--language', type=click.Choice(['en', 'sv']))
-@click.option('-d', '--debug', is_flag=True)
+@click.option("-r", "--render", type=click.Choice(["html", "pdf"]), default="html")
+@click.option(
+    "-s",
+    "--sample",
+    "samples",
+    type=str,
+    multiple=True,
+    help="One or more sample names or IDs - Only for PDF reports",
+)
+@click.option("-o", "--outfile", "outfile", type=str, help="Outfile path - Only for PDF reports")
+@click.option("-l", "--language", type=click.Choice(["en", "sv"]))
+@click.option("-d", "--debug", is_flag=True)
 @click.pass_context
 def report(context, render, samples, outfile, language, debug):
     """Generate a coverage report from Chanjo SQL output."""
     # get uri + dialect of Chanjo database
-    if context.obj['database'] is None:
-        click.echo('database URI not found')
+    if context.obj["database"] is None:
+        click.echo("database URI not found")
         context.abort()
 
     # set the custom option
-    context.obj['report'] = dict(language=language, debug=debug, samples=samples, outfile=outfile)
+    context.obj["report"] = dict(language=language, debug=debug, samples=samples, outfile=outfile)
 
-    if render == 'html':
+    if render == "html":
         html.render_html(context.obj)
     else:
         if not samples:

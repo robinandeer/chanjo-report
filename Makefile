@@ -1,4 +1,4 @@
-.PHONY: help build setup report-html report-pdf
+.PHONY: help build setup report test prune
 .DEFAULT_GOAL := help
 
 help:
@@ -14,6 +14,10 @@ setup: ## Use Chanjo to set up a mysql database containing demo data
 	docker-compose run chanjo-cli chanjo -d mysql+pymysql://chanjoUser:chanjoPassword@mariadb/chanjo4_test load -n sample1 --group-name test_group -g test_group chanjo/init/demo-files/sample1.coverage.bed
 	docker-compose run chanjo-cli chanjo -d mysql+pymysql://chanjoUser:chanjoPassword@mariadb/chanjo4_test load -n sample2 --group-name test_group -g test_group chanjo/init/demo-files/sample2.coverage.bed
 	docker-compose run chanjo-cli chanjo -d mysql+pymysql://chanjoUser:chanjoPassword@mariadb/chanjo4_test load -n sample3 --group-name test_group -g test_group chanjo/init/demo-files/sample3.coverage.bed
+
+test: ## Run the tests in containers against MariaDB (needs only Docker). TESTS=path for a subset
+	docker compose -f docker-compose.test.yml run --rm --build test $(or $(TESTS),tests); status=$$?; \
+	docker compose -f docker-compose.test.yml down --volumes; exit $$status
 
 report: ## Create a coverage report in HTML format
 	docker-compose run -p 5000:5000 chanjo-report chanjo -d mysql+pymysql://chanjoUser:chanjoPassword@mariadb/chanjo4_test report --render html

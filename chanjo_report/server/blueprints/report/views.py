@@ -3,7 +3,7 @@ import datetime
 import logging
 
 from chanjo.store.models import Sample, Transcript, TranscriptStat
-from flask import Blueprint, abort, jsonify, render_template, request, send_file, url_for
+from flask import Blueprint, abort, jsonify, render_template, request, send_file
 
 from chanjo_report.server.extensions import api
 
@@ -20,6 +20,7 @@ report_bp = Blueprint(
     static_folder="static",
     static_url_path="/static/report",
 )
+
 
 @report_bp.route("/genes/<gene_id>")
 def gene(gene_id):

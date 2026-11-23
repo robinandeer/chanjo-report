@@ -32,7 +32,7 @@ msgstr "Baserat på genpanel"
 msgid "Cutoff"
 msgstr "Gränsvärde"
 
-msgif "Included splice sites"
+msgid "Included splice sites"
 msgstr "Inkluderade splitsningpositioner"
 
 msgid "Generally important metrics"

@@ -1,0 +1,34 @@
+# Test environment: a MariaDB service and the test runner, as in production.
+# Run with `make test`.
+name: chanjo-report-test
+
+services:
+
+  mariadb:
+    image: mariadb:11
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=chanjo4_test
+      - MARIADB_USER=chanjoUser
+      - MARIADB_PASSWORD=chanjoPassword
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 30s
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  test:
+    # wkhtmltopdf is only published for amd64
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      # The tests reach MariaDB on localhost:3306 (network_mode below)
+      - CHANJO_TEST_DB_URI=mysql+pymysql://chanjoUser:chanjoPassword@localhost:3306/chanjo4_test
+    # Share the MariaDB network namespace so the tests reach it on localhost:3306
+    network_mode: "service:mariadb"
